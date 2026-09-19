@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- social:start -->
+<meta name="description" content="Practitioner session 2 of 10. The ward predicts the outcome without causing it, and it is not a leak. Flip it on every patient and count the predictions that change: across twenty seeds at Thornbury that runs from 0.70 to 1.00, and every one of those models scores about 0.949 held out.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Learn with Phoebe">
+<meta property="og:title" content="The shortcut - learn ML epistemology with phoebe">
+<meta property="og:description" content="Practitioner session 2 of 10. Building the shortcut, and measuring behavioural reliance by flipping one feature and counting what moves.">
+<meta property="og:url" content="https://phoebefu6.github.io/learn-ml-epistemology-with-phoebe/courses/p2-the-shortcut.html">
+<meta property="og:image" content="https://phoebefu6.github.io/learn-ml-epistemology-with-phoebe/assets/og-cover.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="The shortcut - learn ML epistemology with phoebe">
+<meta name="twitter:description" content="Reliance from 0.70 to 1.00, held-out accuracy 0.949 for all of them. The score cannot tell them apart.">
+<meta name="twitter:image" content="https://phoebefu6.github.io/learn-ml-epistemology-with-phoebe/assets/og-cover.png">
+<!-- social:end -->
+<title>Practitioner session 2 · The shortcut - learn ML epistemology with phoebe</title>
+<link rel="stylesheet" href="../assets/style.css?v=2">
+</head>
+<body>
+
+<div class="toolbar">
+  <div class="wrap">
+    <span class="crumb"><a href="../index.html">learn-ml-epistemology-with-phoebe</a> / Practitioner session 2 of 10</span>
+    <button class="btn" id="toggle-all" type="button">Expand all</button>
+    <button class="btn primary" id="zoom-toggle" type="button">Projector zoom: off</button>
+  </div>
+</div>
+
+<header class="masthead">
+  <div class="wrap">
+    <div class="eyebrow">Learn ML Epistemology with Phoebe · Practitioner session 2 of 10</div>
+    <h1>Building the shortcut and <span class="accent">measuring reliance</span></h1>
+    <p class="sub">Session 1 ended on a sentence with nothing to back it up yet: a held-out score cannot see a shortcut, because the shortcut works on the held-out rows too. Tonight that stops being an argument and becomes a measurement. Flip the ward on every patient, hold everything else fixed, and count how many predictions change. At Thornbury that share runs from 0.70 to 1.00 depending on nothing more than the random seed, and every one of those models scores about 0.949 on the held-out set.</p>
+    <div class="chip-row">
+      <span class="chip level">🔴 Hardest</span>
+      <span class="chip audience">Anyone who has been asked which feature the model is using</span>
+      <span class="chip audience">Anyone who has answered by reading a coefficient</span>
+      <span class="chip time">45 min</span>
+    </div>
+    <div class="agenda">
+      <span class="a1" style="flex:1">0-3 · Welcome</span>
+      <span class="a2" style="flex:4">3-17 · Shortcut, not leak</span>
+      <span class="a3" style="flex:4">17-31 · Behavioural reliance</span>
+      <span class="a4" style="flex:3">31-45 · Build-along and Q&amp;A</span>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <!-- ============ INTRO ============ -->
+  <section class="section" id="intro">
+    <div class="section-kicker">
+      <span class="klabel">Part 0</span>
+      <h2>Where tonight sits</h2>
+    </div>
+    <p class="lede">Session 1 built the Thornbury world and split it two ways, and established what a held-out number is an estimate of. Tonight trains a model in it and asks a question the held-out number cannot answer: how hard does this particular model lean on the feature that will stop working? That question has an answer you can compute in four lines, and the answer varies wildly between models the score says are identical. Session 3 turns that into twenty models and a spread. Session 4 designs the world to test them in.</p>
+
+    <div class="legend">
+      <span class="pill">Live = written together in the 45 minutes</span>
+      <span class="pill">Self-study = the full depth, after class</span>
+      <span class="pill">🔍 Every diagram zooms</span>
+    </div>
+
+    <div class="callout win">
+      <p><strong>★ What you walk out with tonight.</strong> A clean line between a shortcut and a leak, which matters because the two get different fixes: one is measured and stress tested, the other is removed and the validation re-run. A four-line reliance measure you can point at any binary feature in any model, with the Thornbury range 0.70 to 1.00 as the reference for how far apart two equally scored models can sit. And the reason weight inspection does not answer this question once there are hidden units in the way.</p>
+    </div>
+
+    <details class="card" open>
+      <summary><span class="mode live">Live</span>A shortcut is not a leak, and the difference decides the fix<span class="mini">5 min</span><span class="caret">▶</span></summary>
+      <div class="body">
+        <p>The ward a patient is on is recorded at admission. It is sitting in the record hours before anybody knows whether that patient deteriorates, and it would be sitting there at prediction time in production too. Nothing about it is unavailable, retrospective or contaminated. It is not leakage.</p>
+        <p>What it is instead is a feature whose usefulness depends on an arrangement. In the collection year the high-acuity ward received most of the patients who went on to deteriorate, so the ward agreed with the outcome about 90 percent of the time without causing it. The agreement is a fact about how the hospital group was organised that year, and hospital groups reorganise. The mechanics of the other failure, how a post-outcome field reaches a feature list and why a noisy one survives review, belong to <strong>learn-model-risk-with-phoebe</strong> p3.</p>
+        <p>Getting this line right is not pedantry, because the two failures get opposite treatments. A leak is removed and the validation is re-run, and the number that comes back is the real one. A shortcut is not removed by default: it was genuinely predictive, a model that drops it scores worse, and the honest move is to measure how much the model depends on it and then test the model where the arrangement no longer holds.</p>
+      </div>
+    </details>
+
+    <details class="card">
+      <summary><span class="mode self">Self-study</span>The words that will keep coming back<span class="mini">4 min</span><span class="caret">▶</span></summary>
+      <div class="body">
+        <ul>
+          <li><strong>Shortcut.</strong> A feature that predicts the outcome without causing it, whose usefulness depends on an arrangement that can change.</li>
+          <li><strong>Leakage.</strong> Information in the feature list that could not have been known when the prediction was made. Different failure, different fix, and the mechanics live in <strong>learn-model-risk-with-phoebe</strong> p3.</li>
+          <li><strong>Behavioural reliance.</strong> The share of rows whose predicted class changes when one feature is flipped and everything else is held fixed. Tonight's measurement.</li>
+          <li><strong>Intervention.</strong> Setting a feature to a value rather than observing it. The reliance measure is an intervention on the input, which is why it answers a question the held-out score cannot.</li>
+          <li><strong>Decay against reversal.</strong> A shortcut can stop being informative, which is Thornbury's case, or it can start pointing the other way. The second is worse and is not modelled here.</li>
+          <li><strong>The standing pair.</strong> Mean held-out 0.949 and mean shifted 0.765 across the five data draws. Every session quotes those two numbers against each other.</li>
+        </ul>
+      </div>
+    </details>
+  </section>
+
+  <!-- ============ PART 1 ============ -->
+  <section class="section" id="part-1">
+    <div class="section-kicker">
+      <span class="klabel">Part 1 · covers shortcut against leak</span>
+      <h2>Available at prediction time, and still a problem</h2>
+      <span class="tag concept">12 min live</span>
+    </div>
+    <p class="lede">The clock settles the question. Everything known before the outcome is fair game as a feature, and being fair game is not the same as being durable. The two categories look identical in a feature importance plot and need completely different responses, so the clock check comes first.</p>
+
+    <figure class="zoomable">
+      <svg viewBox="0 0 880 320" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="A timeline from admission through the prediction to the outcome becoming known 24 hours later. The ward is recorded at admission, before the outcome, so it is not a leak. A post-outcome field is recorded after the outcome is known and could not have been available in time. Below, two panels give the different fixes: a shortcut is measured for reliance and then stress tested, while a leak is removed and the validation re-run, with the mechanics held by learn-model-risk-with-phoebe p3.">
+        <style>
+          .p2aH { font: 800 12px Inter, sans-serif; fill: #231A10; }
+          .p2aK { font: 800 11px Inter, sans-serif; fill: #231A10; }
+          .p2aT { font: 800 11px Inter, sans-serif; fill: #FFFFFF; }
+          .p2aW { font: 400 11px Inter, sans-serif; fill: #FFFFFF; }
+          .p2aB { font: 400 11px Inter, sans-serif; fill: #231A10; }
+          .p2aRb { font: 800 12px Inter, sans-serif; fill: #155E75; }
+          .p2aR { font: 400 11px Inter, sans-serif; fill: #155E75; }
+        </style>
+        <defs>
+          <marker id="p2aAr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#6B5B47"></path></marker>
+        </defs>
+
+        <text class="p2aH" x="14" y="22">A shortcut is available when the prediction is made. A leak is not.</text>
+
+        <text class="p2aK" x="46" y="62">Admission</text>
+        <text class="p2aK" x="300" y="62">Prediction made</text>
+        <text class="p2aK" x="570" y="62">Outcome known, 24 hours later</text>
+
+        <line x1="40" y1="96" x2="846" y2="96" stroke="#6B5B47" stroke-width="1.6" marker-end="url(#p2aAr)"></line>
+        <line x1="60" y1="84" x2="60" y2="108" stroke="#6B5B47" stroke-width="1.6"></line>
+        <line x1="330" y1="84" x2="330" y2="108" stroke="#6B5B47" stroke-width="1.6"></line>
+        <line x1="600" y1="84" x2="600" y2="108" stroke="#6B5B47" stroke-width="1.6"></line>
+
+        <rect x="40" y="124" width="280" height="50" rx="8" fill="#713F12"></rect>
+        <text class="p2aT" x="54" y="145">Ward: recorded at admission</text>
+        <text class="p2aW" x="54" y="164">known before the outcome, so not a leak</text>
+
+        <rect x="560" y="124" width="300" height="50" rx="8" fill="#155E75"></rect>
+        <text class="p2aT" x="574" y="145">A post-outcome field lands here</text>
+        <text class="p2aW" x="574" y="164">could not have been known in time</text>
+
+        <rect x="14" y="192" width="420" height="112" rx="9" fill="#FBF6EF" stroke="#DCCDB8"></rect>
+        <text class="p2aH" x="28" y="216">Shortcut</text>
+        <text class="p2aB" x="28" y="238">Real, usable, honestly available at prediction time.</text>
+        <text class="p2aB" x="28" y="258">Its usefulness depends on an arrangement in the world.</text>
+        <text class="p2aB" x="28" y="278">Fix: measure the reliance tonight, then stress test it</text>
+        <text class="p2aB" x="28" y="296">in session 4.</text>
+
+        <rect x="448" y="192" width="418" height="112" rx="9" fill="#ECFEFF" stroke="#155E75"></rect>
+        <text class="p2aRb" x="462" y="216">Leak</text>
+        <text class="p2aR" x="462" y="238">The field could not have been known when the</text>
+        <text class="p2aR" x="462" y="258">prediction was made.</text>
+        <text class="p2aR" x="462" y="278">Fix: remove it and re-run the validation. Mechanics in</text>
+        <text class="p2aR" x="462" y="296">learn-model-risk-with-phoebe p3.</text>
+      </svg>
+      <figcaption>🔍 Click to zoom - same suspicious feature importance, two different failures, two different fixes.</figcaption>
+    </figure>
+
+    <details class="card">
+      <summary><span class="mode live">Live</span>Why removing the ward is not the obvious answer<span class="mini">4 min</span><span class="caret">▶</span></summary>
+      <div class="body">
+        <p>The instinct in the room is always to drop the feature. Resist it for a minute. In the collection year the ward carried genuine information about who was going to deteriorate, because the allocation policy put the sicker patients in the high-acuity ward. A model that never sees the ward scores lower on the held-out set, and in a normal review it loses to the model that does see it. Dropping a feature because it makes you uncomfortable also costs you the ability to notice when the arrangement changes, since the model no longer responds to it at all.</p>
+        <p>The defensible sequence is narrower. Establish that the feature is available in time, which makes it a feature rather than a leak. Measure how much this model depends on it, which is tonight. Then score the model where the arrangement has changed, which is the shifted set and session 4. Removal is one possible outcome of that sequence, not its starting point.</p>
+      </div>
+    </details>
+
+    <details class="card">
+      <summary><span class="mode live">Live</span>The standing pair: 0.949 and 0.765<span class="mini">4 min</span><span class="caret">▶</span></summary>
+      <div class="body">
+        <p>Across the five data draws the mean held-out accuracy is 0.949 and the mean shifted accuracy is 0.765. Those two numbers are quoted against each other for the rest of the track, so it is worth being exact about what separates them. The model is the same. The architecture is the same, three inputs into twelve tanh hidden units into one logit. The metric is the same. The only difference is which world the 2,000 scored patients came from: the collection year, where the ward agrees with the outcome 90 percent of the time, or the deployment year, where it agrees 50 percent of the time.</p>
+        <div class="callout example">
+          <span class="ex-pill">Real world</span>
+          <p>When a stakeholder asks what the model is worth, both numbers are the honest answer and neither one alone is. The first says what it does where it was measured. The second says what one changed arrangement costs. A review that hears only the first has been given a true statement about a world that has an expiry date on it.</p>
+        </div>
+      </div>
+    </details>
+  </section>
+
+  <!-- ============ PART 2 ============ -->
+  <section class="section" id="part-2">
+    <div class="section-kicker">
+      <span class="klabel">Part 2 · covers behavioural reliance</span>
+      <h2>Flip the ward and count what moves</h2>
+      <span class="tag concept">12 min live</span>
+    </div>
+    <p class="lede">This is the measurement the session owns, and it is almost embarrassingly simple. Take every patient in the held-out set. Score them once with the ward set to 0 and once with it set to 1, changing nothing else. Count the fraction whose predicted class differs between the two. That fraction is the model's behavioural reliance on the ward, and it is a fact about the model rather than about the data it was scored on.</p>
+
+    <figure class="zoomable">
+      <svg viewBox="0 0 880 366" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="The ward-flip measurement. One patient is scored twice with vitals and lab held fixed: with the ward set to 0 the model predicts stable, with the ward set to 1 it predicts deterioration. One model's reliance is the count of changed predictions divided by every patient scored. Across twenty seeds at Thornbury the measured range runs from 0.70 to 1.00 on a zero to one axis, and every one of those models scores about 0.949 on the held-out set.">
+        <style>
+          .p2bH { font: 800 12px Inter, sans-serif; fill: #231A10; }
+          .p2bT { font: 800 11px Inter, sans-serif; fill: #FFFFFF; }
+          .p2bB { font: 400 11px Inter, sans-serif; fill: #231A10; }
+          .p2bM { font: 400 11px Inter, sans-serif; fill: #6B5B47; }
+          .p2bR { font: 400 11px Inter, sans-serif; fill: #155E75; }
+          .p2bRb { font: 800 11px Inter, sans-serif; fill: #155E75; }
+          .p2bBig { font: 800 22px Inter, sans-serif; fill: #155E75; }
+        </style>
+        <defs>
+          <marker id="p2bAr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#6B5B47"></path></marker>
+        </defs>
+
+        <text class="p2bH" x="14" y="22">Flip the ward, hold everything else fixed, count the predictions that change.</text>
+
+        <rect x="14" y="40" width="520" height="140" rx="9" fill="#FBF6EF" stroke="#DCCDB8"></rect>
+        <text class="p2bH" x="28" y="64">The same patient, scored twice</text>
+
+        <rect x="28" y="78" width="250" height="38" rx="7" fill="#EBD9C3" stroke="#DCCDB8"></rect>
+        <text class="p2bB" x="40" y="102">vitals and lab as recorded, ward = 0</text>
+        <line x1="284" y1="97" x2="316" y2="97" stroke="#6B5B47" stroke-width="1.6" marker-end="url(#p2bAr)"></line>
+        <rect x="322" y="78" width="196" height="38" rx="7" fill="#713F12"></rect>
+        <text class="p2bT" x="336" y="102">predicts stable</text>
+
+        <rect x="28" y="126" width="250" height="38" rx="7" fill="#EBD9C3" stroke="#DCCDB8"></rect>
+        <text class="p2bB" x="40" y="150">the very same row, ward = 1</text>
+        <line x1="284" y1="145" x2="316" y2="145" stroke="#6B5B47" stroke-width="1.6" marker-end="url(#p2bAr)"></line>
+        <rect x="322" y="126" width="196" height="38" rx="7" fill="#155E75"></rect>
+        <text class="p2bT" x="336" y="150">predicts deterioration</text>
+
+        <rect x="548" y="40" width="318" height="140" rx="9" fill="#ECFEFF" stroke="#155E75"></rect>
+        <text class="p2bRb" x="562" y="64">One model's reliance on the ward</text>
+        <text class="p2bR" x="562" y="88">changed predictions divided by</text>
+        <text class="p2bR" x="562" y="108">every patient scored</text>
+        <text class="p2bBig" x="562" y="148">0.70 to 1.00</text>
+        <text class="p2bR" x="562" y="170">across twenty seeds at Thornbury</text>
+
+        <text class="p2bH" x="14" y="214">Twenty models, one pipeline, one difference between them: the random seed.</text>
+
+        <line x1="60" y1="284" x2="760" y2="284" stroke="#DCCDB8" stroke-width="1.5"></line>
+        <line x1="60" y1="278" x2="60" y2="290" stroke="#DCCDB8" stroke-width="1.5"></line>
+        <line x1="410" y1="278" x2="410" y2="290" stroke="#DCCDB8" stroke-width="1.5"></line>
+        <line x1="760" y1="278" x2="760" y2="290" stroke="#DCCDB8" stroke-width="1.5"></line>
+        <rect x="550" y="262" width="210" height="22" rx="5" fill="#713F12"></rect>
+        <text class="p2bB" x="550" y="252">measured range, 0.70 to 1.00</text>
+        <text class="p2bM" x="48" y="306">0.00</text>
+        <text class="p2bM" x="398" y="306">0.50</text>
+        <text class="p2bM" x="748" y="306">1.00</text>
+
+        <text class="p2bM" x="14" y="332">share of patients whose prediction changes when only the ward moves</text>
+        <text class="p2bRb" x="14" y="356">Every one of these models scores about 0.949 on the held-out set.</text>
+      </svg>
+      <figcaption>🔍 Click to zoom - one intervention, one count, and a range the held-out score cannot see.</figcaption>
+    </figure>
+
+    <details class="card">
+      <summary><span class="mode live">Live</span>What a range of 0.70 to 1.00 actually says<span class="mini">4 min</span><span class="caret">▶</span></summary>
+      <div class="body">
+        <p>At the bottom of the range, a model changes its mind about 7 patients in 10 when the only thing that moves is the ward. At the top, it changes its mind about all of them: the ward alone decides the prediction for every patient in the set. These are not different pipelines, different features or different data. They differ by the random seed, which sets the initial weights and the order the examples arrive in, and nothing else.</p>
+        <p>Now put the held-out score next to that. Every one of those models scores about 0.949. The number everybody in the review will look at is constant across a range of behaviour that runs from heavy dependence to total dependence. That is why the reliance measure is worth four lines of code: it is the only thing in the room that distinguishes the models, and it distinguishes them before the arrangement changes rather than after.</p>
+      </div>
+    </details>
+
+    <details class="card">
+      <summary><span class="mode live">Live</span>Why reading the weights does not answer this<span class="mini">4 min</span><span class="caret">▶</span></summary>
+      <div class="body">
+        <p>With a single linear layer you could read the coefficient on the ward and argue about its size. Thornbury's model has twelve tanh hidden units between the input and the output, so the ward's influence is spread across twelve incoming weights and then recombined through twelve outgoing ones. There is no single number to read, and the product of the two layers is not the answer either, because the tanh is not linear and the hidden units interact.</p>
+        <p>The flip sidesteps all of it. Rather than asking what the weights mean, it asks what the model does, which is the question anybody actually had. It also stays honest when you replace the network with a gradient-boosted tree, an ensemble or something nobody can read at all: the measurement only needs predictions with the feature set two ways.</p>
+      </div>
+    </details>
+
+    <details class="card">
+      <summary><span class="mode self">Self-study</span>How the deployment world is designed, and the case it does not include<span class="mini">4 min</span><span class="caret">▶</span></summary>
+      <div class="body">
+        <p>The deployment year at Thornbury is built by one change: the ward agreement drops from 90 percent to 50 percent. The shortcut does not disappear from the feature list, it does not become missing, and it does not turn hostile. It decays into noise, which is the mild version of this failure, and the honest label for a feature agreeing with the outcome half the time is uninformative.</p>
+        <p>The worse case exists and is deliberately not modelled: a shortcut that <strong>reverses</strong>, where the arrangement flips so the feature now points away from the outcome. A model leaning hard on a reversed shortcut is confidently wrong rather than merely unhelpful, and the drop is larger than anything shown here. Take 0.765 as the cost of decay, not as a worst case, and say so when quoting it.</p>
+      </div>
+    </details>
+  </section>
+
+  <!-- ============ PART 3 ============ -->
+  <section class="section" id="part-3">
+    <div class="section-kicker">
+      <span class="klabel">Part 3 · build-along</span>
+      <h2>Train one model, then interrogate it</h2>
+      <span class="tag build">13 min build-along</span>
+    </div>
+    <p class="lede">Two blocks, both on top of the generator from session 1. The first trains one small network on the collection year and scores it twice, where it was measured and where the arrangement has changed. The second is the reliance measure, which is four lines and a loop.</p>
+
+    <div class="steps">
+      <div class="step"><div><p><strong>Import last session's generator.</strong> The one with two standard-normal signals, the logit and the ward that agrees with the outcome with probability p. Nothing tonight works without it.</p></div></div>
+      <div class="step"><div><p><strong>Train one network on the collection year.</strong> Three inputs, twelve tanh hidden units, one logit, trained by stochastic gradient descent. Small on purpose: nothing tonight is about capacity.</p></div></div>
+      <div class="step"><div><p><strong>Score it twice.</strong> Once on the held-out rows from the collection year, once on the shifted rows from the deployment year. Expect the neighbourhood of 0.949 and 0.765 rather than those digits exactly.</p></div></div>
+      <div class="step"><div><p><strong>Write the reliance function.</strong> Copy the feature matrix twice, set the ward column to 0 in one copy and 1 in the other, predict both, and take the mean of the disagreement.</p></div></div>
+      <div class="step"><div><p><strong>Run it across seeds.</strong> Change only the random seed and watch the reliance move while the held-out score does not. That contrast is the whole session in one printout.</p></div></div>
+      <div class="step"><div><p><strong>Point it at something of your own.</strong> Take the binary feature you named in last session's homework and run the same four lines. The number you get is the one your next review should hear.</p></div></div>
+    </div>
+
+    <div class="prompt-box good"><span class="label">★ Block 1 · one model, scored where you looked and where you did not</span>
+import numpy as np
+from sklearn.neural_network import MLPClassifier
+
+# make_data is the Thornbury generator written in session 1
+X_train, y_train = make_data(4000, 101, 0.90)
+X_held,  y_held  = make_data(2000, 102, 0.90)
+X_shift, y_shift = make_data(2000, 103, 0.50)
+
+def thornbury_net(seed):
+    return MLPClassifier(hidden_layer_sizes=(12,), activation="tanh",
+                         solver="sgd", learning_rate_init=0.08,
+                         alpha=2e-4, max_iter=30, random_state=seed)
+
+net = thornbury_net(1).fit(X_train, y_train)
+
+print("held out:", round(net.score(X_held,  y_held),  3))   # around 0.949
+print("shifted :", round(net.score(X_shift, y_shift), 3))   # around 0.765
+
+# This is a different random number generator from the engine that produced
+# the canon numbers on this site, so the digits here will not reproduce them
+# exactly. The neighbourhood is the claim; the last decimal is not.
+</div>
+
+    <div class="prompt-box good"><span class="label">★ Block 2 · behavioural reliance on the ward</span>
+import numpy as np
+
+WARD = 2  # the third column of X: vitals, lab, ward
+
+def reliance_on_ward(model, X):
+    """Flip the ward on every patient, hold vitals and lab fixed,
+    and return the share of predictions that change."""
+    X0 = X.copy(); X0[:, WARD] = 0
+    X1 = X.copy(); X1[:, WARD] = 1
+    return float(np.mean(model.predict(X0) != model.predict(X1)))
+
+print("reliance:", round(reliance_on_ward(net, X_held), 2))
+
+# the same pipeline, the same data, only the seed moving
+for seed in range(1, 6):
+    m = thornbury_net(seed).fit(X_train, y_train)
+    print(seed,
+          "held out", round(m.score(X_held, y_held), 3),
+          "reliance", round(reliance_on_ward(m, X_held), 2))
+
+# Across twenty seeds at Thornbury the reliance runs from 0.70 to 1.00,
+# and every one of those models scores about 0.949 on the held-out set.
+# Session 3 runs the full twenty and measures the spread that follows.
+</div>
+
+    <div class="callout tip">
+      <p><strong>The habit to keep.</strong> For any binary feature somebody is nervous about, reliance is two copies of the matrix and one mean. Report it next to the accuracy, not instead of it, and report it before anybody asks. A model at 0.949 with a reliance of 1.00 on one arrangement-dependent feature is a different object from a model at 0.949 with a reliance of 0.15, and the score alone will never say which one is on the slide.</p>
+    </div>
+  </section>
+
+  <!-- ============ QUIZ ============ -->
+  <section class="section" id="quiz">
+    <div class="section-kicker">
+      <span class="klabel">Check yourself</span>
+      <h2>Three questions</h2>
+    </div>
+
+    <div class="quiz-q" data-answer="1">
+      <p class="qtext">The ward is recorded at admission, hours before anybody knows whether the patient deteriorates. What is it?</p>
+      <button class="qopt" type="button">A · A leak, because it agrees with the outcome 90 percent of the time and that agreement had to come from somewhere</button>
+      <button class="qopt" type="button">B · A shortcut: genuinely available when the prediction is made, and useful only while an arrangement in the world holds</button>
+      <button class="qopt" type="button">C · Neither, it is an ordinary strong feature and needs no handling beyond the usual validation</button>
+      <p class="qwhy">Leakage is information that could not have been known in time, and the ward fails that test: it was there at admission and would be there in production. The problem is durability rather than availability, which is why the fix is to measure reliance and stress test rather than to remove and re-run.</p>
+    </div>
+
+    <div class="quiz-q" data-answer="0">
+      <p class="qtext">Twenty Thornbury models differ only by their random seed, and their reliance on the ward runs from 0.70 to 1.00. What do their held-out scores look like?</p>
+      <button class="qopt" type="button">A · About 0.949 for every one of them, so the held-out score cannot separate the heavy leaners from the rest</button>
+      <button class="qopt" type="button">B · They track reliance closely, with the most reliant models scoring highest on the held-out set</button>
+      <button class="qopt" type="button">C · The most reliant models score visibly worse, which is how a careful reviewer would spot them</button>
+      <p class="qwhy">The shortcut works on the held-out rows too, so leaning on it neither helps nor hurts the number that gets reported. The models are indistinguishable where everybody looks and range from heavy to total dependence underneath. Session 3 measures the spread this produces once the arrangement changes.</p>
+    </div>
+
+    <div class="quiz-q" data-answer="2">
+      <p class="qtext">Why measure reliance by flipping the ward rather than by reading the model's weight on it?</p>
+      <button class="qopt" type="button">A · Because regularisation distorts coefficients, so any weight read off a trained model is untrustworthy</button>
+      <button class="qopt" type="button">B · Because flipping a column is faster to compute than inspecting a weight matrix</button>
+      <button class="qopt" type="button">C · Because with twelve hidden units there is no single coefficient for the ward, and the flip answers the behavioural question directly</button>
+      <p class="qwhy">The ward's influence is spread over twelve incoming weights, recombined through twelve outgoing ones, and passed through a nonlinearity, so there is no number to read. The flip asks what the model does instead of what its parameters mean, and it keeps working on a model nobody can inspect at all.</p>
+    </div>
+    <p class="quiz-score"></p>
+  </section>
+
+  <!-- ============ HOMEWORK ============ -->
+  <section class="section" id="homework">
+    <div class="section-kicker">
+      <span class="klabel">Homework</span>
+      <h2>Before session 3</h2>
+      <span class="tag time">30 min</span>
+    </div>
+    <div class="callout">
+      <p>Run tonight's two blocks over ten seeds instead of five and keep the printout: held-out accuracy and reliance side by side, one row per seed. Look at the two columns and write one sentence about what varies and what does not. Then write down, in advance, what you expect to happen to those same ten models on the shifted set. Session 3 runs twenty seeds and measures both spreads, and a prediction you wrote before the run is worth more than any amount of agreement afterwards.</p>
+    </div>
+  </section>
+
+  <!-- ============ COVERAGE ============ -->
+  <section class="section" id="official">
+    <div class="section-kicker">
+      <span class="klabel">Sources covered</span>
+      <h2>What tonight maps to</h2>
+    </div>
+    <div class="covered">
+      <div class="covered-row">
+        <span class="status pill solid">✓</span>
+        <span class="name">Shortcut against leak</span>
+        <span class="note">The ward is available before the outcome is known, so it is a feature whose usefulness depends on an arrangement, not leakage. The two failures get different fixes.</span>
+      </div>
+      <div class="covered-row">
+        <span class="status pill solid">✓</span>
+        <span class="name">Behavioural reliance, measured</span>
+        <span class="note">Flip the ward on every patient, hold everything else fixed, count the changed predictions. Across twenty seeds at Thornbury this runs from 0.70 to 1.00 while held-out accuracy stays at about 0.949.</span>
+      </div>
+      <div class="covered-row">
+        <span class="status pill solid">✓</span>
+        <span class="name">Why weight inspection does not answer it</span>
+        <span class="note">With twelve tanh hidden units there is no single coefficient for the ward; the behavioural measure answers the question directly and survives an unreadable model.</span>
+      </div>
+      <div class="covered-row">
+        <span class="status pill solid">✓</span>
+        <span class="name">How the deployment world is designed</span>
+        <span class="note">The shortcut decays from 90 percent agreement to 50 percent rather than vanishing. A shortcut that reverses would be worse and is not modelled.</span>
+      </div>
+      <div class="covered-row">
+        <span class="status pill solid">✓</span>
+        <span class="name">The standing pair</span>
+        <span class="note">Mean held-out 0.949 against mean shifted 0.765 across the five data draws, quoted together for the rest of the track.</span>
+      </div>
+      <div class="covered-row">
+        <span class="status pill light">◐</span>
+        <span class="name">Twenty seeds and the spread that follows</span>
+        <span class="note">Session 3 runs the full bench: identical held-out scores, divergent shifted scores, and the ratio between the two spreads.</span>
+      </div>
+      <div class="covered-row">
+        <span class="status pill light">◐</span>
+        <span class="name">Designing the shifted set</span>
+        <span class="note">Session 4. What a stress test can and cannot establish.</span>
+      </div>
+      <div class="covered-row">
+        <span class="status pill inkpill">·</span>
+        <span class="name">Leak mechanics inside one validation</span>
+        <span class="note">Not covered by design. <strong>learn-model-risk-with-phoebe</strong> p3 owns timing, how a post-outcome field reaches a feature list, and filing it as a validation finding.</span>
+      </div>
+      <div class="covered-row">
+        <span class="status pill inkpill">·</span>
+        <span class="name">Memorization, random labels and double descent</span>
+        <span class="note">Not covered by design. <strong>learn-deep-learning-with-phoebe</strong> session 05 owns how a network can fit noise and what the interpolation threshold means.</span>
+      </div>
+      <div class="covered-row">
+        <span class="status pill inkpill">·</span>
+        <span class="name">Metric definitions and drift detection</span>
+        <span class="note">Not covered by design. <strong>learn-model-evaluation-with-phoebe</strong> defines every metric and owns monitoring.</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ CHEAT SHEET ============ -->
+  <section class="cheat" id="cheatsheet">
+    <h3>Session 2 cheat sheet</h3>
+    <div class="grid-2">
+      <div class="cheat-item"><b>The clock decides</b><span>Known before the outcome means feature, not leak. Availability and durability are different properties.</span></div>
+      <div class="cheat-item"><b>Different fixes</b><span>A leak is removed and the validation re-run. A shortcut is measured, then stress tested.</span></div>
+      <div class="cheat-item"><b>Reliance in four lines</b><span>Copy the matrix twice, set the feature to 0 and to 1, predict both, take the mean disagreement.</span></div>
+      <div class="cheat-item"><b>0.70 to 1.00</b><span>The reliance range across twenty seeds. Same data, same architecture, only the seed differs.</span></div>
+      <div class="cheat-item"><b>All of them score 0.949</b><span>The held-out number is constant across that whole range, which is why it cannot rank them.</span></div>
+      <div class="cheat-item"><b>Weights will not tell you</b><span>Twelve hidden units and a nonlinearity leave no coefficient to read. Ask what the model does.</span></div>
+      <div class="cheat-item"><b>Decay, not reversal</b><span>Agreement falls from 90 percent to 50 percent. A shortcut that reversed would cost more and is not modelled.</span></div>
+      <div class="cheat-item"><b>Report it unprompted</b><span>Accuracy plus reliance. Two models at 0.949 with reliance 1.00 and 0.15 are not the same object.</span></div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="pagefoot">
+  <div class="wrap">
+    <p>Practitioner session 2 of 10 · learn-ml-epistemology-with-phoebe · by Phoebe Fu</p>
+    <nav class="pagenav">
+      <a href="p1-the-assumption-under-the-split.html">← Practitioner session 1 · The assumption under the split</a>
+      <a href="p3-twenty-seeds-one-pipeline.html">Practitioner session 3 · Twenty seeds, one pipeline →</a>
+    </nav>
+  </div>
+</footer>
+
+<script src="../assets/app.js?v=2"></script>
+</body>
+</html>

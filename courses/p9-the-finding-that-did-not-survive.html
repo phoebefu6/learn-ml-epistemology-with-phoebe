@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- social:start -->
+<meta name="description" content="Practitioner session 9 of 10. A first run of the underspecification bench gave a correlation of -0.89 and a dramatic headline. The fourth data draw returned +0.09 and the headline was gone. What survived, and how to test your own claim before you publish it.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Learn with Phoebe">
+<meta property="og:title" content="The finding that did not survive - learn ML epistemology with phoebe">
+<meta property="og:description" content="Practitioner session 9 of 10. One draw produced the headline, one more removed it. A single-draw finding is a hypothesis.">
+<meta property="og:url" content="https://phoebefu6.github.io/learn-ml-epistemology-with-phoebe/courses/p9-the-finding-that-did-not-survive.html">
+<meta property="og:image" content="https://phoebefu6.github.io/learn-ml-epistemology-with-phoebe/assets/og-cover.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="The finding that did not survive - learn ML epistemology with phoebe">
+<meta name="twitter:description" content="corr -0.89 on draw 1, corr +0.09 on draw 4. The spread ratio held in all five.">
+<meta name="twitter:image" content="https://phoebefu6.github.io/learn-ml-epistemology-with-phoebe/assets/og-cover.png">
+<!-- social:end -->
+<title>Practitioner session 9 · The finding that did not survive - learn ML epistemology with phoebe</title>
+<link rel="stylesheet" href="../assets/style.css?v=2">
+</head>
+<body>
+
+<div class="toolbar">
+  <div class="wrap">
+    <span class="crumb"><a href="../index.html">learn-ml-epistemology-with-phoebe</a> / Practitioner session 9 of 10</span>
+    <button class="btn" id="toggle-all" type="button">Expand all</button>
+    <button class="btn primary" id="zoom-toggle" type="button">Projector zoom: off</button>
+  </div>
+</div>
+
+<header class="masthead">
+  <div class="wrap">
+    <div class="eyebrow">Learn ML Epistemology with Phoebe · Practitioner session 9 of 10</div>
+    <h1>The finding that <span class="accent">did not survive</span></h1>
+    <p class="sub">The first run of the Thornbury underspecification bench produced a correlation of -0.89 between held-out accuracy and shifted accuracy. That is a clean, strong, quotable result, and it supports a genuinely dramatic claim: the best model on the held-out set is the worst under shift. It was written down. Then the bench was run on a fourth data draw and the correlation came back at +0.09. Nothing in the pipeline had changed. Tonight is the autopsy: what died, what survived all five draws, and the procedure that would have caught it before anybody read it.</p>
+    <div class="chip-row">
+      <span class="chip level">🔴 Hardest</span>
+      <span class="chip audience">Anyone who writes findings other people act on</span>
+      <span class="chip audience">Reviewers and second readers</span>
+      <span class="chip time">45 min</span>
+    </div>
+    <div class="agenda">
+      <span class="a1" style="flex:1">0-3 · Welcome</span>
+      <span class="a2" style="flex:4">3-23 · Five draws, one autopsy</span>
+      <span class="a3" style="flex:2">23-29 · How many draws</span>
+      <span class="a4" style="flex:5">29-45 · Build-along: kill your own claim</span>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <!-- ============ INTRO ============ -->
+  <section class="section" id="intro">
+    <div class="section-kicker">
+      <span class="klabel">Part 0</span>
+      <h2>Where tonight sits</h2>
+    </div>
+    <p class="lede">Eight sessions have gone after other people's numbers: the split, the shortcut, the seeds, the stress test, the selection, the test-set size, the benchmark, the leak. Tonight the target is your own. The bench in session 3 nearly shipped a finding that was not there, it was caught by an extra run rather than by any review step, and the whole episode is the shortest available demonstration of what the earlier sessions have been arguing.</p>
+
+    <div class="legend">
+      <span class="pill">Live = presented in the 45 minutes</span>
+      <span class="pill">Self-study = the full depth, after class</span>
+      <span class="pill">🔍 Every diagram zooms</span>
+    </div>
+
+    <div class="callout win">
+      <p><strong>★ What you walk out with tonight.</strong> The five-draw table of the underspecification bench and the ability to say exactly which row of it is a finding and which is a coincidence. A procedure for testing your own claim before anybody else sees it: re-run across draws, report the range instead of the point, and put the draw count next to the number. And a way to write up a result whose headline has died without pretending it never existed.</p>
+    </div>
+
+    <details class="card" open>
+      <summary><span class="mode live">Live</span>What actually happened<span class="mini">4 min</span><span class="caret">▶</span></summary>
+      <div class="body">
+        <p>The bench trains twenty models on one data draw. The only difference between them is the random seed, which sets the initial weights and the order examples arrive in. Each model is scored twice: on 2,000 held-out patients from the collection year, and on 2,000 patients from the deployment year after the wards were reorganised. Twenty pairs of numbers, one correlation.</p>
+        <p>On the first draw that correlation was -0.89. Read plainly, it says the models that look best where you measured are the models that do worst where you did not, which would make held-out ranking actively misleading and would be the single most useful thing the bench could produce. The number was real, the code was right, and the finding was wrong.</p>
+        <div class="callout example">
+          <span class="ex-pill">Real world</span>
+          <p>Draw 2 came back at +0.03 and could have been read as noise around a mostly negative effect. Draw 3 came back at -0.87, which looked like confirmation. Draw 4 came back at +0.09. Four draws in, the sign had crossed zero twice and the claim had no support left. The cost of finding that out was three extra runs of a bench that takes minutes.</p>
+        </div>
+      </div>
+    </details>
+
+    <details class="card">
+      <summary><span class="mode self">Self-study</span>Draw, seed, split: what varies and what does not<span class="mini">3 min</span><span class="caret">▶</span></summary>
+      <div class="body">
+        <ul>
+          <li><strong>A seed.</strong> Initial weights and example order. Twenty seeds inside one draw give twenty models on identical data.</li>
+          <li><strong>A data draw.</strong> A fresh sample of the Thornbury world: 4,000 training patients, 2,000 held out, 2,000 shifted. The relationships in the generator do not change, only the sample does.</li>
+          <li><strong>What the correlation is computed over.</strong> The twenty models inside one draw. It is a statistic of twenty points, and it is reported as though it were a property of the pipeline.</li>
+          <li><strong>What stayed fixed across all five draws.</strong> The architecture of 3 inputs, 12 tanh hidden units and 1 logit, the training schedule, and the generator itself.</li>
+          <li><strong>The thing that was never varied in the first run.</strong> The data draw. The finding was a statement about the pipeline, computed on one sample, and nobody noticed the gap until a second sample existed.</li>
+        </ul>
+      </div>
+    </details>
+  </section>
+
+  <!-- ============ PART 1 ============ -->
+  <section class="section" id="part-1">
+    <div class="section-kicker">
+      <span class="klabel">Part 1 · covers the five draws</span>
+      <h2>Five draws, side by side</h2>
+      <span class="tag concept">12 min live</span>
+    </div>
+    <p class="lede">Put the draws in one table and the two kinds of result separate themselves immediately. One column never changes its story. One column cannot keep its sign. Neither is visible from a single run, which is the only view most findings ever get.</p>
+
+    <figure class="zoomable">
+      <svg viewBox="0 0 880 396" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="A five row table of the underspecification bench. Draw 1: held-out spread 0.019, shifted spread 0.051, ratio 2.7 times, correlation -0.89. Draw 2: 0.008, 0.038, 4.8 times, correlation +0.03. Draw 3: 0.012, 0.046, 4.0 times, correlation -0.87. Draw 4: 0.003, 0.034, 11.3 times, correlation +0.09. Draw 5: 0.016, 0.048, 3.0 times, correlation -0.75. A dot plot on the right places each correlation on a scale from -1 to +1, showing the values crossing zero. Robust in five draws out of five: the shifted spread is wider than the held-out spread by 2.7 to 11.3 times. Not robust: the correlation crosses zero.">
+        <style>
+          .p9aH { font: 800 12px Inter, sans-serif; fill: #231A10; }
+          .p9aT { font: 800 11px Inter, sans-serif; fill: #fff; }
+          .p9aK { font: 800 11px Inter, sans-serif; fill: #231A10; }
+          .p9aB { font: 400 11px Inter, sans-serif; fill: #231A10; }
+          .p9aM { font: 400 11px Inter, sans-serif; fill: #6B5B47; }
+          .p9aX { font: 800 11px Inter, sans-serif; fill: #155E75; }
+        </style>
+
+        <text class="p9aH" x="14" y="22">One bench, five data draws. Read the last column top to bottom.</text>
+
+        <rect x="14" y="34" width="852" height="26" rx="6" fill="#713F12"></rect>
+        <text class="p9aT" x="28" y="52">Data draw</text>
+        <text class="p9aT" x="138" y="52">Held-out spread</text>
+        <text class="p9aT" x="254" y="52">Shifted spread</text>
+        <text class="p9aT" x="370" y="52">Ratio</text>
+        <text class="p9aT" x="446" y="52">corr</text>
+        <text class="p9aT" x="516" y="52">corr(held, shifted) placed from -1 to +1</text>
+
+        <line x1="684" y1="66" x2="684" y2="300" stroke="#DCCDB8" stroke-width="1" stroke-dasharray="4 3"></line>
+
+        <rect x="14" y="72" width="852" height="40" rx="8" fill="#EBD9C3" stroke="#D9B892"></rect>
+        <text class="p9aK" x="28" y="97">Draw 1</text>
+        <text class="p9aB" x="138" y="97">0.019</text>
+        <text class="p9aB" x="254" y="97">0.051</text>
+        <text class="p9aB" x="370" y="97">2.7x</text>
+        <text class="p9aK" x="446" y="97">-0.89</text>
+        <line x1="684" y1="92" x2="535" y2="92" stroke="#6B5B47" stroke-width="1.5"></line>
+        <circle cx="535" cy="92" r="6" fill="#4A2A0C"></circle>
+
+        <rect x="14" y="118" width="852" height="40" rx="8" fill="#FBF6EF" stroke="#DCCDB8"></rect>
+        <text class="p9aK" x="28" y="143">Draw 2</text>
+        <text class="p9aB" x="138" y="143">0.008</text>
+        <text class="p9aB" x="254" y="143">0.038</text>
+        <text class="p9aB" x="370" y="143">4.8x</text>
+        <text class="p9aB" x="446" y="143">+0.03</text>
+        <line x1="684" y1="138" x2="689" y2="138" stroke="#6B5B47" stroke-width="1.5"></line>
+        <circle cx="689" cy="138" r="5" fill="#713F12"></circle>
+
+        <rect x="14" y="164" width="852" height="40" rx="8" fill="#FBF6EF" stroke="#DCCDB8"></rect>
+        <text class="p9aK" x="28" y="189">Draw 3</text>
+        <text class="p9aB" x="138" y="189">0.012</text>
+        <text class="p9aB" x="254" y="189">0.046</text>
+        <text class="p9aB" x="370" y="189">4.0x</text>
+        <text class="p9aB" x="446" y="189">-0.87</text>
+        <line x1="684" y1="184" x2="538" y2="184" stroke="#6B5B47" stroke-width="1.5"></line>
+        <circle cx="538" cy="184" r="5" fill="#713F12"></circle>
+
+        <rect x="14" y="210" width="852" height="40" rx="8" fill="#ECFEFF" stroke="#155E75"></rect>
+        <text class="p9aK" x="28" y="235">Draw 4</text>
+        <text class="p9aB" x="138" y="235">0.003</text>
+        <text class="p9aB" x="254" y="235">0.034</text>
+        <text class="p9aB" x="370" y="235">11.3x</text>
+        <text class="p9aX" x="446" y="235">+0.09</text>
+        <line x1="684" y1="230" x2="699" y2="230" stroke="#155E75" stroke-width="1.5"></line>
+        <circle cx="699" cy="230" r="6" fill="#155E75"></circle>
+
+        <rect x="14" y="256" width="852" height="40" rx="8" fill="#FBF6EF" stroke="#DCCDB8"></rect>
+        <text class="p9aK" x="28" y="281">Draw 5</text>
+        <text class="p9aB" x="138" y="281">0.016</text>
+        <text class="p9aB" x="254" y="281">0.048</text>
+        <text class="p9aB" x="370" y="281">3.0x</text>
+        <text class="p9aB" x="446" y="281">-0.75</text>
+        <line x1="684" y1="276" x2="558" y2="276" stroke="#6B5B47" stroke-width="1.5"></line>
+        <circle cx="558" cy="276" r="5" fill="#713F12"></circle>
+
+        <text class="p9aM" x="510" y="314">-1</text>
+        <text class="p9aM" x="680" y="314">0</text>
+        <text class="p9aM" x="840" y="314">+1</text>
+
+        <rect x="14" y="326" width="852" height="56" rx="9" fill="#ECFEFF" stroke="#155E75"></rect>
+        <text class="p9aX" x="28" y="350">Robust in 5 of 5: the shifted spread is wider than the held-out spread, by 2.7 to 11.3 times.</text>
+        <text class="p9aB" x="28" y="370">Not robust: the correlation crosses zero. Draw 1 says the best model on paper is the worst under shift. Draw 4 says nothing of the kind.</text>
+      </svg>
+      <figcaption>🔍 Click to zoom - two columns from the same runs, and only one of them is a finding.</figcaption>
+    </figure>
+
+    <details class="card">
+      <summary><span class="mode live">Live</span>Why the sign moves<span class="mini">4 min</span><span class="caret">▶</span></summary>
+      <div class="body">
+        <p>The correlation is computed over twenty points, and the spread it is computed across is tiny: on draw 4 the twenty models sit inside a held-out spread of 0.003. Correlating a set of near-identical numbers against anything is a fragile operation, because the ordering of those numbers is close to arbitrary. The bench is not measuring a relationship between two quantities so much as reporting how twenty almost-tied models happened to line up in one sample.</p>
+        <p>That is why the ratio behaves differently. The ratio compares two spreads, which are aggregate quantities, and it is asking a question with a large effect behind it: models that agree to within thousandths where they were measured disagree by hundredths where they were not. Large effects on aggregate quantities survive resampling. Orderings among near-ties do not.</p>
+      </div>
+    </details>
+
+    <details class="card">
+      <summary><span class="mode self">Self-study</span>Two readings of an unstable sign<span class="mini">4 min</span><span class="caret">▶</span></summary>
+      <div class="body">
+        <p><strong>Reading one: there is nothing there.</strong> Held-out accuracy carries essentially no information about shifted accuracy, in either direction. The five values are scatter around no relationship, and the two strongly negative draws are what scatter looks like when you only run it twice.</p>
+        <p><strong>Reading two: the estimate is underpowered.</strong> Twenty models per draw is a small sample for a correlation, so a weak true relationship could be present and invisible at this size. On this reading the bench has not shown there is nothing there; it has shown it cannot see.</p>
+        <p>The bench as it stands cannot separate these, and pretending otherwise would be the same error at a different level. What matters is that both readings forbid the original claim: neither one licenses "the best model on held-out data is the worst under shift". The way to separate them is more models per draw and more draws, which is a decision about what the answer is worth rather than a technical difficulty.</p>
+      </div>
+    </details>
+  </section>
+
+  <!-- ============ PART 2 ============ -->
+  <section class="section" id="part-2">
+    <div class="section-kicker">
+      <span class="klabel">Part 2 · covers what died and what survived</span>
+      <h2>A single-draw finding is a hypothesis</h2>
+      <span class="tag concept">8 min live</span>
+    </div>
+    <p class="lede">The run that produced -0.89 was not sloppy. It was a correctly computed statistic on correctly generated data, and everything about it looked like a result. The only thing missing was a second sample, and a second sample is the cheapest object in the entire pipeline.</p>
+
+    <figure class="zoomable">
+      <svg viewBox="0 0 880 284" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Five stages in a row. Draw 1 gives correlation -0.89, clean and quotable. The headline: best on held-out is worst under shift. Draw 4 gives correlation +0.09 with the same pipeline and a new data draw. The headline dies: the sign moved, so the claim was never there to be found. What survived: the ratio of 2.7 to 11.3 times, in five draws out of five. One data draw produced the finding and one more removed it.">
+        <style>
+          .p9bH { font: 800 12px Inter, sans-serif; fill: #231A10; }
+          .p9bT { font: 800 11px Inter, sans-serif; fill: #fff; }
+          .p9bB { font: 400 11px Inter, sans-serif; fill: #231A10; }
+          .p9bM { font: 400 11px Inter, sans-serif; fill: #6B5B47; }
+          .p9bX { font: 800 11px Inter, sans-serif; fill: #155E75; }
+        </style>
+        <defs>
+          <marker id="p9bAr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#6B5B47"></path></marker>
+        </defs>
+
+        <text class="p9bH" x="14" y="22">The life of a headline, from Tuesday to Thursday.</text>
+
+        <rect x="14" y="56" width="154" height="104" rx="9" fill="#FBF6EF" stroke="#DCCDB8"></rect>
+        <rect x="14" y="56" width="154" height="24" rx="9" fill="#713F12"></rect>
+        <text class="p9bT" x="28" y="73">Draw 1</text>
+        <text class="p9bB" x="28" y="104">corr -0.89</text>
+        <text class="p9bM" x="28" y="122">Clean and quotable</text>
+
+        <line x1="170" y1="108" x2="186" y2="108" stroke="#6B5B47" stroke-width="1.6" marker-end="url(#p9bAr)"></line>
+
+        <rect x="188" y="56" width="154" height="104" rx="9" fill="#FBF6EF" stroke="#DCCDB8"></rect>
+        <rect x="188" y="56" width="154" height="24" rx="9" fill="#713F12"></rect>
+        <text class="p9bT" x="202" y="73">The headline</text>
+        <text class="p9bB" x="202" y="104">Best on held-out is</text>
+        <text class="p9bB" x="202" y="122">worst under shift</text>
+        <text class="p9bM" x="202" y="140">Written down</text>
+
+        <line x1="344" y1="108" x2="360" y2="108" stroke="#6B5B47" stroke-width="1.6" marker-end="url(#p9bAr)"></line>
+
+        <rect x="362" y="56" width="154" height="104" rx="9" fill="#FBF6EF" stroke="#DCCDB8"></rect>
+        <rect x="362" y="56" width="154" height="24" rx="9" fill="#713F12"></rect>
+        <text class="p9bT" x="376" y="73">Draw 4</text>
+        <text class="p9bB" x="376" y="104">corr +0.09</text>
+        <text class="p9bM" x="376" y="122">Same pipeline, new</text>
+        <text class="p9bM" x="376" y="140">data draw</text>
+
+        <line x1="518" y1="108" x2="534" y2="108" stroke="#6B5B47" stroke-width="1.6" marker-end="url(#p9bAr)"></line>
+
+        <rect x="536" y="56" width="154" height="104" rx="9" fill="#FBF6EF" stroke="#DCCDB8"></rect>
+        <rect x="536" y="56" width="154" height="24" rx="9" fill="#713F12"></rect>
+        <text class="p9bT" x="550" y="73">The headline dies</text>
+        <text class="p9bB" x="550" y="104">The sign moved, so</text>
+        <text class="p9bB" x="550" y="122">the claim was never</text>
+        <text class="p9bB" x="550" y="140">there to be found</text>
+
+        <line x1="692" y1="108" x2="708" y2="108" stroke="#6B5B47" stroke-width="1.6" marker-end="url(#p9bAr)"></line>
+
+        <rect x="710" y="56" width="156" height="104" rx="9" fill="#ECFEFF" stroke="#155E75"></rect>
+        <rect x="710" y="56" width="156" height="24" rx="9" fill="#155E75"></rect>
+        <text class="p9bT" x="724" y="73">What survived</text>
+        <text class="p9bX" x="724" y="104">Ratio 2.7 to 11.3x</text>
+        <text class="p9bB" x="724" y="122">in five draws out</text>
+        <text class="p9bB" x="724" y="140">of five</text>
+
+        <rect x="14" y="180" width="852" height="40" rx="9" fill="#FBF6EF" stroke="#DCCDB8"></rect>
+        <text class="p9bB" x="28" y="205">One data draw produced the finding. One more data draw was the entire cost of removing it, and it was paid by accident.</text>
+
+        <rect x="14" y="228" width="852" height="40" rx="9" fill="#ECFEFF" stroke="#155E75"></rect>
+        <text class="p9bX" x="28" y="253">A finding worth a headline is a finding that needs more draws, not fewer.</text>
+      </svg>
+      <figcaption>🔍 Click to zoom - nothing between stage two and stage four was a mistake. Stage two was simply premature.</figcaption>
+    </figure>
+
+    <details class="card">
+      <summary><span class="mode live">Live</span>What to do when the headline dies<span class="mini">4 min</span><span class="caret">▶</span></summary>
+      <div class="body">
+        <p>The instinct is to delete the dead claim and publish the survivor as though it had always been the point. That loses the most transferable thing in the episode. The write-up that helps a reader is the one that keeps the robust claim and reports the dead one next to it: here is what held in five draws out of five, here is what looked stronger on one draw and did not survive, and here is the number that killed it.</p>
+        <p>Reporting the death costs one sentence and buys two things. A reader who half-remembers the dramatic version from somewhere else is told directly that it did not replicate, and the next person to run this bench and see -0.89 on their first draw knows what they are looking at. Both of those are worth more than the appearance of having been right the first time.</p>
+        <div class="callout example">
+          <span class="ex-pill">Real world</span>
+          <p>The surviving claim: across five data draws, the shifted spread was wider than the held-out spread every time, by 2.7 to 11.3 times, with mean held-out accuracy 0.949 and mean shifted accuracy 0.765. The reported death: the correlation between held-out and shifted accuracy ran from -0.89 to +0.09 across the same five draws, so the stronger claim that held-out ranking inverts under shift is not supported.</p>
+        </div>
+      </div>
+    </details>
+
+    <details class="card">
+      <summary><span class="mode self">Self-study</span>The near-miss was caught by luck, not by process<span class="mini">3 min</span><span class="caret">▶</span></summary>
+      <div class="body">
+        <p>Nothing in a normal review would have found this. The code was correct, the statistic was the right one, the data generator was documented, and a reader checking the arithmetic would have confirmed -0.89. Code review, a second pair of eyes and a reproducibility check all pass on a result computed from a single sample, because all three verify that the number is what the run produced.</p>
+        <p>The only thing that catches it is resampling, and resampling has to be a standing habit rather than a response to suspicion, because suspicion attaches to results that look wrong. This one looked right.</p>
+      </div>
+    </details>
+  </section>
+
+  <!-- ============ PART 3 ============ -->
+  <section class="section" id="part-3">
+    <div class="section-kicker">
+      <span class="klabel">Part 3 · covers the asymmetry</span>
+      <h2>A dramatic result deserves more draws than a boring one</h2>
+      <span class="tag concept">6 min live</span>
+    </div>
+    <p class="lede">Effort spent on replication is usually distributed by how suspicious a result looks. It should be distributed by how much the result would change what somebody does, which is close to the opposite rule in practice.</p>
+
+    <figure class="zoomable">
+      <svg viewBox="0 0 880 268" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="A rising staircase over a left to right axis measuring how much a finding would change what somebody does. A finding that confirms what you expected needs only the draws you already ran. A finding that moves a number somebody will act on needs five draws before it is written down. A finding that reverses the advice needs five draws and then a deliberate attempt to break it, because the stronger a result, the more ways there are for it to be an accident.">
+        <style>
+          .p9cH { font: 800 12px Inter, sans-serif; fill: #231A10; }
+          .p9cK { font: 800 11px Inter, sans-serif; fill: #231A10; }
+          .p9cB { font: 400 11px Inter, sans-serif; fill: #231A10; }
+          .p9cM { font: 400 11px Inter, sans-serif; fill: #6B5B47; }
+        </style>
+        <defs>
+          <marker id="p9cAr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#6B5B47"></path></marker>
+        </defs>
+
+        <text class="p9cH" x="14" y="22">How many draws before you write it down</text>
+        <text class="p9cM" x="14" y="40">Left to right: how much the finding would change what somebody does.</text>
+
+        <rect x="40" y="142" width="250" height="44" rx="9" fill="#FBF6EF" stroke="#DCCDB8"></rect>
+        <text class="p9cK" x="54" y="162">Confirms what you expected</text>
+        <text class="p9cM" x="54" y="178">The draws you already ran</text>
+
+        <rect x="310" y="112" width="250" height="74" rx="9" fill="#EBD9C3" stroke="#D9B892"></rect>
+        <text class="p9cK" x="324" y="132">Moves a number somebody</text>
+        <text class="p9cK" x="324" y="148">will act on</text>
+        <text class="p9cM" x="324" y="168">Five draws before it is written</text>
+
+        <rect x="580" y="76" width="260" height="110" rx="9" fill="#ECFEFF" stroke="#155E75"></rect>
+        <text class="p9cK" x="594" y="96">Reverses the advice</text>
+        <text class="p9cM" x="594" y="116">Five draws, and then look for</text>
+        <text class="p9cM" x="594" y="132">a way to break it that you did</text>
+        <text class="p9cM" x="594" y="148">not plan. The stronger a result,</text>
+        <text class="p9cM" x="594" y="164">the more ways there are for it</text>
+        <text class="p9cM" x="594" y="180">to be an accident.</text>
+
+        <line x1="40" y1="196" x2="850" y2="196" stroke="#6B5B47" stroke-width="1.6" marker-end="url(#p9cAr)"></line>
+        <text class="p9cM" x="40" y="214">Nobody would act differently</text>
+        <text class="p9cM" x="850" y="214" text-anchor="end">Somebody would act differently tomorrow</text>
+
+        <rect x="14" y="224" width="852" height="36" rx="9" fill="#FBF6EF" stroke="#DCCDB8"></rect>
+        <text class="p9cB" x="28" y="247">Most write-ups run this backwards: the surprising result is published fastest, because it is the one somebody wants to tell.</text>
+      </svg>
+      <figcaption>🔍 Click to zoom - the budget for killing a finding should scale with what believing it would cost.</figcaption>
+    </figure>
+
+    <details class="card">
+      <summary><span class="mode live">Live</span>Five draws is a floor, not a ritual<span class="mini">3 min</span><span class="caret">▶</span></summary>
+      <div class="body">
+        <p>Five is enough to see a sign change and not enough to estimate anything precisely. It earns its place as a floor because it is cheap for a bench that runs in minutes, and because a claim that cannot survive five samples of its own data was never going to survive somebody else's. For a finding that would change a deployment decision, five is the point at which you start looking for a way to break it, not the point at which you stop.</p>
+        <p>The number also has to be reported. A range from five draws and the same range from fifty mean different things, and a reader cannot tell them apart unless the count is written next to the finding.</p>
+      </div>
+    </details>
+  </section>
+
+  <!-- ============ PART 4 ============ -->
+  <section class="section" id="part-4">
+    <div class="section-kicker">
+      <span class="klabel">Part 4 · build-along</span>
+      <h2>Try to kill your own claim</h2>
+      <span class="tag build">16 min build-along</span>
+    </div>
+    <p class="lede">Bring a finding your team produced in the last quarter: a lift, a comparison, an ablation, a correlation, anything somebody quoted. The exercise is to work out what you held fixed by accident, and what the claim would look like written honestly if you had varied it.</p>
+
+    <figure class="zoomable">
+      <svg viewBox="0 0 880 290" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="The same bench written two ways. One run, one number, no draw count: held-out accuracy anti-predicts accuracy under shift, correlation -0.89. Five draws, a range and the count beside it: across five data draws the correlation between held-out and shifted accuracy ran from -0.89 to +0.09, so the bench shows no stable relationship, while the spread ratio held in all five draws at 2.7 to 11.3 times. Three rules follow: re-run across draws, report the range rather than the point, and state the draw count.">
+        <style>
+          .p9dH { font: 800 12px Inter, sans-serif; fill: #231A10; }
+          .p9dQ { font: 800 12px Inter, sans-serif; fill: #231A10; }
+          .p9dK { font: 800 11px Inter, sans-serif; fill: #231A10; }
+          .p9dB { font: 400 11px Inter, sans-serif; fill: #231A10; }
+          .p9dM { font: 400 11px Inter, sans-serif; fill: #6B5B47; }
+          .p9dX { font: 800 11px Inter, sans-serif; fill: #155E75; }
+        </style>
+
+        <text class="p9dH" x="14" y="22">The same runs, written two ways.</text>
+
+        <rect x="14" y="34" width="852" height="64" rx="9" fill="#FBF6EF" stroke="#DCCDB8"></rect>
+        <text class="p9dM" x="28" y="56">One run, one number, no draw count</text>
+        <text class="p9dQ" x="28" y="80">"Held-out accuracy anti-predicts accuracy under shift (corr -0.89)."</text>
+
+        <rect x="14" y="110" width="852" height="84" rx="9" fill="#ECFEFF" stroke="#155E75"></rect>
+        <text class="p9dX" x="28" y="132">Five draws, a range, and the count beside it</text>
+        <text class="p9dB" x="28" y="154">"Across five data draws the correlation between held-out and shifted accuracy ran from -0.89 to +0.09,</text>
+        <text class="p9dB" x="28" y="172">so this bench shows no stable relationship. The spread ratio held in all five draws, at 2.7 to 11.3 times."</text>
+
+        <rect x="14" y="210" width="280" height="66" rx="9" fill="#FDFBF7" stroke="#DCCDB8"></rect>
+        <text class="p9dK" x="28" y="232">Re-run across draws</text>
+        <text class="p9dM" x="28" y="252">Vary what you held fixed by</text>
+        <text class="p9dM" x="28" y="268">accident, not only the seed.</text>
+
+        <rect x="300" y="210" width="280" height="66" rx="9" fill="#FDFBF7" stroke="#DCCDB8"></rect>
+        <text class="p9dK" x="314" y="232">Report the range</text>
+        <text class="p9dM" x="314" y="252">The point estimate is the least</text>
+        <text class="p9dM" x="314" y="268">durable thing you computed.</text>
+
+        <rect x="586" y="210" width="280" height="66" rx="9" fill="#FDFBF7" stroke="#DCCDB8"></rect>
+        <text class="p9dK" x="600" y="232">State the draw count</text>
+        <text class="p9dM" x="600" y="252">A finding with no n beside it</text>
+        <text class="p9dM" x="600" y="268">cannot be weighed by a reader.</text>
+      </svg>
+      <figcaption>🔍 Click to zoom - the second version is longer by one clause and says something a reader can rely on.</figcaption>
+    </figure>
+
+    <div class="steps">
+      <div class="step"><div><p><strong>Write the claim as one sentence with a number in it.</strong> If it takes three sentences, there is more than one claim and they will need to be killed separately. Underline the number that would have to move for the sentence to be wrong.</p></div></div>
+      <div class="step"><div><p><strong>List everything that was fixed when that number was produced.</strong> The data sample, the seed, the split, the date window, the cohort filter, the library version, the machine. Most of these were never chosen; they were whatever was there.</p></div></div>
+      <div class="step"><div><p><strong>Circle the one you have no reason to trust.</strong> Usually the sample or the window. That is the thing to vary, and the question to ask is not whether it matters but how much the answer moves when it changes.</p></div></div>
+      <div class="step"><div><p><strong>Re-run five times, varying only that.</strong> Keep every run, including the ones that agree. If five is genuinely unaffordable, run two, and write down that you ran two rather than reporting the first as though it were the finding.</p></div></div>
+      <div class="step"><div><p><strong>Check the sign before the size.</strong> A claim whose direction flips across runs is finished and no amount of averaging rescues it. A claim whose direction holds while its size moves is alive and needs a range.</p></div></div>
+      <div class="step"><div><p><strong>Rewrite the sentence as a range with its draw count.</strong> "Between X and Y across five runs" is publishable. "X" is a number somebody got once, and a reader cannot tell which one they are being handed.</p></div></div>
+      <div class="step"><div><p><strong>If the headline died, write both.</strong> Keep the claim that survived, report the one that did not and the run that ended it. The reader who most needs that sentence is the one about to reproduce your first run.</p></div></div>
+    </div>
+
+    <div class="callout tip">
+      <p><strong>The cheapest version, for a pipeline that takes hours instead of minutes.</strong> Two extra runs on two different date windows will catch a sign flip, which is the failure that matters most and the one that survives review most easily. Do it before the finding reaches a slide, because a claim is much harder to withdraw after somebody has repeated it to their own stakeholders.</p>
+    </div>
+  </section>
+
+  <!-- ============ QUIZ ============ -->
+  <section class="section" id="quiz">
+    <div class="section-kicker">
+      <span class="klabel">Check yourself</span>
+      <h2>Three questions</h2>
+    </div>
+
+    <div class="quiz-q" data-answer="2">
+      <p class="qtext">Your first run of the bench returns a correlation of -0.89 between held-out and shifted accuracy. What do you have?</p>
+      <button class="qopt" type="button">A · A finding, since the correlation is strong and the computation is correct</button>
+      <button class="qopt" type="button">B · An error, since a correlation that strong on real data is almost always a bug in the code</button>
+      <button class="qopt" type="button">C · A hypothesis about the pipeline, computed on one sample, which needs more draws before it can be written as a result</button>
+      <p class="qwhy">The number was correct and the code was right. What was missing was a second sample: the statistic describes how twenty near-tied models happened to line up in one draw, and draws 2 and 4 both came back positive. Strength is not stability, and only resampling can tell the two apart.</p>
+    </div>
+
+    <div class="quiz-q" data-answer="1">
+      <p class="qtext">Across the five draws, which result can be written down as a finding?</p>
+      <button class="qopt" type="button">A · Held-out accuracy is uncorrelated with shifted accuracy, since the five correlations average close to zero</button>
+      <button class="qopt" type="button">B · The shifted spread is wider than the held-out spread, by 2.7 to 11.3 times, in five draws out of five</button>
+      <button class="qopt" type="button">C · The tighter the held-out spread, the larger the ratio, since draw 4 has the tightest spread and the largest ratio</button>
+      <p class="qwhy">The ratio holds in every draw and compares two aggregate quantities, so it survives resampling. Averaging the five correlations hides that their sign moves, and a relationship between spread and ratio built from one extreme draw is the same single-draw mistake in a new place.</p>
+    </div>
+
+    <div class="quiz-q" data-answer="0">
+      <p class="qtext">A dramatic result and a boring result both come out of the same afternoon's work. How should replication effort be split?</p>
+      <button class="qopt" type="button">A · More on the dramatic one, because it would change what somebody does and a strong result has more ways to be an accident</button>
+      <button class="qopt" type="button">B · Equally, because treating results differently by how they look is how bias enters the analysis</button>
+      <button class="qopt" type="button">C · More on the boring one, because the dramatic result is self-evidently important and will be scrutinised by readers anyway</button>
+      <p class="qwhy">The cost of being wrong scales with how much the finding would change behaviour, and the dramatic result is the one that travels before anybody checks it. Equal effort sounds even-handed and spends the same budget on a claim nobody will act on as on one that reverses the advice.</p>
+    </div>
+    <p class="quiz-score"></p>
+  </section>
+
+  <!-- ============ HOMEWORK ============ -->
+  <section class="section" id="homework">
+    <div class="section-kicker">
+      <span class="klabel">Homework</span>
+      <h2>Before session 10</h2>
+      <span class="tag time">40 min</span>
+    </div>
+    <div class="callout">
+      <p>Take the most quoted number your team produced this quarter and re-run whatever produced it on a different sample: another date window, another cohort, another random split. One extra run is enough to learn something. Write the result as a range with the run count next to it, and if the direction moved, write the sentence that says so. Bring both versions of the sentence to session 10, where the falsifier gets written before the bench runs rather than after.</p>
+    </div>
+  </section>
+
+  <!-- ============ COVERAGE ============ -->
+  <section class="section" id="official">
+    <div class="section-kicker">
+      <span class="klabel">Sources covered</span>
+      <h2>What tonight maps to</h2>
+    </div>
+    <div class="covered">
+      <div class="covered-row">
+        <span class="status pill solid">✓</span>
+        <span class="name">The finding that did not survive</span>
+        <span class="note">corr -0.89 on draw 1 and +0.09 on draw 4, with the full five-draw sequence and why the sign moves at all.</span>
+      </div>
+      <div class="covered-row">
+        <span class="status pill solid">✓</span>
+        <span class="name">What is robust across all five draws</span>
+        <span class="note">The shifted spread wider than the held-out spread by 2.7 to 11.3 times, with mean held-out accuracy 0.949 and mean shifted accuracy 0.765.</span>
+      </div>
+      <div class="covered-row">
+        <span class="status pill solid">✓</span>
+        <span class="name">The replication asymmetry</span>
+        <span class="note">Why a result that would change a decision earns more draws than one that confirms what everybody expected.</span>
+      </div>
+      <div class="covered-row">
+        <span class="status pill solid">✓</span>
+        <span class="name">The procedure</span>
+        <span class="note">Re-run across draws, report the range rather than the point, state the draw count, and report the dead headline alongside the surviving claim.</span>
+      </div>
+      <div class="covered-row">
+        <span class="status pill light">◐</span>
+        <span class="name">Running the bench yourself</span>
+        <span class="note">Session 3 builds it and session 10 runs both panes live, including the draw selector that produced these five rows.</span>
+      </div>
+      <div class="covered-row">
+        <span class="status pill inkpill">·</span>
+        <span class="name">Memorization, random labels and double descent</span>
+        <span class="note">Not covered by design. <strong>learn-deep-learning-with-phoebe</strong> session 05 owns them.</span>
+      </div>
+      <div class="covered-row">
+        <span class="status pill inkpill">·</span>
+        <span class="name">Metric definitions and drift detection</span>
+        <span class="note">Not covered by design. <strong>learn-model-evaluation-with-phoebe</strong> defines the metrics and owns monitoring.</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ CHEAT SHEET ============ -->
+  <section class="cheat" id="cheatsheet">
+    <h3>Session 9 cheat sheet</h3>
+    <div class="grid-2">
+      <div class="cheat-item"><b>-0.89 then +0.09</b><span>Draw 1 gave the headline, draw 4 removed it. Nothing in the pipeline changed.</span></div>
+      <div class="cheat-item"><b>One draw is a hypothesis</b><span>A correct statistic on one sample is not yet a result about the pipeline.</span></div>
+      <div class="cheat-item"><b>The ratio survived</b><span>2.7 to 11.3 times, in five draws out of five. Aggregate effects survive resampling.</span></div>
+      <div class="cheat-item"><b>Orderings among near-ties</b><span>On draw 4 the held-out spread was 0.003. Correlating near-identical numbers is fragile by construction.</span></div>
+      <div class="cheat-item"><b>Check the sign first</b><span>A direction that flips across runs ends the claim. A size that moves needs a range.</span></div>
+      <div class="cheat-item"><b>Report the range and the n</b><span>"Between X and Y across five runs" can be weighed. "X" cannot.</span></div>
+      <div class="cheat-item"><b>Dramatic earns more draws</b><span>Effort should scale with what believing the result would change, not with how suspicious it looks.</span></div>
+      <div class="cheat-item"><b>Publish the death</b><span>Keep the robust claim, report the one that died and the run that ended it.</span></div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="pagefoot">
+  <div class="wrap">
+    <p>Practitioner session 9 of 10 · learn-ml-epistemology-with-phoebe · by Phoebe Fu</p>
+    <nav class="pagenav">
+      <a href="p8-leakage-at-field-scale.html">← Practitioner session 8 · Leakage at the scale of a field</a>
+      <a href="p10-the-credibility-bench.html">Practitioner session 10 · The credibility bench →</a>
+    </nav>
+  </div>
+</footer>
+
+<script src="../assets/app.js?v=2"></script>
+</body>
+</html>

@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- social:start -->
+<meta name="description" content="Leader session 5 of 6. Kapoor and Narayanan found leakage in 17 fields, collectively affecting 294 papers, with a taxonomy of eight types. When a failure is that widely distributed it is structural, and the right response is a checklist rather than a judgement about the authors.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Learn with Phoebe">
+<meta property="og:title" content="A whole literature, wrong the same way - learn ML epistemology with phoebe">
+<meta property="og:description" content="Leader session 5 of 6. Leakage at the scale of a field, and what to do about evidence you did not produce.">
+<meta property="og:url" content="https://phoebefu6.github.io/learn-ml-epistemology-with-phoebe/courses/a5-a-whole-literature-wrong.html">
+<meta property="og:image" content="https://phoebefu6.github.io/learn-ml-epistemology-with-phoebe/assets/og-cover.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="A whole literature, wrong the same way - learn ML epistemology with phoebe">
+<meta name="twitter:description" content="294 papers. 17 fields. Eight types of leakage. Nearly three hundred teams did not all get careless at once.">
+<meta name="twitter:image" content="https://phoebefu6.github.io/learn-ml-epistemology-with-phoebe/assets/og-cover.png">
+<!-- social:end -->
+<title>Leader session 5 · A whole literature, wrong the same way - learn ML epistemology with phoebe</title>
+<link rel="stylesheet" href="../assets/style.css?v=2">
+</head>
+<body>
+
+<div class="toolbar">
+  <div class="wrap">
+    <span class="crumb"><a href="../index.html">learn-ml-epistemology-with-phoebe</a> / Leader session 5 of 6</span>
+    <button class="btn" id="toggle-all" type="button">Expand all</button>
+    <button class="btn primary" id="zoom-toggle" type="button">Projector zoom: off</button>
+  </div>
+</div>
+
+<header class="masthead">
+  <div class="wrap">
+    <div class="eyebrow">Learn ML Epistemology with Phoebe · Leader session 5 of 6</div>
+    <h1>A whole literature, <span class="accent">wrong the same way</span></h1>
+    <p class="sub">In 2023 Kapoor and Narayanan published a survey in Patterns with a finding that is hard to read calmly. They found leakage in 17 fields, collectively affecting 294 papers, and organised what they found into a taxonomy of eight types running from textbook errors to open research problems. Nearly three hundred published results, across seventeen disciplines, failed in the same way. Tonight is not about blaming any of those teams, and it is not about how to find a leak inside one model. It is about what a leader should do with a body of evidence they did not produce, now that the base rate of this particular flaw is known to be high.</p>
+    <div class="chip-row">
+      <span class="chip level">🔴 Hardest</span>
+      <span class="chip audience">Whoever cites published results in a decision</span>
+      <span class="chip audience">Anyone approving work built on somebody else's finding</span>
+      <span class="chip time">45 min</span>
+    </div>
+    <div class="agenda">
+      <span class="a1" style="flex:1">0-3 · Welcome</span>
+      <span class="a2" style="flex:5">3-20 · A failure at the scale of a field</span>
+      <span class="a3" style="flex:4">20-40 · Build-along: the Monday question</span>
+      <span class="a4" style="flex:1">40-45 · Q&amp;A</span>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <!-- ============ INTRO ============ -->
+  <section class="section" id="intro">
+    <div class="section-kicker">
+      <span class="klabel">Part 0</span>
+      <h2>Where tonight sits</h2>
+    </div>
+    <p class="lede">Session 1 laid out three links carrying a score to a decision, and the second of them was <strong>an untouched draw</strong>: the test rows did not help choose the model, and nothing about the answer was already sitting in the inputs. Session 4 asked what a published benchmark number licenses. Tonight takes the second link and the published literature at the same time, because leakage is that link failing in the harshest possible way and it has been found at a scale nobody expected. Session 6 closes the track with the question that makes all of this operational: what would change your mind, written down before the result arrives.</p>
+
+    <div class="legend">
+      <span class="pill">Live = presented in the 45 minutes</span>
+      <span class="pill">Self-study = the full depth, after class</span>
+      <span class="pill">🔍 Every diagram zooms</span>
+    </div>
+
+    <div class="callout win">
+      <p><strong>★ What you walk out with tonight.</strong> Three numbers you can cite from memory: 17 fields, 294 papers, eight types. A reading of those numbers that is more useful than outrage, namely that a failure distributed that widely is structural rather than personal. One question that costs a sentence and filters most of the damage: what was the split, and could anything downstream of the outcome have been in the inputs. And a line drawn carefully between a shortcut and a leak, because they look similar in a review and they need entirely different fixes.</p>
+    </div>
+
+    <details class="card" open>
+      <summary><span class="mode live">Live</span>Nearly three hundred papers is not a story about carelessness<span class="mini">4 min</span><span class="caret">▶</span></summary>
+      <div class="body">
+        <p>The first instinct on hearing this number is to reach for a judgement about the authors. That instinct is worth putting down immediately, and not out of politeness. It is simply the wrong model of what happened. When 294 papers across 17 disciplines fail the same way, the explanation cannot be that nearly three hundred research teams were independently sloppy. Something in the shared conditions permitted it: the incentives, the review process and the tooling all allowed a result to be published without anyone catching the flaw.</p>
+        <p>That reframing changes what you do next. If the cause is individual carelessness, the fix is vigilance and better people, which is a fix nobody can actually implement. If the cause is structural, the fix is a checklist and a default of suspicion toward results you did not produce yourself. Checklists are cheap, they survive staff changes, and they work on tired people at the end of a quarter, which is when most evidence actually gets approved.</p>
+        <div class="callout example">
+          <span class="ex-pill">Real world</span>
+          <p>Thornbury's clinical team wants to cite three published studies in the business case for the triage model. Under the old reading, someone senior reads the papers and forms an impression of quality. Under tonight's reading, someone asks all three the same two questions about the split and the timing of the inputs, writes the answers in the business case, and marks the ones that cannot be answered. The second version takes less time and produces a document that can be argued with.</p>
+        </div>
+      </div>
+    </details>
+
+    <details class="card">
+      <summary><span class="mode self">Self-study</span>The words tonight keeps using<span class="mini">4 min</span><span class="caret">▶</span></summary>
+      <div class="body">
+        <ul>
+          <li><strong>Leakage.</strong> Information about the answer reaching the model's inputs when it should not have. The held-out score then measures something other than the ability to predict.</li>
+          <li><strong>Shortcut.</strong> A feature that predicts the outcome without causing it, and that was genuinely available before the outcome. A different failure with a different fix, and the subject of part 2.</li>
+          <li><strong>The prediction moment.</strong> The point in time when the decision has to be made. Every input has to have existed before it.</li>
+          <li><strong>A structural failure.</strong> One that arises from shared conditions rather than individual error, and which is therefore predicted by the conditions rather than by the person.</li>
+          <li><strong>Evidence you did not produce.</strong> Any result whose data, split and pipeline you cannot inspect. Most of the evidence in any business case.</li>
+          <li><strong>Base rate.</strong> How often a flaw occurs in a population of results. Once it is known to be high, suspicion stops being rude and becomes arithmetic.</li>
+          <li><strong>Falsifier.</strong> The observation that would make you stop believing the claim, written down in advance. Session 6.</li>
+        </ul>
+      </div>
+    </details>
+  </section>
+
+  <!-- ============ PART 1 ============ -->
+  <section class="section" id="part-1">
+    <div class="section-kicker">
+      <span class="klabel">Part 1 · covers the scale of the finding</span>
+      <h2>Seventeen fields, and the same flaw in each</h2>
+      <span class="tag concept">10 min live</span>
+    </div>
+    <p class="lede">The survey by Kapoor and Narayanan, "Leakage and the reproducibility crisis in machine-learning-based science", is worth knowing by its three numbers. Leakage in <strong>17 fields</strong>. Collectively affecting <strong>294 papers</strong>. Organised into a taxonomy of <strong>eight types</strong>, spanning everything from textbook errors through to open research problems. That last range is the part that gets skipped, and it is the part that tells you the eight are not all the same kind of thing: some are mistakes anyone can be taught to avoid, and some are genuinely unsolved.</p>
+
+    <figure class="zoomable">
+      <svg viewBox="0 0 880 322" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Kapoor and Narayanan found leakage in 17 fields, shown here as 17 numbered tiles with no field names or per-field counts, because the survey totals are what is reported. A panel records the two totals: 294 papers affected across all 17 fields, and 8 types of leakage in one taxonomy. Below, a band divided into eight segments numbered 1 to 8 runs from textbook errors at the left end to open research problems at the right end.">
+        <style>
+          .a5aH { font: 800 12px Inter, sans-serif; fill: #231A10; }
+          .a5aBig { font: 800 27px Inter, sans-serif; fill: #fff; }
+          .a5aW { font: 400 11px Inter, sans-serif; fill: #fff; }
+          .a5aB { font: 400 11px Inter, sans-serif; fill: #231A10; }
+          .a5aM { font: 400 11px Inter, sans-serif; fill: #6B5B47; }
+          .a5aN { font: 800 10px Inter, sans-serif; fill: #231A10; }
+        </style>
+
+        <text class="a5aH" x="14" y="22">One failure mode, found again and again, by people who were not being careless.</text>
+
+        <rect x="14" y="46" width="76" height="44" rx="7" fill="#EBD9C3" stroke="#DCCDB8"></rect>
+        <text class="a5aM" x="52" y="74" text-anchor="middle">1</text>
+        <rect x="100" y="46" width="76" height="44" rx="7" fill="#EBD9C3" stroke="#DCCDB8"></rect>
+        <text class="a5aM" x="138" y="74" text-anchor="middle">2</text>
+        <rect x="186" y="46" width="76" height="44" rx="7" fill="#EBD9C3" stroke="#DCCDB8"></rect>
+        <text class="a5aM" x="224" y="74" text-anchor="middle">3</text>
+        <rect x="272" y="46" width="76" height="44" rx="7" fill="#EBD9C3" stroke="#DCCDB8"></rect>
+        <text class="a5aM" x="310" y="74" text-anchor="middle">4</text>
+        <rect x="358" y="46" width="76" height="44" rx="7" fill="#EBD9C3" stroke="#DCCDB8"></rect>
+        <text class="a5aM" x="396" y="74" text-anchor="middle">5</text>
+        <rect x="444" y="46" width="76" height="44" rx="7" fill="#EBD9C3" stroke="#DCCDB8"></rect>
+        <text class="a5aM" x="482" y="74" text-anchor="middle">6</text>
+
+        <rect x="14" y="100" width="76" height="44" rx="7" fill="#EBD9C3" stroke="#DCCDB8"></rect>
+        <text class="a5aM" x="52" y="128" text-anchor="middle">7</text>
+        <rect x="100" y="100" width="76" height="44" rx="7" fill="#EBD9C3" stroke="#DCCDB8"></rect>
+        <text class="a5aM" x="138" y="128" text-anchor="middle">8</text>
+        <rect x="186" y="100" width="76" height="44" rx="7" fill="#EBD9C3" stroke="#DCCDB8"></rect>
+        <text class="a5aM" x="224" y="128" text-anchor="middle">9</text>
+        <rect x="272" y="100" width="76" height="44" rx="7" fill="#EBD9C3" stroke="#DCCDB8"></rect>
+        <text class="a5aM" x="310" y="128" text-anchor="middle">10</text>
+        <rect x="358" y="100" width="76" height="44" rx="7" fill="#EBD9C3" stroke="#DCCDB8"></rect>
+        <text class="a5aM" x="396" y="128" text-anchor="middle">11</text>
+        <rect x="444" y="100" width="76" height="44" rx="7" fill="#EBD9C3" stroke="#DCCDB8"></rect>
+        <text class="a5aM" x="482" y="128" text-anchor="middle">12</text>
+
+        <rect x="14" y="154" width="76" height="44" rx="7" fill="#EBD9C3" stroke="#DCCDB8"></rect>
+        <text class="a5aM" x="52" y="182" text-anchor="middle">13</text>
+        <rect x="100" y="154" width="76" height="44" rx="7" fill="#EBD9C3" stroke="#DCCDB8"></rect>
+        <text class="a5aM" x="138" y="182" text-anchor="middle">14</text>
+        <rect x="186" y="154" width="76" height="44" rx="7" fill="#EBD9C3" stroke="#DCCDB8"></rect>
+        <text class="a5aM" x="224" y="182" text-anchor="middle">15</text>
+        <rect x="272" y="154" width="76" height="44" rx="7" fill="#EBD9C3" stroke="#DCCDB8"></rect>
+        <text class="a5aM" x="310" y="182" text-anchor="middle">16</text>
+        <rect x="358" y="154" width="76" height="44" rx="7" fill="#EBD9C3" stroke="#DCCDB8"></rect>
+        <text class="a5aM" x="396" y="182" text-anchor="middle">17</text>
+
+        <rect x="540" y="46" width="326" height="152" rx="9" fill="#713F12"></rect>
+        <text class="a5aBig" x="562" y="92">294</text>
+        <text class="a5aW" x="562" y="114">papers affected, across all 17 fields</text>
+        <text class="a5aBig" x="562" y="160">8</text>
+        <text class="a5aW" x="562" y="182">types of leakage, in one taxonomy</text>
+
+        <text class="a5aH" x="14" y="224">Seventeen fields. The survey reports the totals, so no field is named or counted here.</text>
+
+        <text class="a5aB" x="14" y="252">Eight types, and they are not the same kind of thing:</text>
+        <rect x="14" y="262" width="852" height="24" rx="6" fill="#EADFCF" stroke="#DCCDB8"></rect>
+        <line x1="120.5" y1="262" x2="120.5" y2="286" stroke="#DCCDB8" stroke-width="1"></line>
+        <line x1="227" y1="262" x2="227" y2="286" stroke="#DCCDB8" stroke-width="1"></line>
+        <line x1="333.5" y1="262" x2="333.5" y2="286" stroke="#DCCDB8" stroke-width="1"></line>
+        <line x1="440" y1="262" x2="440" y2="286" stroke="#DCCDB8" stroke-width="1"></line>
+        <line x1="546.5" y1="262" x2="546.5" y2="286" stroke="#DCCDB8" stroke-width="1"></line>
+        <line x1="653" y1="262" x2="653" y2="286" stroke="#DCCDB8" stroke-width="1"></line>
+        <line x1="759.5" y1="262" x2="759.5" y2="286" stroke="#DCCDB8" stroke-width="1"></line>
+        <text class="a5aN" x="67" y="278" text-anchor="middle">1</text>
+        <text class="a5aN" x="174" y="278" text-anchor="middle">2</text>
+        <text class="a5aN" x="280" y="278" text-anchor="middle">3</text>
+        <text class="a5aN" x="387" y="278" text-anchor="middle">4</text>
+        <text class="a5aN" x="493" y="278" text-anchor="middle">5</text>
+        <text class="a5aN" x="600" y="278" text-anchor="middle">6</text>
+        <text class="a5aN" x="706" y="278" text-anchor="middle">7</text>
+        <text class="a5aN" x="813" y="278" text-anchor="middle">8</text>
+        <text class="a5aM" x="14" y="306">textbook errors</text>
+        <text class="a5aM" x="866" y="306" text-anchor="end">open research problems</text>
+      </svg>
+      <figcaption>🔍 Click to zoom - the totals are the finding. The tiles are counted, not named, because per-field numbers are not what the survey reports here.</figcaption>
+    </figure>
+
+    <details class="card">
+      <summary><span class="mode live">Live</span>What a field-wide error does to a body of evidence<span class="mini">4 min</span><span class="caret">▶</span></summary>
+      <div class="body">
+        <p>A single flawed paper is a local problem: it is wrong, somebody eventually notices, and the field moves on. A flaw distributed across a literature is a different object entirely, because the usual repair mechanism stops working. Papers cite each other, reviews aggregate them, and a systematic review of studies that share a flaw inherits the flaw and gives it a more authoritative shape. The error does not cancel out with volume. It concentrates.</p>
+        <p>For a leader the consequence is unpleasant and specific: the strength of a claim in your domain is no longer well estimated by how many papers support it. A count of supporting studies is a weak signal when the studies share a method, share a tooling stack and share a review culture. What raises confidence is variety in how the result was obtained, not volume in how often it was reported, and that is a harder thing to ask for in a business case.</p>
+      </div>
+    </details>
+
+    <details class="card">
+      <summary><span class="mode live">Live</span>Why the review process did not catch it<span class="mini">4 min</span><span class="caret">▶</span></summary>
+      <div class="body">
+        <p>Peer review is good at catching claims that do not follow from the reported evidence. It is much weaker at catching a flaw in how the evidence was produced, because that part is usually described in a paragraph rather than shown. A reviewer reads "we used a held-out test set" and has nothing to check it against. The result reproduces, because rerunning the same pipeline on the same data reproduces the same flaw perfectly.</p>
+        <p>This is why reproducibility and correctness come apart here, and it is a distinction worth having in your vocabulary before somebody uses the first word to reassure you about the second. A leaked result is generally fully reproducible. Everyone who runs it gets the same excellent number. The number simply is not an estimate of what the model can do on a patient whose outcome is not yet known.</p>
+        <div class="callout example">
+          <span class="ex-pill">Real world</span>
+          <p>The distinction to keep is between <strong>reproducible</strong>, meaning the same inputs give the same outputs, and <strong>valid</strong>, meaning the number is an estimate of the quantity claimed. Session 1's link two is where they part company. A result can be reproducible to six decimal places and still be an estimate of nothing you can use.</p>
+        </div>
+      </div>
+    </details>
+
+    <details class="card">
+      <summary><span class="mode self">Self-study</span>How to talk about this without indicting anyone<span class="mini">3 min</span><span class="caret">▶</span></summary>
+      <div class="body">
+        <p>There is a version of this session that turns into a morality tale, and it makes teams defensive and unhelpful. The better framing to use inside your own organisation is that the base rate for this flaw is high, so checking is now routine rather than accusatory. You check a wire transfer against a second pair of eyes without implying the finance team is dishonest. Same move, same tone.</p>
+        <p>Worth saying out loud in the room: your own team's results are in the same population as everybody else's. A leader who applies the checklist only to external evidence has built a filter with a hole in the middle of it, and the hole is exactly where the work you are most invested in sits.</p>
+      </div>
+    </details>
+  </section>
+
+  <!-- ============ PART 2 ============ -->
+  <section class="section" id="part-2">
+    <div class="section-kicker">
+      <span class="klabel">Part 2 · covers the line between a shortcut and a leak</span>
+      <h2>Thornbury's ward was not leakage, and the difference matters</h2>
+      <span class="tag concept">8 min live</span>
+    </div>
+    <p class="lede">Four sessions in, the Thornbury ward has become the standing example of a number that stopped being true. It would be easy, and wrong, to file it under tonight's heading. The ward was genuinely available before the outcome: a real fact about a real patient, recorded at the moment the prediction had to be made. It agreed with the outcome 90 percent of the time in the collection year and 50 percent after the reorganisation, and the model scored 0.949 held out and 0.765 shifted. That is a shortcut expiring, not information about the answer sneaking into the inputs. Two failures, two fixes, and a review that confuses them applies the wrong one.</p>
+
+    <figure class="zoomable">
+      <svg viewBox="0 0 880 388" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="A two column contrast. On the left, a shortcut: Thornbury's ward, in the record before the outcome, agreeing with the outcome 90 percent of the time in the collection year and 50 percent after the reorganisation, held-out accuracy 0.949 and shifted accuracy 0.765. Its fix is a stress test and a named watcher. On the right, a leak: a field that only exists once the outcome is known, whose agreement never decays and whose held-out number estimates nothing. Its fix is checking the timing of every field against the prediction moment, with the mechanics handed to learn-model-risk-with-phoebe p3.">
+        <style>
+          .a5bH { font: 800 12px Inter, sans-serif; fill: #231A10; }
+          .a5bT { font: 800 11px Inter, sans-serif; fill: #fff; }
+          .a5bB { font: 400 11px Inter, sans-serif; fill: #231A10; }
+          .a5bM { font: 400 11px Inter, sans-serif; fill: #6B5B47; }
+          .a5bK { font: 800 11px Inter, sans-serif; fill: #4A2A0C; }
+          .a5bR { font: 800 11px Inter, sans-serif; fill: #155E75; }
+        </style>
+
+        <text class="a5bH" x="14" y="22">Two different failures. Two different fixes. Telling them apart is the work.</text>
+
+        <rect x="14" y="40" width="420" height="34" rx="8" fill="#713F12"></rect>
+        <text class="a5bT" x="28" y="62">A shortcut · Thornbury's ward</text>
+        <rect x="446" y="40" width="420" height="34" rx="8" fill="#155E75"></rect>
+        <text class="a5bT" x="460" y="62">A leak · a field from after the outcome</text>
+
+        <rect x="14" y="84" width="420" height="178" rx="9" fill="#FBF6EF" stroke="#DCCDB8"></rect>
+        <text class="a5bB" x="28" y="110">In the record before the outcome. Genuinely</text>
+        <text class="a5bB" x="28" y="130">available at the moment of the prediction.</text>
+        <text class="a5bB" x="28" y="154">Agrees with the outcome 90 percent of the time</text>
+        <text class="a5bB" x="28" y="174">in the collection year, 50 percent after the</text>
+        <text class="a5bB" x="28" y="194">wards are reorganised.</text>
+        <text class="a5bK" x="28" y="222">Held out 0.949. Shifted 0.765.</text>
+        <text class="a5bM" x="28" y="246">Predictive, and never promised to stay so.</text>
+
+        <rect x="446" y="84" width="420" height="178" rx="9" fill="#FBF6EF" stroke="#DCCDB8"></rect>
+        <text class="a5bB" x="460" y="110">Carries information that only exists once the</text>
+        <text class="a5bB" x="460" y="130">outcome is known.</text>
+        <text class="a5bB" x="460" y="154">Agrees with the outcome because the outcome</text>
+        <text class="a5bB" x="460" y="174">wrote it, which is why that agreement never</text>
+        <text class="a5bB" x="460" y="194">decays and never warns you.</text>
+        <text class="a5bK" x="460" y="222">The held-out number estimates nothing.</text>
+        <text class="a5bM" x="460" y="246">Reproducible, and wrong from the first row.</text>
+
+        <rect x="14" y="278" width="420" height="96" rx="9" fill="#EADFCF" stroke="#DCCDB8"></rect>
+        <text class="a5bK" x="28" y="302">The fix</text>
+        <text class="a5bB" x="28" y="324">Stress test it. Score the model where the</text>
+        <text class="a5bB" x="28" y="344">arrangement no longer holds, then name the</text>
+        <text class="a5bB" x="28" y="364">watcher who would notice it going.</text>
+
+        <rect x="446" y="278" width="420" height="96" rx="9" fill="#ECFEFF" stroke="#155E75"></rect>
+        <text class="a5bR" x="460" y="302">The fix</text>
+        <text class="a5bB" x="460" y="324">Check the timing of every field against the</text>
+        <text class="a5bB" x="460" y="344">prediction moment. The mechanics of that hunt</text>
+        <text class="a5bB" x="460" y="364">live in learn-model-risk-with-phoebe p3.</text>
+      </svg>
+      <figcaption>🔍 Click to zoom - a stress test repairs one of these and does nothing at all for the other.</figcaption>
+    </figure>
+
+    <details class="card">
+      <summary><span class="mode live">Live</span>Why the wrong fix is worse than no fix<span class="mini">4 min</span><span class="caret">▶</span></summary>
+      <div class="body">
+        <p>Run a stress test on a shortcut and you learn something real: the model leans on an arrangement, here is how much, here is what it costs when the arrangement moves. Run the same stress test on a leaked model and you learn nothing, because the leaked field carries the answer in every environment you can construct. It will pass the stress test beautifully. The team will report that the model is robust, and the word robust will now be doing active harm.</p>
+        <p>The tell is the timing, and only the timing. A shortcut is a real fact available before the outcome whose usefulness depends on an arrangement that can change. A leak is information that did not exist yet when the prediction had to be made. Everything else about them looks the same on a dashboard: a strong feature, a high score, a confident team. How to hunt one down inside a single model is a practitioner job and it belongs to <strong>learn-model-risk-with-phoebe</strong> p3.</p>
+      </div>
+    </details>
+
+    <details class="card">
+      <summary><span class="mode self">Self-study</span>The one question, and why it is the cheapest filter you have<span class="mini">3 min</span><span class="caret">▶</span></summary>
+      <div class="body">
+        <p>When a vendor, a paper or an internal team cites a published result, ask two things in one breath: what was the split, and could anything downstream of the outcome have been in the inputs. That is it. No statistics, no code, no methodology review. It takes about fifteen seconds to ask and it is the question that 294 papers did not get.</p>
+        <p>It is also usefully diagnostic in how it fails. A team with a clean answer gives it immediately, because they had to think about it while building. A team that has to go away and check has told you the question was never asked, which is a finding on its own and a perfectly civil place to leave it. Nobody has been accused of anything and everybody now knows where the evidence stands.</p>
+      </div>
+    </details>
+  </section>
+
+  <!-- ============ PART 3 ============ -->
+  <section class="section" id="part-3">
+    <div class="section-kicker">
+      <span class="klabel">Part 3 · build-along</span>
+      <h2>Put the Monday question to real evidence in the room</h2>
+      <span class="tag build">20 min build-along</span>
+    </div>
+    <p class="lede">No laptop. Bring the external result you looked up for homework, plus whichever internal model your team is proudest of. Work both through the same six steps, in the same tone. The point of doing them together is that the checklist has to be something you can apply to your own work without flinching, or it will quietly become a weapon pointed outward only.</p>
+
+    <div class="steps">
+      <div class="step"><div><p><strong>Name the prediction moment.</strong> In one sentence: at what point does this decision have to be made, and what is known at that point. Everything else in the exercise depends on this sentence being specific about time.</p></div></div>
+      <div class="step"><div><p><strong>Ask what the split was.</strong> What was the model scored on, how was it separated from what it learned from, and who decided. "A random split" is an answer. "I would have to check" is a more informative one.</p></div></div>
+      <div class="step"><div><p><strong>Ask whether anything downstream of the outcome could be in the inputs.</strong> Not accusingly, and not as a statistics question. Go feature by feature if the list is short, and ask when each one gets recorded.</p></div></div>
+      <div class="step"><div><p><strong>Sort each suspicious feature into shortcut or leak.</strong> Available before the outcome and dependent on an arrangement is a shortcut. Existing only after the outcome is a leak. If the room cannot agree which, that feature is the finding.</p></div></div>
+      <div class="step"><div><p><strong>Apply the matching fix, out loud.</strong> A stress test and a named watcher for the shortcut. A timing check on every field for the leak, handed to whoever owns the pipeline. Say which one you are choosing and why.</p></div></div>
+      <div class="step"><div><p><strong>Write the three answers into the business case.</strong> The split, the timing, and what could not be established. The unanswerable ones are not a failure of the exercise; they are the honest boundary of what the evidence supports.</p></div></div>
+    </div>
+
+    <div class="callout tip">
+      <p><strong>The one-sentence version to take into a meeting.</strong> "Before we lean on that result, what was the split, and could anything that only exists after the outcome have been in the inputs?" It is short enough to ask without a preamble, civil enough to ask a supplier, and it is the single highest-yield question in this whole track.</p>
+    </div>
+  </section>
+
+  <!-- ============ QUIZ ============ -->
+  <section class="section" id="quiz">
+    <div class="section-kicker">
+      <span class="klabel">Check yourself</span>
+      <h2>Three questions</h2>
+    </div>
+
+    <div class="quiz-q" data-answer="2">
+      <p class="qtext">Kapoor and Narayanan found leakage in 17 fields, collectively affecting 294 papers, across a taxonomy of eight types. What follows for a leader?</p>
+      <button class="qopt" type="button">A · Machine-learning-based science should be treated as unreliable until the affected papers have been retracted</button>
+      <button class="qopt" type="button">B · Review standards in those 17 fields were unusually weak, so results from other disciplines can be trusted as before</button>
+      <button class="qopt" type="button">C · A failure distributed that widely is structural, so the response is a checklist and a default of suspicion toward results you did not produce</button>
+      <p class="qwhy">Nearly three hundred teams across seventeen disciplines did not independently become careless. The incentives, the review process and the tooling all permitted it, which makes the useful response procedural rather than a judgement about the authors. It also applies to your own team's results, which sit in the same population.</p>
+    </div>
+
+    <div class="quiz-q" data-answer="1">
+      <p class="qtext">Thornbury's model leaned on the ward, which agreed with the outcome 90 percent of the time in the collection year and 50 percent after the reorganisation. Was that leakage?</p>
+      <button class="qopt" type="button">A · Yes, because the ward carried information about the outcome that the model should not have had access to</button>
+      <button class="qopt" type="button">B · No, because the ward was genuinely available before the outcome; it is a shortcut that expired, and a stress test is the fix</button>
+      <button class="qopt" type="button">C · No, because the drop from 0.949 to 0.765 was too small to indicate leakage of any kind</button>
+      <p class="qwhy">The tell is timing. The ward was a real fact recorded at the moment the prediction had to be made, so the held-out number was an estimate of something. It just depended on an arrangement that changed. A leaked field would have passed the stress test instead of failing it, because it carries the answer in every environment you can build.</p>
+    </div>
+
+    <div class="quiz-q" data-answer="0">
+      <p class="qtext">An internal team cites a published result to support a large investment. What single question filters the most risk for the least effort?</p>
+      <button class="qopt" type="button">A · What was the split, and could anything downstream of the outcome have been in the inputs</button>
+      <button class="qopt" type="button">B · Has the result been replicated by an independent group using the same data and pipeline</button>
+      <button class="qopt" type="button">C · Was the paper published in a venue with a strong peer review process</button>
+      <p class="qwhy">A leaked result generally replicates perfectly, because the same pipeline on the same data reproduces the flaw along with the number, so replication of that kind is reassurance about the wrong property. Peer review is weak here too, since the production of the evidence is described rather than shown. The split and timing question is the one that goes straight at the mechanism.</p>
+    </div>
+    <p class="quiz-score"></p>
+  </section>
+
+  <!-- ============ HOMEWORK ============ -->
+  <section class="section" id="homework">
+    <div class="section-kicker">
+      <span class="klabel">Homework</span>
+      <h2>Before session 6</h2>
+      <span class="tag time">30 min</span>
+    </div>
+    <div class="callout">
+      <p>Take the model or the result you are currently most confident about, and write one sentence describing what you would have to observe to stop believing it. Be concrete: a number on a named set, a behaviour in a named month, a comparison against a named alternative. If you cannot finish the sentence, write down why not. Session 6 is entirely about that sentence, and the ones people struggle to write are the interesting cases.</p>
+    </div>
+  </section>
+
+  <!-- ============ COVERAGE ============ -->
+  <section class="section" id="official">
+    <div class="section-kicker">
+      <span class="klabel">Sources covered</span>
+      <h2>What tonight maps to</h2>
+    </div>
+    <div class="covered">
+      <div class="covered-row">
+        <span class="status pill solid">✓</span>
+        <span class="name">Kapoor and Narayanan (2023), Patterns</span>
+        <span class="note">Leakage in 17 fields, collectively affecting 294 papers, with a taxonomy of eight types from textbook errors to open research problems.</span>
+      </div>
+      <div class="covered-row">
+        <span class="status pill solid">✓</span>
+        <span class="name">Leakage as a property of a literature</span>
+        <span class="note">Why a widely distributed failure is structural, what it does to a body of evidence, and why reproducible and valid come apart.</span>
+      </div>
+      <div class="covered-row">
+        <span class="status pill solid">✓</span>
+        <span class="name">Shortcut against leak, drawn precisely</span>
+        <span class="note">Thornbury's ward at 90 percent then 50 percent, 0.949 held out and 0.765 shifted, and why a stress test fixes one and not the other.</span>
+      </div>
+      <div class="covered-row">
+        <span class="status pill light">◐</span>
+        <span class="name">Writing the falsifier in advance</span>
+        <span class="note">Session 6. Tonight supplies the question to ask about evidence; session 6 makes it a commitment made before the result arrives.</span>
+      </div>
+      <div class="covered-row">
+        <span class="status pill light">◐</span>
+        <span class="name">The eight types in working detail</span>
+        <span class="note">Practitioner session p8 takes the taxonomy apart and reproduces a leak; tonight stays at the level of a field.</span>
+      </div>
+      <div class="covered-row">
+        <span class="status pill inkpill">·</span>
+        <span class="name">Finding a leak inside one model</span>
+        <span class="note">Not covered by design. <strong>learn-model-risk-with-phoebe</strong> p3 owns the leak hunt: timing, how a post-outcome field reaches a feature list, and how a noisy leak survives review.</span>
+      </div>
+      <div class="covered-row">
+        <span class="status pill inkpill">·</span>
+        <span class="name">Whether a feature causes an outcome</span>
+        <span class="note">Not covered by design. <strong>learn-causal-inference-with-phoebe</strong> owns identification and what may be adjusted for; tonight is only about timing and agreement.</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ CHEAT SHEET ============ -->
+  <section class="cheat" id="cheatsheet">
+    <h3>Session 5 cheat sheet</h3>
+    <div class="grid-2">
+      <div class="cheat-item"><b>17 fields, 294 papers</b><span>Kapoor and Narayanan, Patterns, 2023. One failure mode, found across seventeen disciplines.</span></div>
+      <div class="cheat-item"><b>Eight types</b><span>From textbook errors to open research problems. They are not all the same kind of mistake.</span></div>
+      <div class="cheat-item"><b>Structural, not personal</b><span>Nearly three hundred teams did not get careless at once. The conditions permitted it.</span></div>
+      <div class="cheat-item"><b>So the fix is a checklist</b><span>Vigilance cannot be implemented. A two-question checklist survives staff changes and tired quarters.</span></div>
+      <div class="cheat-item"><b>Volume is not variety</b><span>Studies that share a method share its flaw. Counting supporting papers stops being a strong signal.</span></div>
+      <div class="cheat-item"><b>Reproducible is not valid</b><span>A leaked result reproduces perfectly. The number is simply not an estimate of what was claimed.</span></div>
+      <div class="cheat-item"><b>Timing is the tell</b><span>Before the outcome and dependent on an arrangement is a shortcut. Only existing after it is a leak.</span></div>
+      <div class="cheat-item"><b>The Monday question</b><span>What was the split, and could anything downstream of the outcome have been in the inputs?</span></div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="pagefoot">
+  <div class="wrap">
+    <p>Leader session 5 of 6 · learn-ml-epistemology-with-phoebe · by Phoebe Fu</p>
+    <nav class="pagenav">
+      <a href="a4-what-a-benchmark-licenses.html">← Leader session 4 · What a benchmark licenses</a>
+      <a href="a6-what-would-change-your-mind.html">Leader session 6 · What would change your mind →</a>
+    </nav>
+  </div>
+</footer>
+
+<script src="../assets/app.js?v=2"></script>
+</body>
+</html>

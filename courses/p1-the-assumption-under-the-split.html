@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- social:start -->
+<meta name="description" content="Practitioner session 1 of 10. A held-out estimate is unbiased for the distribution the split was drawn from and silent about every other one. Three shapes of data where a random split is a lie about deployment, and the fix for each.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Learn with Phoebe">
+<meta property="og:title" content="The assumption under the split - learn ML epistemology with phoebe">
+<meta property="og:description" content="Practitioner session 1 of 10. What a random split buys, what it quietly assumes, and why a held-out score cannot see a shortcut.">
+<meta property="og:url" content="https://phoebefu6.github.io/learn-ml-epistemology-with-phoebe/courses/p1-the-assumption-under-the-split.html">
+<meta property="og:image" content="https://phoebefu6.github.io/learn-ml-epistemology-with-phoebe/assets/og-cover.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="The assumption under the split - learn ML epistemology with phoebe">
+<meta name="twitter:description" content="Independent and identically distributed is an assumption about the world, not a property of the code.">
+<meta name="twitter:image" content="https://phoebefu6.github.io/learn-ml-epistemology-with-phoebe/assets/og-cover.png">
+<!-- social:end -->
+<title>Practitioner session 1 · The assumption under the split - learn ML epistemology with phoebe</title>
+<link rel="stylesheet" href="../assets/style.css?v=2">
+</head>
+<body>
+
+<div class="toolbar">
+  <div class="wrap">
+    <span class="crumb"><a href="../index.html">learn-ml-epistemology-with-phoebe</a> / Practitioner session 1 of 10</span>
+    <button class="btn" id="toggle-all" type="button">Expand all</button>
+    <button class="btn primary" id="zoom-toggle" type="button">Projector zoom: off</button>
+  </div>
+</div>
+
+<header class="masthead">
+  <div class="wrap">
+    <div class="eyebrow">Learn ML Epistemology with Phoebe · Practitioner session 1 of 10</div>
+    <h1>The assumption <span class="accent">under the split</span></h1>
+    <p class="sub">One line of code hands you a number that everyone downstream treats as the truth about the model. The number is real, and it is an estimate of exactly one thing: how the model behaves on data drawn the same way as the data it was scored on. Tonight is about what that sentence buys you, the three shapes of data where it is a lie about the deployment you actually face, and why Thornbury's held-out 0.949 could never have warned anybody about the 0.765 that followed.</p>
+    <div class="chip-row">
+      <span class="chip level">🔴 Hardest</span>
+      <span class="chip audience">Anyone who writes train_test_split</span>
+      <span class="chip audience">Anyone who signs off on the number it produces</span>
+      <span class="chip time">45 min</span>
+    </div>
+    <div class="agenda">
+      <span class="a1" style="flex:1">0-3 · Welcome</span>
+      <span class="a2" style="flex:4">3-18 · What the split estimates</span>
+      <span class="a3" style="flex:4">18-32 · Three shapes that break it</span>
+      <span class="a4" style="flex:3">32-45 · Build-along and Q&amp;A</span>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <!-- ============ INTRO ============ -->
+  <section class="section" id="intro">
+    <div class="section-kicker">
+      <span class="klabel">Part 0</span>
+      <h2>How the practitioner track works</h2>
+    </div>
+    <p class="lede">Ten sessions, 45 minutes each, laptop open. Tonight is the foundation: what a held-out estimate is an estimate of. Session 2 builds the Thornbury shortcut and measures how hard a model leans on it. Session 3 trains twenty models that differ only by their random seed. Session 4 designs the stress set. Sessions 5 and 6 measure what selecting on a test set costs and how big a test set has to be before that cost can even be measured. Sessions 7 to 10 move outward to benchmarks, leakage across a whole literature, a finding that did not survive one more data draw, and the bench you run before you sign anything. The worked example throughout is <strong>Thornbury</strong>, a fictional hospital group predicting which patients deteriorate within 24 hours, where every true relationship is written into the generator and can therefore be checked.</p>
+
+    <div class="legend">
+      <span class="pill">Live = written together in the 45 minutes</span>
+      <span class="pill">Self-study = the full depth, after class</span>
+      <span class="pill">🔍 Every diagram zooms</span>
+    </div>
+
+    <div class="callout win">
+      <p><strong>★ What you walk out with tonight.</strong> A precise statement of what a held-out number estimates and what it is silent about, so you can say it out loud in a review without hedging. The three data shapes where a random split describes a world nobody will deploy into, each with the split that fixes it. A Thornbury generator running on your own machine, with the ward shortcut written in at 90 percent agreement, ready for the measurement in session 2. And the reason the rest of the track exists: the held-out set and the training set come from the same world, so a held-out score cannot see a shortcut at all.</p>
+    </div>
+
+    <details class="card" open>
+      <summary><span class="mode live">Live</span>What a held-out estimate is unbiased for<span class="mini">5 min</span><span class="caret">▶</span></summary>
+      <div class="body">
+        <p>Hold out a random slice of your rows, train on the rest, score on the slice. What you have built is an unbiased estimate of the model's performance <strong>on the distribution the slice was drawn from</strong>. That is a real guarantee and it is worth having. It is also the whole guarantee. The estimate is not slightly informative about other distributions, or weakly informative, or informative on average: it is silent about them, because nothing in the procedure ever touched them.</p>
+        <p>The assumption doing the work has a name. The rows are treated as <strong>independent and identically distributed</strong>: each one an independent draw from one fixed distribution, so a random half of them stands in for the rest. Both halves of that phrase are claims about how the data came to exist. Independent says one row does not carry information about another. Identically distributed says the world did not move while you were collecting. Neither is something the split function can check, and neither one is repaired by drawing the slice more carefully.</p>
+        <div class="callout example">
+          <span class="ex-pill">Real world</span>
+          <p>Thornbury's training rows and held-out rows both come from the collection year. In that year the ward a patient was on agreed with the outcome about 90 percent of the time, so the ward was just as useful on the held-out rows as it was in training. The held-out estimate came back at 0.949 and it was correct. After the wards were reorganised the agreement fell to about 50 percent and the same model scored 0.765. Both numbers are honest measurements of different distributions.</p>
+        </div>
+      </div>
+    </details>
+
+    <details class="card">
+      <summary><span class="mode self">Self-study</span>The words that will keep coming back<span class="mini">4 min</span><span class="caret">▶</span></summary>
+      <div class="body">
+        <ul>
+          <li><strong>Independent and identically distributed.</strong> Each row an independent draw from one fixed distribution. The assumption a random split rests on, and a statement about the world rather than about the code.</li>
+          <li><strong>Held-out set.</strong> Rows kept out of training and used to estimate behaviour on unseen data from the same distribution.</li>
+          <li><strong>Group.</strong> The unit that repeats across rows: a patient, a session, a device, an institution. If rows share a group, they are not independent draws.</li>
+          <li><strong>Group-aware split.</strong> A split where every row belonging to one group lands on the same side, so the score answers a question about a new group.</li>
+          <li><strong>Time-based split.</strong> Train on the earlier period, score on the later one, so the model is never shown the future of the period it is judged on.</li>
+          <li><strong>Stress set.</strong> Rows chosen to break one named assumption, scored alongside the held-out set rather than instead of it. Session 4.</li>
+          <li><strong>Shortcut.</strong> A feature that predicts the outcome without causing it, whose usefulness depends on an arrangement that can change. Session 2 builds one and measures the model's reliance on it.</li>
+          <li><strong>Accuracy and the rest of the metric family.</strong> Defined, computed and monitored in <strong>learn-model-evaluation-with-phoebe</strong>; here a metric is only ever a claim whose warrant is in question.</li>
+        </ul>
+      </div>
+    </details>
+  </section>
+
+  <!-- ============ PART 1 ============ -->
+  <section class="section" id="part-1">
+    <div class="section-kicker">
+      <span class="klabel">Part 1 · covers what the split estimates</span>
+      <h2>One world, two draws, and a number that only speaks for that world</h2>
+      <span class="tag concept">12 min live</span>
+    </div>
+    <p class="lede">The picture that makes the rest of the track obvious is the smallest one. A random split does not create two worlds. It takes one world and draws from it twice. Everything the held-out score can tell you is a statement about that single world, including every regularity in it that nobody intended to rely on.</p>
+
+    <figure class="zoomable">
+      <svg viewBox="0 0 880 310" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="A random split draws twice from one distribution. The collection year world contains 4,000 training rows and 2,000 held-out rows, and the estimate is unbiased there, scoring 0.949 at Thornbury. A separate panel shows the deployment year with 2,000 rows, where the same model scores 0.765 and about which the held-out estimate says nothing. A band below records that independent and identically distributed is the assumption carrying the number, and that it is a claim about how the data was produced rather than something the split can check.">
+        <style>
+          .p1aH { font: 800 12px Inter, sans-serif; fill: #231A10; }
+          .p1aT { font: 800 11px Inter, sans-serif; fill: #FFFFFF; }
+          .p1aW { font: 400 11px Inter, sans-serif; fill: #FFFFFF; }
+          .p1aB { font: 400 11px Inter, sans-serif; fill: #231A10; }
+          .p1aM { font: 400 11px Inter, sans-serif; fill: #6B5B47; }
+          .p1aR { font: 800 11px Inter, sans-serif; fill: #155E75; }
+        </style>
+        <defs>
+          <marker id="p1aAr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#6B5B47"></path></marker>
+        </defs>
+
+        <text class="p1aH" x="14" y="22">A random split draws twice from one world. The score speaks for that world.</text>
+
+        <rect x="14" y="38" width="410" height="156" rx="9" fill="#FBF6EF" stroke="#DCCDB8"></rect>
+        <text class="p1aH" x="28" y="62">The collection year</text>
+
+        <rect x="28" y="76" width="180" height="46" rx="8" fill="#713F12"></rect>
+        <text class="p1aT" x="42" y="96">Training rows</text>
+        <text class="p1aW" x="42" y="114">4,000 patients</text>
+
+        <rect x="222" y="76" width="188" height="46" rx="8" fill="#713F12"></rect>
+        <text class="p1aT" x="236" y="96">Held-out rows</text>
+        <text class="p1aW" x="236" y="114">2,000 patients</text>
+
+        <text class="p1aB" x="28" y="146">Same draw, same world, so the estimate is unbiased here.</text>
+        <text class="p1aR" x="28" y="168">Thornbury reads 0.949.</text>
+        <text class="p1aM" x="28" y="186">The ward agrees with the outcome 90 percent of the time on both sides.</text>
+
+        <line x1="436" y1="38" x2="436" y2="194" stroke="#DCCDB8" stroke-width="1.5" stroke-dasharray="5 4"></line>
+        <line x1="424" y1="99" x2="446" y2="99" stroke="#6B5B47" stroke-width="1.6" marker-end="url(#p1aAr)"></line>
+
+        <rect x="458" y="38" width="408" height="156" rx="9" fill="#ECFEFF" stroke="#155E75"></rect>
+        <text class="p1aH" x="472" y="62">Any other world, including the one you deploy into</text>
+
+        <rect x="472" y="76" width="200" height="46" rx="8" fill="#155E75"></rect>
+        <text class="p1aT" x="486" y="96">Deployment year</text>
+        <text class="p1aW" x="486" y="114">2,000 patients</text>
+
+        <text class="p1aB" x="472" y="146">Never drawn from, never scored on, never estimated.</text>
+        <text class="p1aR" x="472" y="168">Thornbury reads 0.765.</text>
+        <text class="p1aM" x="472" y="186">The wards are reorganised and the agreement falls to 50 percent.</text>
+
+        <rect x="14" y="210" width="852" height="84" rx="9" fill="#EBD9C3" stroke="#DCCDB8"></rect>
+        <text class="p1aH" x="28" y="234">Independent and identically distributed is the assumption carrying the number across.</text>
+        <text class="p1aB" x="28" y="256">Independent: one row tells you nothing about another. Identically distributed: the world held still while you collected.</text>
+        <text class="p1aB" x="28" y="276">Both are claims about how the data was produced. Neither is a property of the code, and neither is checked by the split.</text>
+      </svg>
+      <figcaption>🔍 Click to zoom - the split never crosses the dashed line, so the number never speaks for the right-hand side.</figcaption>
+    </figure>
+
+    <details class="card">
+      <summary><span class="mode live">Live</span>Why a held-out score cannot see a shortcut<span class="mini">4 min</span><span class="caret">▶</span></summary>
+      <div class="body">
+        <p>This is the sentence the whole track hangs on, and it is short. A shortcut is a feature that predicts the outcome without causing it. In the collection year, Thornbury's ward agrees with the outcome about 90 percent of the time. That agreement is a property of the world the data was collected from, which means it is a property of the training rows and of the held-out rows in equal measure. A model that leans on the ward scores well on both. A model that ignores it scores worse on both, and would be rejected in review for being worse.</p>
+        <p>So the held-out set cannot distinguish the two kinds of learning, not because it is too small and not because it was built carelessly, but because it was drawn from the same place. No amount of additional held-out data changes this. The only measurements that can separate them are measurements that do something the split does not do: intervene on a feature and watch the predictions move, which is session 2, or score the model on data drawn from somewhere else, which is session 4.</p>
+      </div>
+    </details>
+
+    <details class="card">
+      <summary><span class="mode live">Live</span>Predicts and causes are different words, and only one of them is being used here<span class="mini">3 min</span><span class="caret">▶</span></summary>
+      <div class="body">
+        <p>Keep the language plain. The vitals drift and the lab trend at Thornbury are written into the generator as things that actually bring the outcome about. The ward is written in as something that merely agrees with the outcome, because in the collection year the high-acuity ward received most of the patients who went on to deteriorate. Both kinds of feature raise a held-out score. Only one of them keeps working when the arrangement behind the agreement is changed by somebody in facilities management.</p>
+        <p>That distinction is all that is needed tonight, and the formal machinery for reasoning about it, identification and what you may and may not adjust for, belongs to <strong>learn-causal-inference-with-phoebe</strong>. What is needed here is the habit of asking which kind a feature is, and the knowledge that the held-out score will never answer.</p>
+      </div>
+    </details>
+
+    <details class="card">
+      <summary><span class="mode self">Self-study</span>Unbiased is not the same as trustworthy<span class="mini">3 min</span><span class="caret">▶</span></summary>
+      <div class="body">
+        <p>Unbiasedness is a statement about repetition: run the whole procedure many times on fresh draws from the same distribution and the estimates centre on the true value for that distribution. It says nothing about how far any single estimate sits from the truth, which is variance, and nothing about whether the distribution is the one you care about, which is validity. A large held-out set buys the first. Nothing you can do inside the collection year buys the second.</p>
+        <p>The practical reading is that precision and relevance are bought in different shops. When somebody proposes quadrupling the held-out set to increase confidence before deployment, they are buying precision on a quantity nobody disputed.</p>
+      </div>
+    </details>
+  </section>
+
+  <!-- ============ PART 2 ============ -->
+  <section class="section" id="part-2">
+    <div class="section-kicker">
+      <span class="klabel">Part 2 · covers the three shapes that break it</span>
+      <h2>Three shapes of data where a random split is a lie about deployment</h2>
+      <span class="tag concept">12 min live</span>
+    </div>
+    <p class="lede">The independence claim and the identical-distribution claim fail in recognisable ways, and each failure has a standard repair that costs a different line of code. None of the three is a bug in the split function. Each is a mismatch between the question the split answers and the question deployment will ask.</p>
+
+    <figure class="zoomable">
+      <svg viewBox="0 0 880 404" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Three data shapes and their fixes. Grouped rows: the same patient, session, device or institution lands on both sides, and the fix is a group-aware split. Time-ordered rows: a random split shows the model the future of the period it is scored on, and the fix is a time-based split. A moving population: both sides come from the collection window, and the fix is a stress set. A band records that Thornbury is a fourth case, where both sides come from the same world and the shortcut works on both.">
+        <style>
+          .p1bH { font: 800 12px Inter, sans-serif; fill: #231A10; }
+          .p1bK { font: 800 11px Inter, sans-serif; fill: #6B5B47; }
+          .p1bT { font: 800 11px Inter, sans-serif; fill: #FFFFFF; }
+          .p1bB { font: 400 11px Inter, sans-serif; fill: #231A10; }
+          .p1bR { font: 400 11px Inter, sans-serif; fill: #155E75; }
+          .p1bRb { font: 800 11px Inter, sans-serif; fill: #155E75; }
+        </style>
+
+        <text class="p1bH" x="14" y="22">Each shape breaks a different half of the assumption, and each has its own repair.</text>
+
+        <text class="p1bK" x="14" y="44">The data shape</text>
+        <text class="p1bK" x="196" y="44">What a random split does to it</text>
+        <text class="p1bK" x="604" y="44">The repair</text>
+
+        <rect x="14" y="54" width="160" height="84" rx="8" fill="#713F12"></rect>
+        <text class="p1bT" x="26" y="88">Grouped rows</text>
+        <text class="p1bT" x="26" y="108" style="font-weight:400">rows repeat a unit</text>
+        <rect x="182" y="54" width="400" height="84" rx="8" fill="#FBF6EF" stroke="#DCCDB8"></rect>
+        <text class="p1bB" x="196" y="78">The same patient, session, device or institution</text>
+        <text class="p1bB" x="196" y="98">lands on both sides, so the model is scored on</text>
+        <text class="p1bB" x="196" y="118">rows it has already half seen.</text>
+        <rect x="590" y="54" width="276" height="84" rx="8" fill="#ECFEFF" stroke="#155E75"></rect>
+        <text class="p1bRb" x="604" y="78">A group-aware split</text>
+        <text class="p1bR" x="604" y="98">Every row from one group goes</text>
+        <text class="p1bR" x="604" y="118">to one side of the split.</text>
+
+        <rect x="14" y="150" width="160" height="84" rx="8" fill="#713F12"></rect>
+        <text class="p1bT" x="26" y="184">Time ordered</text>
+        <text class="p1bT" x="26" y="204" style="font-weight:400">rows have a clock</text>
+        <rect x="182" y="150" width="400" height="84" rx="8" fill="#FBF6EF" stroke="#DCCDB8"></rect>
+        <text class="p1bB" x="196" y="174">Training rows arrive from after the period the</text>
+        <text class="p1bB" x="196" y="194">model is scored on, so it was shown the future</text>
+        <text class="p1bB" x="196" y="214">of the window it is being judged on.</text>
+        <rect x="590" y="150" width="276" height="84" rx="8" fill="#ECFEFF" stroke="#155E75"></rect>
+        <text class="p1bRb" x="604" y="174">A time-based split</text>
+        <text class="p1bR" x="604" y="194">Train on the earlier period,</text>
+        <text class="p1bR" x="604" y="214">score on the later one.</text>
+
+        <rect x="14" y="246" width="160" height="84" rx="8" fill="#713F12"></rect>
+        <text class="p1bT" x="26" y="280">A moving</text>
+        <text class="p1bT" x="26" y="300">population</text>
+        <rect x="182" y="246" width="400" height="84" rx="8" fill="#FBF6EF" stroke="#DCCDB8"></rect>
+        <text class="p1bB" x="196" y="270">Both sides come from the collection window, so</text>
+        <text class="p1bB" x="196" y="290">neither can show what happens when the people,</text>
+        <text class="p1bB" x="196" y="310">the process or the arrangement move.</text>
+        <rect x="590" y="246" width="276" height="84" rx="8" fill="#ECFEFF" stroke="#155E75"></rect>
+        <text class="p1bRb" x="604" y="270">A stress set</text>
+        <text class="p1bR" x="604" y="290">Rows chosen to break one</text>
+        <text class="p1bR" x="604" y="310">named assumption. Session 4.</text>
+
+        <rect x="14" y="342" width="852" height="50" rx="9" fill="#EBD9C3" stroke="#DCCDB8"></rect>
+        <text class="p1bH" x="28" y="364">Thornbury is the fourth case, and the quietest one.</text>
+        <text class="p1bB" x="28" y="384">Rows are independent, the clock is fine, nobody moved yet, and the shortcut works on both sides of an honest split.</text>
+      </svg>
+      <figcaption>🔍 Click to zoom - three named shapes with three named repairs, and a fourth case no split can reach.</figcaption>
+    </figure>
+
+    <details class="card">
+      <summary><span class="mode live">Live</span>Grouped rows: the score answers a question nobody asked<span class="mini">4 min</span><span class="caret">▶</span></summary>
+      <div class="body">
+        <p>Rows are rarely the unit anybody cares about. Admissions belong to patients, clicks belong to sessions, readings belong to devices, cases belong to institutions. When a random split scatters the rows of one group across both sides, the held-out score is still an unbiased estimate, but of a strange quantity: performance on a new row from a group the model has already met. If deployment means meeting a new patient, that quantity is not the one you wanted, and it is reliably the friendlier of the two.</p>
+        <p>The repair is a group-aware split, and the only hard part is naming the group honestly. It is usually the unit that will be new at deployment time. Write it down before the split, because after the split it is invisible: the two index sets look identical in shape and completely different in meaning.</p>
+      </div>
+    </details>
+
+    <details class="card">
+      <summary><span class="mode live">Live</span>Time-ordered rows: the model saw the future of the week it is graded on<span class="mini">4 min</span><span class="caret">▶</span></summary>
+      <div class="body">
+        <p>When rows carry a clock, a random split takes some rows from after the scored period and puts them in training. The model then has information about how the period turned out while being graded on it. The estimate that comes back is unbiased for a world in which you get to know the future, which is not a world anybody deploys into.</p>
+        <p>The repair is a time-based split: train on the earlier period, score on the later one, and accept a smaller and noisier number in exchange for one that means something. This is a different failure from a field that could not have been known when the prediction was made, which is leakage; the mechanics of that, how a post-outcome field reaches a feature list and how a noisy one survives review, belong to <strong>learn-model-risk-with-phoebe</strong> p3.</p>
+      </div>
+    </details>
+
+    <details class="card">
+      <summary><span class="mode self">Self-study</span>A moving population, and why a stress set is not just more data<span class="mini">3 min</span><span class="caret">▶</span></summary>
+      <div class="body">
+        <p>The third shape is the one Thornbury eventually meets. Collection happens in one period; deployment happens in another; between them the people change, or the process that produces the rows changes, or an arrangement that several features quietly depended on is reorganised. Nothing inside the collection window can measure this, because every row you could add is drawn from the window.</p>
+        <p>A stress set is data chosen to break one named assumption: a later period, a different site, a rearranged version of the world. It is scored alongside the held-out set, never instead of it, and it answers a narrow question rather than a general one. Designing one, and being precise about what it can and cannot establish, is session 4.</p>
+      </div>
+    </details>
+  </section>
+
+  <!-- ============ PART 3 ============ -->
+  <section class="section" id="part-3">
+    <div class="section-kicker">
+      <span class="klabel">Part 3 · build-along</span>
+      <h2>Build the Thornbury world, then split it two ways</h2>
+      <span class="tag build">13 min build-along</span>
+    </div>
+    <p class="lede">Laptop open, numpy and scikit-learn, nothing else. Two blocks. The first writes the Thornbury generator, with both honest signals and the ward shortcut, so that from tonight onward every claim in the track can be checked against a world whose truth you typed yourself. The second splits the same frame twice and shows that the two results are different objects answering different questions.</p>
+
+    <div class="steps">
+      <div class="step"><div><p><strong>Write the generator.</strong> Two standard-normal signals, a logit built from them, a Bernoulli outcome, and a ward that agrees with the outcome with probability p and is a coin flip otherwise. The shortcut strength is a parameter, which is what lets the same function produce the collection year and the deployment year.</p></div></div>
+      <div class="step"><div><p><strong>Make three frames.</strong> Training and held-out at an agreement of 0.90, shifted at 0.50. Keep the seeds different so the three are genuinely separate draws.</p></div></div>
+      <div class="step"><div><p><strong>Check the shortcut is there.</strong> Before trusting anything downstream, confirm the ward matches the outcome about 90 percent of the time in the first two frames and about 50 percent in the third. A generator you have not checked is a claim, not a fixture.</p></div></div>
+      <div class="step"><div><p><strong>Add a group column.</strong> Give the frame two admissions per patient so the grouped shape is real rather than described.</p></div></div>
+      <div class="step"><div><p><strong>Split it twice.</strong> Once at random, once group-aware, and count how many patients appear on both sides of each. The random split leaks patients across the boundary; the group split cannot.</p></div></div>
+      <div class="step"><div><p><strong>Say what each score would mean.</strong> Out loud, before session 2 trains anything on either of them. One estimates performance on a new admission from a known patient. The other estimates performance on a new patient. Only one of those is deployment.</p></div></div>
+    </div>
+
+    <div class="prompt-box good"><span class="label">★ Block 1 · the Thornbury generator</span>
+import numpy as np
+
+def make_data(n, seed, shortcut_strength):
+    """Thornbury: does this patient deteriorate within 24 hours?
+
+    Two honest signals cause the outcome: a vitals drift and a lab trend.
+    One shortcut, the ward, agrees with the outcome without causing it.
+    """
+    rng = np.random.default_rng(seed)
+    vitals = rng.standard_normal(n)
+    lab = rng.standard_normal(n)
+    z = -0.35 + 1.25 * vitals + 1.05 * lab
+    p = 1.0 / (1.0 + np.exp(-z))
+    y = (rng.random(n) &lt; p).astype(int)
+
+    agrees = rng.random(n) &lt; shortcut_strength
+    coin = (rng.random(n) &lt; 0.5).astype(int)
+    ward = np.where(agrees, y, coin)
+
+    X = np.column_stack([vitals, lab, ward])
+    return X, y
+
+# the collection year: the ward agrees with the outcome 0.90 of the time
+X_train, y_train = make_data(4000, 101, 0.90)
+X_held,  y_held  = make_data(2000, 102, 0.90)
+
+# the deployment year: the wards are reorganised and agreement falls to 0.50
+X_shift, y_shift = make_data(2000, 103, 0.50)
+
+for name, X, y in [("train", X_train, y_train),
+                   ("held ", X_held,  y_held),
+                   ("shift", X_shift, y_shift)]:
+    print(name, "ward agrees with the outcome:",
+          round(float(np.mean(X[:, 2] == y)), 3))
+</div>
+
+    <div class="prompt-box good"><span class="label">★ Block 2 · two splits, two different objects</span>
+import numpy as np
+from sklearn.model_selection import train_test_split, GroupShuffleSplit
+
+X, y = make_data(4000, 101, 0.90)
+
+# make the grouped shape real: two admissions per patient
+patient = np.repeat(np.arange(len(y) // 2), 2)
+rows = np.arange(len(y))
+
+# a random split: the row is the unit
+i_tr, i_te = train_test_split(rows, test_size=0.25,
+                              random_state=0, stratify=y)
+shared_random = len(set(patient[i_tr]).intersection(patient[i_te]))
+
+# a group-aware split: the patient is the unit
+gss = GroupShuffleSplit(n_splits=1, test_size=0.25, random_state=0)
+g_tr, g_te = next(gss.split(X, y, groups=patient))
+shared_group = len(set(patient[g_tr]).intersection(patient[g_te]))
+
+print("patients on both sides, random split:", shared_random)
+print("patients on both sides, group split :", shared_group)
+
+# The two held-out sets have the same shape and answer different questions.
+# Random: how does this do on a new admission from a patient it has met.
+# Group : how does this do on a patient it has never met.
+# Neither one can see the ward shortcut, because both are drawn from the
+# collection year, where the ward agrees with the outcome 0.90 of the time.
+</div>
+
+    <div class="callout tip">
+      <p><strong>The check to keep.</strong> After any split, print how many units of the thing that will be new at deployment appear on both sides. If the answer is not zero, the score you are about to compute is an estimate of something easier than the job. This is two lines and it has caught more inflated numbers than any review meeting.</p>
+    </div>
+  </section>
+
+  <!-- ============ QUIZ ============ -->
+  <section class="section" id="quiz">
+    <div class="section-kicker">
+      <span class="klabel">Check yourself</span>
+      <h2>Three questions</h2>
+    </div>
+
+    <div class="quiz-q" data-answer="1">
+      <p class="qtext">Thornbury's held-out estimate is 0.949 and it is unbiased. Unbiased for what?</p>
+      <button class="qopt" type="button">A · For the accuracy the model will show after deployment, which is what unbiased means in practice</button>
+      <button class="qopt" type="button">B · For accuracy on the distribution the split was drawn from, and silent about every other distribution</button>
+      <button class="qopt" type="button">C · For accuracy on any distribution, provided the split was random and the held-out set was large enough</button>
+      <p class="qwhy">The guarantee is tied to the distribution that produced the rows. Nothing in the procedure ever touched the deployment year, so the estimate is not weakly informative about it; it is silent. Thornbury's 0.765 is an honest measurement of a different distribution, not a correction to the first one.</p>
+    </div>
+
+    <div class="quiz-q" data-answer="1">
+      <p class="qtext">Your rows are admissions and most patients have several. You split at random and score 0.96. What is that number an estimate of?</p>
+      <button class="qopt" type="button">A · Performance on a new patient, since the individual admission rows in the held-out set were never trained on</button>
+      <button class="qopt" type="button">B · Performance on a new admission from a patient the model has already met, which is the easier of the two questions</button>
+      <button class="qopt" type="button">C · Nothing at all, because a split with shared groups produces an invalid score that has to be discarded</button>
+      <p class="qwhy">The estimate is still unbiased, just for the wrong quantity. Rows from the same patient are not independent draws, so the held-out rows carry information the model already absorbed. A group-aware split changes the question back to the one deployment asks, and typically lowers the number.</p>
+    </div>
+
+    <div class="quiz-q" data-answer="0">
+      <p class="qtext">Why could no amount of extra held-out data at Thornbury have revealed the ward shortcut?</p>
+      <button class="qopt" type="button">A · The ward agrees with the outcome 90 percent of the time on held-out rows too, so leaning on it raises the held-out score</button>
+      <button class="qopt" type="button">B · Two thousand held-out patients is too few to detect a feature effect of that size</button>
+      <button class="qopt" type="button">C · The ward is a leak, and leaks are undetectable by construction</button>
+      <p class="qwhy">Held-out rows come from the same world as training rows, so the shortcut is just as useful on both. A model that ignored the ward would have scored worse and been rejected for it. Seeing the shortcut needs a different kind of measurement: intervene on the feature, or score somewhere else. The ward is also not a leak, since it is genuinely known before the outcome is.</p>
+    </div>
+    <p class="quiz-score"></p>
+  </section>
+
+  <!-- ============ HOMEWORK ============ -->
+  <section class="section" id="homework">
+    <div class="section-kicker">
+      <span class="klabel">Homework</span>
+      <h2>Before session 2</h2>
+      <span class="tag time">30 min</span>
+    </div>
+    <div class="callout">
+      <p>Keep tonight's generator in a file you can import, because every session from here uses it. Then take one model your team already runs and answer two questions in writing. First: what is the unit that will be new at deployment, and does the split respect it? Second: name the one feature somebody on the team would call the most predictive, and say whether it causes the outcome or merely agrees with it, and what arrangement that agreement depends on. Bring the feature name to session 2, because the measurement built there applies to it directly.</p>
+    </div>
+  </section>
+
+  <!-- ============ COVERAGE ============ -->
+  <section class="section" id="official">
+    <div class="section-kicker">
+      <span class="klabel">Sources covered</span>
+      <h2>What tonight maps to</h2>
+    </div>
+    <div class="covered">
+      <div class="covered-row">
+        <span class="status pill solid">✓</span>
+        <span class="name">What a held-out estimate is unbiased for</span>
+        <span class="note">Unbiased for the distribution the split was drawn from, silent about any other. Independent and identically distributed as an assumption about the world, not a property of the code.</span>
+      </div>
+      <div class="covered-row">
+        <span class="status pill solid">✓</span>
+        <span class="name">Three shapes where a random split lies about deployment</span>
+        <span class="note">Grouped rows, time-ordered rows, and a moving population, with the group-aware split, the time-based split and the stress set as the three repairs.</span>
+      </div>
+      <div class="covered-row">
+        <span class="status pill solid">✓</span>
+        <span class="name">The Thornbury world, built</span>
+        <span class="note">Two honest signals, one shortcut, agreement at 90 percent in the collection year and 50 percent after the wards are reorganised. Held-out 0.949 against shifted 0.765.</span>
+      </div>
+      <div class="covered-row">
+        <span class="status pill solid">✓</span>
+        <span class="name">Why a held-out score cannot see a shortcut</span>
+        <span class="note">The held-out set and the training set come from the same world, so the shortcut works on both and a model that ignores it scores worse.</span>
+      </div>
+      <div class="covered-row">
+        <span class="status pill light">◐</span>
+        <span class="name">Measuring reliance on the shortcut</span>
+        <span class="note">Session 2 flips the ward on every patient and counts the predictions that change.</span>
+      </div>
+      <div class="covered-row">
+        <span class="status pill light">◐</span>
+        <span class="name">Twenty seeds, one pipeline</span>
+        <span class="note">Session 3. Models that are indistinguishable where you looked, and distinguishable where you did not.</span>
+      </div>
+      <div class="covered-row">
+        <span class="status pill light">◐</span>
+        <span class="name">Designing the stress set</span>
+        <span class="note">Session 4. What a stress test can and cannot establish.</span>
+      </div>
+      <div class="covered-row">
+        <span class="status pill inkpill">·</span>
+        <span class="name">Leak mechanics inside one validation</span>
+        <span class="note">Not covered by design. <strong>learn-model-risk-with-phoebe</strong> p3 owns timing, how a post-outcome field reaches a feature list, and why a noisy leak survives review.</span>
+      </div>
+      <div class="covered-row">
+        <span class="status pill inkpill">·</span>
+        <span class="name">Causal machinery behind predicts against causes</span>
+        <span class="note">Not covered by design. <strong>learn-causal-inference-with-phoebe</strong> owns identification and what may be adjusted for.</span>
+      </div>
+      <div class="covered-row">
+        <span class="status pill inkpill">·</span>
+        <span class="name">Metric definitions and drift detection</span>
+        <span class="note">Not covered by design. <strong>learn-model-evaluation-with-phoebe</strong> defines every metric and owns monitoring.</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ CHEAT SHEET ============ -->
+  <section class="cheat" id="cheatsheet">
+    <h3>Session 1 cheat sheet</h3>
+    <div class="grid-2">
+      <div class="cheat-item"><b>Unbiased, and only there</b><span>A held-out score estimates performance on the distribution the split was drawn from. Silent about all others.</span></div>
+      <div class="cheat-item"><b>The assumption has a name</b><span>Independent and identically distributed. A claim about how the data was produced, not something the code checks.</span></div>
+      <div class="cheat-item"><b>Grouped rows</b><span>Same patient, session, device or institution on both sides. Fix with a group-aware split.</span></div>
+      <div class="cheat-item"><b>Time-ordered rows</b><span>A random split shows the model the future of the week it is graded on. Fix with a time-based split.</span></div>
+      <div class="cheat-item"><b>A moving population</b><span>No row from the collection window can measure it. Fix with a stress set, scored alongside not instead.</span></div>
+      <div class="cheat-item"><b>One world, two draws</b><span>A split does not create two worlds. Every regularity in the one world is in both halves.</span></div>
+      <div class="cheat-item"><b>0.949 then 0.765</b><span>Ward agreement 90 percent in the collection year, 50 percent after the reorganisation, no retraining.</span></div>
+      <div class="cheat-item"><b>The two-line check</b><span>Count the deployment-new units appearing on both sides of the split. Anything but zero softens the score.</span></div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="pagefoot">
+  <div class="wrap">
+    <p>Practitioner session 1 of 10 · learn-ml-epistemology-with-phoebe · by Phoebe Fu</p>
+    <nav class="pagenav">
+      <a href="../index.html">← All sessions</a>
+      <a href="p2-the-shortcut.html">Practitioner session 2 · The shortcut →</a>
+    </nav>
+  </div>
+</footer>
+
+<script src="../assets/app.js?v=2"></script>
+</body>
+</html>

@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- social:start -->
+<meta name="description" content="Practitioner session 5 of 10. Pick the best of k candidates by their score on a test set and the reported number climbs from 0.9527 to 0.9569 while the honest number stays at about 0.9500. The optimism grows with k, saturates, and never reaches one accuracy point.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Learn with Phoebe">
+<meta property="og:title" content="Selecting on a set - learn ML epistemology with phoebe">
+<meta property="og:description" content="Practitioner session 5 of 10. Bench B: the k sweep, the flat honest column, and the saturation.">
+<meta property="og:url" content="https://phoebefu6.github.io/learn-ml-epistemology-with-phoebe/courses/p5-selecting-on-a-set.html">
+<meta property="og:image" content="https://phoebefu6.github.io/learn-ml-epistemology-with-phoebe/assets/og-cover.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Selecting on a set - learn ML epistemology with phoebe">
+<meta name="twitter:description" content="Reported 0.9527 to 0.9569. Honest 0.9500 to 0.9497. Selection buys reports, not models.">
+<meta name="twitter:image" content="https://phoebefu6.github.io/learn-ml-epistemology-with-phoebe/assets/og-cover.png">
+<!-- social:end -->
+<title>Practitioner session 5 · Selecting on a set - learn ML epistemology with phoebe</title>
+<link rel="stylesheet" href="../assets/style.css?v=2">
+</head>
+<body>
+
+<div class="toolbar">
+  <div class="wrap">
+    <span class="crumb"><a href="../index.html">learn-ml-epistemology-with-phoebe</a> / Practitioner session 5 of 10</span>
+    <button class="btn" id="toggle-all" type="button">Expand all</button>
+    <button class="btn primary" id="zoom-toggle" type="button">Projector zoom: off</button>
+  </div>
+</div>
+
+<header class="masthead">
+  <div class="wrap">
+    <div class="eyebrow">Learn ML Epistemology with Phoebe · Practitioner session 5 of 10</div>
+    <h1>Selecting on <span class="accent">a set</span></h1>
+    <p class="sub">Train a pool of candidates, score them all on the test set, keep the best one and report its score. Everyone has done this and nothing about it looks careless. What it does to the number is measurable: across Bench B the reported accuracy climbs from 0.9527 at one candidate to 0.9569 at a hundred, while the same models measured on 6,000 patients nobody selected on sit at 0.9500 and 0.9497. The report moved. The model did not.</p>
+    <div class="chip-row">
+      <span class="chip level">🔴 Hardest</span>
+      <span class="chip audience">Anyone who has kept the best of a sweep</span>
+      <span class="chip audience">Anyone reading a number somebody else selected</span>
+      <span class="chip time">45 min</span>
+    </div>
+    <div class="agenda">
+      <span class="a1" style="flex:1">0-3 · Welcome</span>
+      <span class="a2" style="flex:4">3-17 · Where the optimism comes from</span>
+      <span class="a3" style="flex:4">17-31 · The k sweep, measured</span>
+      <span class="a4" style="flex:3">31-45 · Protections and Q&amp;A</span>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <!-- ============ INTRO ============ -->
+  <section class="section" id="intro">
+    <div class="section-kicker">
+      <span class="klabel">Part 0</span>
+      <h2>Where tonight sits</h2>
+    </div>
+    <p class="lede">Sessions 1 to 4 asked what a held-out number can tell you about a world that moves. Tonight the world stays still and the number goes wrong anyway, because of something the analyst did rather than something the hospital did. The moment a set decides which model ships, it stops being a measurement of that model and becomes the thing the model was chosen to score well on. Session 6 measures the lever that controls the size of the effect.</p>
+
+    <div class="legend">
+      <span class="pill">Live = written together in the 45 minutes</span>
+      <span class="pill">Self-study = the full depth, after class</span>
+      <span class="pill">🔍 Every diagram zooms</span>
+    </div>
+
+    <div class="callout win">
+      <p><strong>★ What you walk out with tonight.</strong> The arithmetic behind selection optimism, which is the maximum of k noisy measurements rather than any kind of overfitting to training data. The measured size of it at Thornbury, which is smaller than the folklore and larger than zero. Three protections that cost nothing and are almost never in place. And a number to quote next to any reported score: how many candidates were compared on the set that produced it.</p>
+    </div>
+
+    <details class="card" open>
+      <summary><span class="mode live">Live</span>The setup, exactly as Bench B runs it<span class="mini">4 min</span><span class="caret">▶</span></summary>
+      <div class="body">
+        <p>A pool of k candidate models is trained on the collection year. Every one of them is scored on <strong>one</strong> test set of 400 patients. The analyst keeps whichever scored highest and reports that score. The honest number is that same kept model measured again on 6,000 fresh patients nobody selected on. Candidates are smaller networks than the rest of the course uses, 6 hidden units and 8 epochs, and every row of the sweep is the mean of 12 replications.</p>
+        <p>Nothing in that description is unusual practice. It is a hyperparameter sweep, a model bake-off, a leaderboard, or a week of iterating against the same evaluation, described plainly. The only thing Bench B adds is a second set that never took part in the choice, which is how the size of the difference becomes visible at all.</p>
+      </div>
+    </details>
+
+    <details class="card">
+      <summary><span class="mode self">Self-study</span>The words that will keep coming back<span class="mini">4 min</span><span class="caret">▶</span></summary>
+      <div class="body">
+        <ul>
+          <li><strong>Reported accuracy.</strong> The winning candidate's score on the set that chose it. The number that reaches the deck.</li>
+          <li><strong>Honest accuracy.</strong> The same model, measured on data that took no part in the selection. What the model is actually worth.</li>
+          <li><strong>Optimism.</strong> Reported minus honest. At Thornbury it runs from 0.0027 at one candidate to 0.0072 at fifty and stops climbing.</li>
+          <li><strong>Selection, not overfitting.</strong> Nothing here is a model fitting noise in its training data. The candidates never see the test set during training; the analyst does.</li>
+          <li><strong>Saturation.</strong> The point past which more candidates stop buying reported accuracy. Between k = 50 and k = 100 the optimism does not move.</li>
+          <li><strong>Pre-registration.</strong> Writing down what will be selected on, and by which number, before any candidate exists.</li>
+        </ul>
+      </div>
+    </details>
+  </section>
+
+  <!-- ============ PART 1 ============ -->
+  <section class="section" id="part-1">
+    <div class="section-kicker">
+      <span class="klabel">Part 1 · covers the mechanism</span>
+      <h2>The maximum of k noisy measurements</h2>
+      <span class="tag concept">12 min live</span>
+    </div>
+    <p class="lede">An accuracy computed on 400 patients is not the model's accuracy. It is the model's accuracy plus whatever those particular 400 patients happened to contribute. Score twenty near-identical candidates on the same 400 and you get twenty draws of that contribution. Keep the largest and you have kept the largest contribution too.</p>
+
+    <figure class="zoomable">
+      <svg viewBox="0 0 880 340" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Twelve candidate models plotted as dots scattered around a dashed line marking the true accuracy they all share. The highest dot is marked as the one kept and reported. A side panel explains that the candidates are about equally good but their measurements are not, so keeping the best measurement keeps the largest error with it. A band underneath states that nothing about the model improved, only the measurement, and that raising the candidate count raises the reported number while the honest number stays where it was.">
+        <style>
+          .p5aH { font: 800 12px Inter, sans-serif; fill: #231A10; }
+          .p5aB { font: 400 11px Inter, sans-serif; fill: #231A10; }
+          .p5aM { font: 400 11px Inter, sans-serif; fill: #6B5B47; }
+          .p5aR { font: 400 11px Inter, sans-serif; fill: #155E75; }
+          .p5aRb { font: 800 12px Inter, sans-serif; fill: #155E75; }
+        </style>
+
+        <text class="p5aH" x="14" y="22">Each candidate is measured with noise. The analyst keeps the largest measurement.</text>
+
+        <text class="p5aM" x="14" y="84">measured</text>
+        <text class="p5aM" x="14" y="100">accuracy</text>
+
+        <line x1="100" y1="88" x2="100" y2="224" stroke="#DCCDB8" stroke-width="1.5"></line>
+        <line x1="100" y1="224" x2="620" y2="224" stroke="#DCCDB8" stroke-width="1.5"></line>
+
+        <line x1="100" y1="158" x2="620" y2="158" stroke="#155E75" stroke-width="1.4" stroke-dasharray="5 4"></line>
+        <text class="p5aR" x="110" y="150">true accuracy, the same for every candidate</text>
+
+        <circle cx="124" cy="176" r="4.5" fill="#713F12" fill-opacity="0.75"></circle>
+        <circle cx="164" cy="132" r="4.5" fill="#713F12" fill-opacity="0.75"></circle>
+        <circle cx="204" cy="188" r="4.5" fill="#713F12" fill-opacity="0.75"></circle>
+        <circle cx="244" cy="168" r="4.5" fill="#713F12" fill-opacity="0.75"></circle>
+        <circle cx="284" cy="120" r="4.5" fill="#713F12" fill-opacity="0.75"></circle>
+        <circle cx="324" cy="194" r="4.5" fill="#713F12" fill-opacity="0.75"></circle>
+        <circle cx="364" cy="148" r="4.5" fill="#713F12" fill-opacity="0.75"></circle>
+        <circle cx="404" cy="180" r="4.5" fill="#713F12" fill-opacity="0.75"></circle>
+        <circle cx="444" cy="128" r="4.5" fill="#713F12" fill-opacity="0.75"></circle>
+        <circle cx="484" cy="164" r="4.5" fill="#713F12" fill-opacity="0.75"></circle>
+        <circle cx="524" cy="186" r="4.5" fill="#713F12" fill-opacity="0.75"></circle>
+        <circle cx="564" cy="104" r="6.5" fill="#155E75"></circle>
+
+        <line x1="564" y1="94" x2="564" y2="80" stroke="#155E75" stroke-width="1.4"></line>
+        <text class="p5aRb" x="452" y="74">kept and reported</text>
+
+        <text class="p5aM" x="100" y="244">candidates, in the order they were trained</text>
+
+        <rect x="650" y="50" width="216" height="182" rx="9" fill="#FBF6EF" stroke="#DCCDB8"></rect>
+        <text class="p5aH" x="664" y="74">What selection does</text>
+        <text class="p5aB" x="664" y="102">Every candidate is about</text>
+        <text class="p5aB" x="664" y="122">as good as every other.</text>
+        <text class="p5aB" x="664" y="142">Their measurements are not.</text>
+        <text class="p5aM" x="664" y="170">Keeping the best measurement</text>
+        <text class="p5aM" x="664" y="190">keeps the largest error</text>
+        <text class="p5aM" x="664" y="210">along with it.</text>
+
+        <rect x="14" y="262" width="852" height="64" rx="9" fill="#ECFEFF" stroke="#155E75"></rect>
+        <text class="p5aRb" x="28" y="288">Nothing about the model improved. The measurement did.</text>
+        <text class="p5aB" x="28" y="310">Raise the candidate count and the reported number climbs while the honest number stays where it was.</text>
+      </svg>
+      <figcaption>🔍 Click to zoom - the winner is the candidate whose 400 patients were kindest, not the candidate that is best.</figcaption>
+    </figure>
+
+    <details class="card">
+      <summary><span class="mode live">Live</span>Why this is not overfitting in the usual sense<span class="mini">4 min</span><span class="caret">▶</span></summary>
+      <div class="body">
+        <p>Overfitting, as the word is normally used, is a model absorbing structure in its training data that does not exist in the world, and the cure is regularisation, more data or a smaller model. None of those touch what happens here. The candidates never see the test set while training. Every one of them generalises perfectly respectably. The inflation is introduced afterwards, by the person choosing, and it would happen just as reliably if the candidates were coin flips with no learning in them at all.</p>
+        <p>That is why regularising harder, cross-validating the candidates, or training them more carefully does not remove it. The optimism belongs to the selection step, so the only things that change it are how many comparisons the set was asked to arbitrate and how precisely it can arbitrate them.</p>
+      </div>
+    </details>
+
+    <details class="card">
+      <summary><span class="mode live">Live</span>Two things the gap grows with<span class="mini">4 min</span><span class="caret">▶</span></summary>
+      <div class="body">
+        <p><strong>How many candidates.</strong> With one candidate there is no maximum to take, so the optimism is only the ordinary difference between two samples: 0.0027 at Thornbury. With a hundred, the analyst is taking the best of a hundred draws and the optimism reaches 0.0072.</p>
+        <p><strong>How noisy each measurement is.</strong> The maximum of a hundred tightly clustered estimates is barely above their middle. The maximum of a hundred widely scattered estimates is far above it. Anything that widens the scatter, and the size of the test set is the main thing that does, widens the gap. Session 6 measures that directly.</p>
+        <div class="callout example">
+          <span class="ex-pill">Real world</span>
+          <p>A team runs a 60-configuration grid search, keeps the configuration with the best score on the evaluation set, and reports that score in the model card. Nobody logged the other 59 numbers and nobody recorded that the set was asked to rank 60 things. The reported score is not wrong, and it is not the score of the model that shipped either.</p>
+        </div>
+      </div>
+    </details>
+  </section>
+
+  <!-- ============ PART 2 ============ -->
+  <section class="section" id="part-2">
+    <div class="section-kicker">
+      <span class="klabel">Part 2 · covers the k sweep</span>
+      <h2>The honest column does not move</h2>
+      <span class="tag concept">10 min live</span>
+    </div>
+    <p class="lede">Two columns, seven rows, and the whole argument sits in the second column. One of them climbs with every extra candidate. The other one was measured on patients nobody selected on, and it is flat.</p>
+
+    <figure class="zoomable">
+      <svg viewBox="0 0 880 366" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Two lines against a candidate count of one, two, five, ten, twenty-five, fifty and one hundred. The reported accuracy climbs from 0.9527 to 0.9544, 0.9548, 0.9552, 0.9562, 0.9567 and 0.9569. The honest accuracy, measured on six thousand fresh patients, reads 0.9500, 0.9499, 0.9499, 0.9499, 0.9494, 0.9495 and 0.9497 and is flat. The optimism below each point reads 0.0027, 0.0045, 0.0049, 0.0053, 0.0068, 0.0072 and 0.0072.">
+        <style>
+          .p5bH { font: 800 12px Inter, sans-serif; fill: #231A10; }
+          .p5bB { font: 400 11px Inter, sans-serif; fill: #231A10; }
+          .p5bM { font: 400 11px Inter, sans-serif; fill: #6B5B47; }
+          .p5bRb { font: 800 12px Inter, sans-serif; fill: #155E75; }
+        </style>
+
+        <text class="p5bH" x="14" y="22">Selecting harder moves one line and not the other.</text>
+
+        <line x1="110" y1="38" x2="140" y2="38" stroke="#713F12" stroke-width="3"></line>
+        <circle cx="125" cy="38" r="4" fill="#713F12"></circle>
+        <text class="p5bM" x="148" y="42">reported: the best of k on the test set</text>
+        <line x1="400" y1="38" x2="430" y2="38" stroke="#155E75" stroke-width="3"></line>
+        <circle cx="415" cy="38" r="4" fill="#155E75"></circle>
+        <text class="p5bM" x="438" y="42">honest: the same model on 6,000 fresh patients</text>
+
+        <line x1="100" y1="60" x2="100" y2="262" stroke="#DCCDB8" stroke-width="1.5"></line>
+        <line x1="100" y1="262" x2="800" y2="262" stroke="#DCCDB8" stroke-width="1.5"></line>
+
+        <line x1="94" y1="80" x2="100" y2="80" stroke="#DCCDB8" stroke-width="1.5"></line>
+        <line x1="94" y1="130" x2="100" y2="130" stroke="#DCCDB8" stroke-width="1.5"></line>
+        <line x1="94" y1="180" x2="100" y2="180" stroke="#DCCDB8" stroke-width="1.5"></line>
+        <line x1="94" y1="230" x2="100" y2="230" stroke="#DCCDB8" stroke-width="1.5"></line>
+        <text class="p5bM" x="88" y="84" text-anchor="end">0.9575</text>
+        <text class="p5bM" x="88" y="134" text-anchor="end">0.9550</text>
+        <text class="p5bM" x="88" y="184" text-anchor="end">0.9525</text>
+        <text class="p5bM" x="88" y="234" text-anchor="end">0.9500</text>
+
+        <polyline points="120,176 228,142 336,134 444,126 552,106 660,96 768,92" fill="none" stroke="#713F12" stroke-width="2.4"></polyline>
+        <circle cx="120" cy="176" r="4" fill="#713F12"></circle>
+        <circle cx="228" cy="142" r="4" fill="#713F12"></circle>
+        <circle cx="336" cy="134" r="4" fill="#713F12"></circle>
+        <circle cx="444" cy="126" r="4" fill="#713F12"></circle>
+        <circle cx="552" cy="106" r="4" fill="#713F12"></circle>
+        <circle cx="660" cy="96" r="4" fill="#713F12"></circle>
+        <circle cx="768" cy="92" r="4" fill="#713F12"></circle>
+
+        <polyline points="120,230 228,232 336,232 444,232 552,242 660,240 768,236" fill="none" stroke="#155E75" stroke-width="2.4"></polyline>
+        <circle cx="120" cy="230" r="4" fill="#155E75"></circle>
+        <circle cx="228" cy="232" r="4" fill="#155E75"></circle>
+        <circle cx="336" cy="232" r="4" fill="#155E75"></circle>
+        <circle cx="444" cy="232" r="4" fill="#155E75"></circle>
+        <circle cx="552" cy="242" r="4" fill="#155E75"></circle>
+        <circle cx="660" cy="240" r="4" fill="#155E75"></circle>
+        <circle cx="768" cy="236" r="4" fill="#155E75"></circle>
+
+        <text class="p5bM" x="14" y="282">candidates k</text>
+        <text class="p5bB" x="120" y="282" text-anchor="middle">1</text>
+        <text class="p5bB" x="228" y="282" text-anchor="middle">2</text>
+        <text class="p5bB" x="336" y="282" text-anchor="middle">5</text>
+        <text class="p5bB" x="444" y="282" text-anchor="middle">10</text>
+        <text class="p5bB" x="552" y="282" text-anchor="middle">25</text>
+        <text class="p5bB" x="660" y="282" text-anchor="middle">50</text>
+        <text class="p5bB" x="768" y="282" text-anchor="middle">100</text>
+
+        <text class="p5bM" x="14" y="306">optimism</text>
+        <text class="p5bM" x="120" y="306" text-anchor="middle">0.0027</text>
+        <text class="p5bM" x="228" y="306" text-anchor="middle">0.0045</text>
+        <text class="p5bM" x="336" y="306" text-anchor="middle">0.0049</text>
+        <text class="p5bM" x="444" y="306" text-anchor="middle">0.0053</text>
+        <text class="p5bM" x="552" y="306" text-anchor="middle">0.0068</text>
+        <text class="p5bM" x="660" y="306" text-anchor="middle">0.0072</text>
+        <text class="p5bM" x="768" y="306" text-anchor="middle">0.0072</text>
+
+        <text class="p5bRb" x="14" y="336">The honest column does not move: 0.9500 at k = 1 and 0.9497 at k = 100.</text>
+        <text class="p5bB" x="14" y="358">Selecting a hundred times harder bought 0.0042 of reported accuracy and -0.0003 of real accuracy.</text>
+      </svg>
+      <figcaption>🔍 Click to zoom - the gap between the two lines is the optimism, and it stops growing after k = 50.</figcaption>
+    </figure>
+
+    <div class="tablescroll">
+      <table class="clean">
+        <thead>
+          <tr><th>Candidates k</th><th>Reported</th><th>Honest</th><th>Optimism</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>1</td><td>0.9527</td><td>0.9500</td><td>0.0027</td></tr>
+          <tr><td>2</td><td>0.9544</td><td>0.9499</td><td>0.0045</td></tr>
+          <tr><td>5</td><td>0.9548</td><td>0.9499</td><td>0.0049</td></tr>
+          <tr><td>10</td><td>0.9552</td><td>0.9499</td><td>0.0053</td></tr>
+          <tr><td>25</td><td>0.9562</td><td>0.9494</td><td>0.0068</td></tr>
+          <tr><td>50</td><td>0.9567</td><td>0.9495</td><td>0.0072</td></tr>
+          <tr><td>100</td><td>0.9569</td><td>0.9497</td><td>0.0072</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <details class="card">
+      <summary><span class="mode live">Live</span>Why the flat column is the finding<span class="mini">4 min</span><span class="caret">▶</span></summary>
+      <div class="body">
+        <p>A climbing reported column on its own proves nothing. It is entirely possible that searching a hundred candidates finds a genuinely better model than searching one, and if it did, both columns would climb together. They do not. The honest column reads 0.9500 at one candidate and 0.9497 at a hundred, which is to say that a hundred times more search produced a model that is very slightly worse on data nobody chose it with.</p>
+        <p>That is the observation worth taking away, because it is the one that separates a real improvement from a selected one. Any time a search is reported as having improved a model, the question is whether the improvement shows up on something the search never touched. If there is no such measurement, there is no way to tell the two apart, and the default assumption should not be that the search got lucky twice.</p>
+      </div>
+    </details>
+
+    <details class="card">
+      <summary><span class="mode self">Self-study</span>The saturation, and why it is reassuring<span class="mini">3 min</span><span class="caret">▶</span></summary>
+      <div class="body">
+        <p>The optimism climbs steeply from k = 1 to k = 10, more slowly to k = 50, and not at all from k = 50 to k = 100. Both of the last two rows read 0.0072. The maximum of many draws grows very slowly once there are already many draws, so doubling a search that is already large barely moves the reported number.</p>
+        <p>The practical consequence is worth stating plainly: the difference between comparing 50 candidates and comparing 5,000 is far smaller than the difference between comparing 1 and comparing 10. Most of the damage is done early. A team that says "we only tried a handful" has not said what they think they have said.</p>
+      </div>
+    </details>
+  </section>
+
+  <!-- ============ PART 3 ============ -->
+  <section class="section" id="part-3">
+    <div class="section-kicker">
+      <span class="klabel">Part 3 · covers the protections</span>
+      <h2>Three things that cost nothing</h2>
+      <span class="tag concept">8 min live</span>
+    </div>
+    <p class="lede">None of these require more data, a different model or a statistician. All three are process, and all three are usually missing from the places the number ends up.</p>
+
+    <figure class="zoomable">
+      <svg viewBox="0 0 880 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Three protections shown as panels. First, hold a set back: score it once at the end after every choice is made, because a set you can still look at is a validation set whatever it is called. Second, write the selection rule first: say in advance what will be selected on and by which number so the choice cannot drift towards whatever the set happens to reward. Third, count the looks: record how many times the set has decided something, because the count is how soft the number is. A band underneath names the reusable holdout of Dwork and colleagues, which answers repeated questions against one set by spending a privacy budget and so puts a ceiling on how many looks the set can survive.">
+        <style>
+          .p5cH { font: 800 12px Inter, sans-serif; fill: #231A10; }
+          .p5cT { font: 800 11px Inter, sans-serif; fill: #FFFFFF; }
+          .p5cB { font: 400 11px Inter, sans-serif; fill: #231A10; }
+          .p5cM { font: 400 11px Inter, sans-serif; fill: #6B5B47; }
+        </style>
+
+        <text class="p5cH" x="14" y="22">Process, not statistics. All three are free.</text>
+
+        <rect x="14" y="40" width="276" height="160" rx="9" fill="#FBF6EF" stroke="#DCCDB8"></rect>
+        <rect x="14" y="40" width="276" height="28" rx="9" fill="#713F12"></rect>
+        <text class="p5cT" x="30" y="59">1 · Hold a set back</text>
+        <text class="p5cB" x="30" y="92">Scored once, at the end, after</text>
+        <text class="p5cB" x="30" y="112">every choice is already made.</text>
+        <text class="p5cM" x="30" y="132">A set you can still look at is</text>
+        <text class="p5cM" x="30" y="152">a validation set, whatever</text>
+        <text class="p5cM" x="30" y="172">it is called.</text>
+
+        <rect x="302" y="40" width="276" height="160" rx="9" fill="#FBF6EF" stroke="#DCCDB8"></rect>
+        <rect x="302" y="40" width="276" height="28" rx="9" fill="#713F12"></rect>
+        <text class="p5cT" x="318" y="59">2 · Write the rule first</text>
+        <text class="p5cB" x="318" y="92">Say in advance what will be</text>
+        <text class="p5cB" x="318" y="112">selected on and by which</text>
+        <text class="p5cM" x="318" y="132">number, so the choice cannot</text>
+        <text class="p5cM" x="318" y="152">drift towards whatever the set</text>
+        <text class="p5cM" x="318" y="172">happens to reward.</text>
+
+        <rect x="590" y="40" width="276" height="160" rx="9" fill="#FBF6EF" stroke="#DCCDB8"></rect>
+        <rect x="590" y="40" width="276" height="28" rx="9" fill="#155E75"></rect>
+        <text class="p5cT" x="606" y="59">3 · Count the looks</text>
+        <text class="p5cB" x="606" y="92">Record how many times the set</text>
+        <text class="p5cB" x="606" y="112">has decided something: a</text>
+        <text class="p5cM" x="606" y="132">threshold, a variant, a cutoff.</text>
+        <text class="p5cM" x="606" y="152">The count is how soft the</text>
+        <text class="p5cM" x="606" y="172">number is.</text>
+
+        <rect x="14" y="214" width="852" height="74" rx="9" fill="#ECFEFF" stroke="#155E75"></rect>
+        <text class="p5cH" x="28" y="242">A fourth protection, for teams that cannot hold a set back.</text>
+        <text class="p5cB" x="28" y="266">Dwork et al. proposed answering repeated questions against one set by spending a privacy budget, which puts a ceiling on how many looks it can survive.</text>
+      </svg>
+      <figcaption>🔍 Click to zoom - the third one is the cheapest and the rarest: a count anybody can keep.</figcaption>
+    </figure>
+
+    <div class="steps">
+      <div class="step"><div><p><strong>Split three ways before anything is trained.</strong> Training, validation, and a set that is physically separate and has a name that says so. The point of the third one is that it has never answered a question.</p></div></div>
+      <div class="step"><div><p><strong>Write the selection rule into the plan.</strong> Which metric, on which set, with ties broken how. A rule written after the candidates exist is a description of the winner, not a rule.</p></div></div>
+      <div class="step"><div><p><strong>Keep a look counter next to the set.</strong> One line in a log per decision the set arbitrated: a threshold, a feature set, an architecture, an early-stop point. The count is what the reader needs in order to discount the number.</p></div></div>
+      <div class="step"><div><p><strong>Report k with the score.</strong> "0.956 on 400 held-out patients, best of 60 configurations" is a different claim from "0.956", and it takes six extra words.</p></div></div>
+      <div class="step"><div><p><strong>Measure the honest number when you can afford it.</strong> If a genuinely untouched set exists, score the chosen model on it once and report both figures. The difference between them is your own optimism, measured rather than assumed.</p></div></div>
+      <div class="step"><div><p><strong>Treat a reused set as spent.</strong> Once a set has chosen a model, it can still describe that model, but it can no longer rank a new one against it without the same inflation returning.</p></div></div>
+    </div>
+
+    <div class="prompt-box good"><span class="label">★ Bench B, run against the engine on this page</span>
+/* ep-live.js is loaded on this page and exposes window.THORNBURY */
+const T = window.THORNBURY;
+
+const train = T.makeData(3000, 77, 0.90);   /* the collection year      */
+const fresh = T.makeData(6000, 88, 0.90);   /* nobody selects on these  */
+
+function sweep(k, n, reps) {
+  let reported = 0, honest = 0;
+  for (let r = 0; r &lt; reps; r++) {
+    const test = T.makeData(n, 5000 + r * 13, 0.90);
+    const pool = T.candidatePool(train, k, 20000 + r * 500);
+    const s = T.selectOnTest(pool, test, fresh);   /* keeps the best on test */
+    reported += s.reported;
+    honest += s.honest;
+  }
+  return { reported: reported / reps, honest: honest / reps };
+}
+
+for (const k of [1, 2, 5, 10, 25, 50, 100]) {
+  const s = sweep(k, 400, 12);
+  console.log(k, s.reported.toFixed(4), s.honest.toFixed(4),
+              (s.reported - s.honest).toFixed(4));
+}
+
+/* 1    0.9527  0.9500  0.0027
+   100  0.9569  0.9497  0.0072
+   candidatePool builds k nets of 6 hidden units for 8 epochs;
+   selectOnTest returns {reported, honest, index} for the winner. */
+</div>
+
+    <div class="callout tip">
+      <p><strong>The habit to keep.</strong> Whenever a score arrives without a candidate count, ask for one. Not to catch anybody out, but because the two numbers mean different things and only one of them is on the slide. A reviewer who knows that 60 configurations were compared on 400 rows knows roughly how much of the score to spend, and a reviewer who does not is reading a maximum as if it were a measurement.</p>
+    </div>
+  </section>
+
+  <!-- ============ PART 4 ============ -->
+  <section class="section" id="part-4">
+    <div class="section-kicker">
+      <span class="klabel">Part 4 · covers the disagreement</span>
+      <h2>Three true things that pull against each other</h2>
+      <span class="tag concept">6 min live</span>
+    </div>
+    <p class="lede">The mechanism is arithmetic and is not in doubt. The measurement here is small. And two strong field results found the effect mild where it was expected to be worst. All three hold, and the honest position is to keep all three rather than pick the one that suits the argument.</p>
+
+    <figure class="zoomable">
+      <svg viewBox="0 0 880 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Three positions side by side. The mechanism: taking the best of k noisy measurements inflates the measurement, which is arithmetic. The measurement: Bench B records optimism of 0.0027 at one candidate and 0.0072 at fifty, flat after that, never reaching one accuracy point. The field evidence: Recht and colleagues attributed the ImageNet and CIFAR-10 drops to harder images rather than reuse, and Roelofs and colleagues found little adaptive overfitting across over a hundred Kaggle competitions. A band underneath states that a claim of broadly corrupted leaderboards does not survive the measurement and a claim that reuse is harmless does not survive the mechanism.">
+        <style>
+          .p5dH { font: 800 12px Inter, sans-serif; fill: #231A10; }
+          .p5dT { font: 800 11px Inter, sans-serif; fill: #FFFFFF; }
+          .p5dB { font: 400 11px Inter, sans-serif; fill: #231A10; }
+          .p5dM { font: 400 11px Inter, sans-serif; fill: #6B5B47; }
+          .p5dRb { font: 800 12px Inter, sans-serif; fill: #155E75; }
+        </style>
+
+        <text class="p5dH" x="14" y="22">Three things that are all true at once.</text>
+
+        <rect x="14" y="40" width="276" height="176" rx="9" fill="#FBF6EF" stroke="#DCCDB8"></rect>
+        <rect x="14" y="40" width="276" height="28" rx="9" fill="#713F12"></rect>
+        <text class="p5dT" x="30" y="59">The mechanism</text>
+        <text class="p5dB" x="30" y="92">Taking the best of k noisy</text>
+        <text class="p5dB" x="30" y="112">measurements inflates the</text>
+        <text class="p5dB" x="30" y="132">measurement. That is</text>
+        <text class="p5dM" x="30" y="152">arithmetic, and it holds</text>
+        <text class="p5dM" x="30" y="172">whoever is doing it and</text>
+        <text class="p5dM" x="30" y="192">however careful they are.</text>
+
+        <rect x="302" y="40" width="276" height="176" rx="9" fill="#FBF6EF" stroke="#DCCDB8"></rect>
+        <rect x="302" y="40" width="276" height="28" rx="9" fill="#4A2A0C"></rect>
+        <text class="p5dT" x="318" y="59">The measurement</text>
+        <text class="p5dB" x="318" y="92">Bench B: optimism 0.0027</text>
+        <text class="p5dB" x="318" y="112">at k = 1, 0.0072 at k = 50,</text>
+        <text class="p5dB" x="318" y="132">and flat after that.</text>
+        <text class="p5dM" x="318" y="152">It never reaches one</text>
+        <text class="p5dM" x="318" y="172">accuracy point at any</text>
+        <text class="p5dM" x="318" y="192">candidate count tried.</text>
+
+        <rect x="590" y="40" width="276" height="176" rx="9" fill="#FBF6EF" stroke="#DCCDB8"></rect>
+        <rect x="590" y="40" width="276" height="28" rx="9" fill="#155E75"></rect>
+        <text class="p5dT" x="606" y="59">The field evidence</text>
+        <text class="p5dB" x="606" y="92">Recht et al. put the ImageNet</text>
+        <text class="p5dB" x="606" y="112">and CIFAR-10 drops down to</text>
+        <text class="p5dB" x="606" y="132">harder images, not reuse.</text>
+        <text class="p5dM" x="606" y="152">Roelofs et al. found little</text>
+        <text class="p5dM" x="606" y="172">adaptive overfitting across</text>
+        <text class="p5dM" x="606" y="192">over a hundred competitions.</text>
+
+        <rect x="14" y="230" width="852" height="58" rx="9" fill="#ECFEFF" stroke="#155E75"></rect>
+        <text class="p5dRb" x="28" y="256">A claim that leaderboards are broadly corrupted does not survive the measurement.</text>
+        <text class="p5dB" x="28" y="278">A claim that reuse is harmless does not survive the mechanism. Both have to be held at once.</text>
+      </svg>
+      <figcaption>🔍 Click to zoom - the disagreement is live, and neither side of it is folklore.</figcaption>
+    </figure>
+
+    <details class="card">
+      <summary><span class="mode live">Live</span>What the two field results actually found<span class="mini">4 min</span><span class="caret">▶</span></summary>
+      <div class="body">
+        <p>Recht, Roelofs, Schmidt and Shankar built new test sets for CIFAR-10 and ImageNet and measured accuracy drops of 3 to 15 percent on CIFAR-10 and 11 to 14 percent on ImageNet. The drops were large. Their conclusion about the cause is the part that matters here: they attributed them to the models' limited ability to generalise to slightly harder images rather than to contamination of the test set through repeated use. They also observed that accuracy gains on the original test sets translate to larger gains on the new ones.</p>
+        <p>Roelofs, Shankar and colleagues went at it from the other direction, across over one hundred Kaggle competitions where entrants repeatedly score against a public holdout and a separate set decides the final ranking. That is adaptive analysis at industrial scale, with money on it. They found little evidence of substantial adaptive overfitting.</p>
+      </div>
+    </details>
+
+    <details class="card">
+      <summary><span class="mode self">Self-study</span>The claim that is defensible<span class="mini">3 min</span><span class="caret">▶</span></summary>
+      <div class="body">
+        <p>Two sentences are unsupportable in opposite directions. "Everyone is overfitting the benchmark" is not supported by anything: the measured effect here saturates under one accuracy point, and the two strongest field studies looked for large adaptive overfitting and did not find it. "Test-set reuse is harmless" is not supported either: the mechanism is arithmetic, the gap is measurable, and it grows with both the number of comparisons and the noisiness of each one.</p>
+        <p>What survives all three positions is narrower and more useful. Selecting on a set converts it from evidence into a target. The cost of that conversion is real, measurable and modest, and it scales with how small the set is. That is a claim you can defend in a review without either alarming people or reassuring them falsely.</p>
+      </div>
+    </details>
+  </section>
+
+  <!-- ============ QUIZ ============ -->
+  <section class="section" id="quiz">
+    <div class="section-kicker">
+      <span class="klabel">Check yourself</span>
+      <h2>Three questions</h2>
+    </div>
+
+    <div class="quiz-q" data-answer="2">
+      <p class="qtext">Reported accuracy rises from 0.9527 at k = 1 to 0.9569 at k = 100 while honest accuracy reads 0.9500 and 0.9497. What does the flat honest column establish?</p>
+      <button class="qopt" type="button">A · That the honest measurement is too coarse to detect the improvement the larger search found</button>
+      <button class="qopt" type="button">B · That the test set of 400 was too small, and both columns would climb together on a larger one</button>
+      <button class="qopt" type="button">C · That the extra search bought reported accuracy and not real accuracy, so the climb is selection rather than improvement</button>
+      <p class="qwhy">If the larger search had found a better model, the honest column would have moved with the reported one. It did not: 0.9500 down to 0.9497 across a hundredfold increase in search. The maximum of many noisy estimates grows; the thing being estimated does not.</p>
+    </div>
+
+    <div class="quiz-q" data-answer="0">
+      <p class="qtext">A team regularises every candidate harder and re-runs the same 60-configuration sweep against the same evaluation set. What happens to the selection optimism?</p>
+      <button class="qopt" type="button">A · Nothing much, because the optimism belongs to the selection step rather than to how any individual candidate was fitted</button>
+      <button class="qopt" type="button">B · It falls, because regularisation is the standard cure for overfitting and this is a form of overfitting</button>
+      <button class="qopt" type="button">C · It rises, because regularised candidates are more similar to each other and the maximum is therefore further out</button>
+      <p class="qwhy">The candidates never see the test set while training, so nothing about how they were fitted changes the arithmetic of taking a maximum over 60 noisy measurements. The two levers are the number of comparisons and the precision of each one, which is the test-set size.</p>
+    </div>
+
+    <div class="quiz-q" data-answer="1">
+      <p class="qtext">Which sentence about test-set reuse is defensible given the mechanism, Bench B and the field evidence together?</p>
+      <button class="qopt" type="button">A · Published leaderboards are broadly corrupted by repeated evaluation and their rankings should not be trusted</button>
+      <button class="qopt" type="button">B · Selecting on a set turns it from evidence into a target, at a cost that is real, measurable and modest, and that grows as the set gets smaller</button>
+      <button class="qopt" type="button">C · Repeated evaluation against a public holdout has been shown to be harmless, so a single well-kept test set is enough</button>
+      <p class="qwhy">The first overstates what anybody has measured: the optimism here saturates under one accuracy point, Recht et al. attributed the ImageNet and CIFAR-10 drops to harder images rather than reuse, and Roelofs et al. found little adaptive overfitting across over a hundred competitions. The third denies an arithmetic mechanism that is visible in the k sweep. Only the middle sentence holds all three positions at once.</p>
+    </div>
+    <p class="quiz-score"></p>
+  </section>
+
+  <!-- ============ HOMEWORK ============ -->
+  <section class="section" id="homework">
+    <div class="section-kicker">
+      <span class="klabel">Homework</span>
+      <h2>Before session 6</h2>
+      <span class="tag time">30 min</span>
+    </div>
+    <div class="callout">
+      <p>Take a score your team has reported in the last quarter and reconstruct two numbers about it: how many candidates were compared on the set that produced it, and how many rows that set had. Ask whoever ran it; the answer is usually available and almost never written down. Then predict, in writing and before session 6, what would happen to the optimism if the same sweep had used a quarter as many test rows. Session 6 measures exactly that, and a prediction made beforehand is the only kind worth anything.</p>
+    </div>
+  </section>
+
+  <!-- ============ COVERAGE ============ -->
+  <section class="section" id="official">
+    <div class="section-kicker">
+      <span class="klabel">Sources covered</span>
+      <h2>What tonight maps to</h2>
+    </div>
+    <div class="covered">
+      <div class="covered-row">
+        <span class="status pill solid">✓</span>
+        <span class="name">Bench B, the k sweep</span>
+        <span class="note">Reported 0.9527 to 0.9569 across k = 1 to 100, honest 0.9500 to 0.9497, optimism 0.0027 to 0.0072 with saturation between k = 50 and k = 100.</span>
+      </div>
+      <div class="covered-row">
+        <span class="status pill solid">✓</span>
+        <span class="name">Where the optimism comes from</span>
+        <span class="note">The maximum of k noisy measurements. Selection by the analyst, not a model fitting noise in its training data, which is why regularising the candidates does not touch it.</span>
+      </div>
+      <div class="covered-row">
+        <span class="status pill solid">✓</span>
+        <span class="name">The flat honest column</span>
+        <span class="note">Selecting a hundred times harder bought 0.0042 of reported accuracy and -0.0003 of real accuracy. The second column is what separates an improvement from a selection.</span>
+      </div>
+      <div class="covered-row">
+        <span class="status pill solid">✓</span>
+        <span class="name">The live disagreement</span>
+        <span class="note">The mechanism, the measured size, and the field evidence from Recht et al. and Roelofs et al. held together rather than resolved in either direction.</span>
+      </div>
+      <div class="covered-row">
+        <span class="status pill solid">✓</span>
+        <span class="name">Protections</span>
+        <span class="note">A genuinely held-back set, a selection rule written before the candidates exist, and a count of how many times the set has decided something.</span>
+      </div>
+      <div class="covered-row">
+        <span class="status pill light">◐</span>
+        <span class="name">How big a test set needs to be</span>
+        <span class="note">Session 6 runs the size sweep with error bars and measures the lever that controls the size of tonight's gap.</span>
+      </div>
+      <div class="covered-row">
+        <span class="status pill light">◐</span>
+        <span class="name">What a benchmark licenses</span>
+        <span class="note">Session 7. Construct validity and the benchmark lottery, which is a different problem from reuse.</span>
+      </div>
+      <div class="covered-row">
+        <span class="status pill inkpill">·</span>
+        <span class="name">The reusable holdout and differential privacy</span>
+        <span class="note">Not covered by design. Named once above as a proposed answer to repeated questions against one set; its mechanics are not derived anywhere in this track.</span>
+      </div>
+      <div class="covered-row">
+        <span class="status pill inkpill">·</span>
+        <span class="name">Metric design and metric gaming</span>
+        <span class="note">Not covered by design. <strong>learn-okr-with-phoebe</strong>, <strong>learn-model-evaluation-with-phoebe</strong> and <strong>learn-ai-evals-with-phoebe</strong> own how a metric is chosen and how it is gamed.</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ CHEAT SHEET ============ -->
+  <section class="cheat" id="cheatsheet">
+    <h3>Session 5 cheat sheet</h3>
+    <div class="grid-2">
+      <div class="cheat-item"><b>A maximum, not a measurement</b><span>The best of k noisy estimates carries the largest error with it.</span></div>
+      <div class="cheat-item"><b>0.9527 to 0.9569</b><span>Reported accuracy from k = 1 to k = 100. The climb is selection.</span></div>
+      <div class="cheat-item"><b>0.9500 to 0.9497</b><span>The honest column across the same sweep. Nothing improved.</span></div>
+      <div class="cheat-item"><b>Not overfitting</b><span>The candidates never see the test set while training. The analyst does. Regularisation cannot help.</span></div>
+      <div class="cheat-item"><b>Two levers</b><span>How many comparisons the set arbitrated, and how precisely it can arbitrate them.</span></div>
+      <div class="cheat-item"><b>It saturates</b><span>0.0072 at k = 50 and 0.0072 at k = 100. Most of the damage happens early.</span></div>
+      <div class="cheat-item"><b>Report k with the score</b><span>Best of 60 on 400 rows is a different claim from a bare accuracy, and it costs six words.</span></div>
+      <div class="cheat-item"><b>Hold all three</b><span>Real mechanism, modest measurement, field evidence against alarm. Do not resolve it by picking one.</span></div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="pagefoot">
+  <div class="wrap">
+    <p>Practitioner session 5 of 10 · learn-ml-epistemology-with-phoebe · by Phoebe Fu</p>
+    <nav class="pagenav">
+      <a href="p4-stress-tests.html">← Practitioner session 4 · Stress tests</a>
+      <a href="p6-how-big-a-test-set.html">Practitioner session 6 · How big does a test set need to be →</a>
+    </nav>
+  </div>
+</footer>
+
+<script src="../assets/ep-live.js?v=2"></script>
+<script src="../assets/app.js?v=2"></script>
+</body>
+</html>

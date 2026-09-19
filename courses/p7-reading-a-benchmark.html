@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- social:start -->
+<meta name="description" content="Practitioner session 7 of 10. A leaderboard rank is a claim about a method paired with one task, one distribution and one scoring rule. The procedure for writing down what a published number licenses for your problem, what it does not, and what you would have to measure yourself to close the gap.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Learn with Phoebe">
+<meta property="og:title" content="Reading a benchmark - learn ML epistemology with phoebe">
+<meta property="og:description" content="Practitioner session 7 of 10. Construct validity as a checklist, the benchmark lottery, and the licence statement you write before you cite.">
+<meta property="og:url" content="https://phoebefu6.github.io/learn-ml-epistemology-with-phoebe/courses/p7-reading-a-benchmark.html">
+<meta property="og:image" content="https://phoebefu6.github.io/learn-ml-epistemology-with-phoebe/assets/og-cover.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Reading a benchmark - learn ML epistemology with phoebe">
+<meta name="twitter:description" content="The ordering ports into your shortlist. The level never ports into your forecast.">
+<meta name="twitter:image" content="https://phoebefu6.github.io/learn-ml-epistemology-with-phoebe/assets/og-cover.png">
+<!-- social:end -->
+<title>Practitioner session 7 · Reading a benchmark - learn ML epistemology with phoebe</title>
+<link rel="stylesheet" href="../assets/style.css?v=2">
+</head>
+<body>
+
+<div class="toolbar">
+  <div class="wrap">
+    <span class="crumb"><a href="../index.html">learn-ml-epistemology-with-phoebe</a> / Practitioner session 7 of 10</span>
+    <button class="btn" id="toggle-all" type="button">Expand all</button>
+    <button class="btn primary" id="zoom-toggle" type="button">Projector zoom: off</button>
+  </div>
+</div>
+
+<header class="masthead">
+  <div class="wrap">
+    <div class="eyebrow">Learn ML Epistemology with Phoebe · Practitioner session 7 of 10</div>
+    <h1>Reading <span class="accent">a benchmark</span></h1>
+    <p class="sub">Sessions 5 and 6 were about a set you own. Tonight the set belongs to somebody else, the number has already been published, and the only decision left is how much of it to carry across to your own problem. The answer is less than it looks, and it is not zero. The procedure takes four questions and ends in three written sentences you attach to the citation, so that anyone reading your deck next quarter can see exactly what the rank was asked to support.</p>
+    <div class="chip-row">
+      <span class="chip level">🔴 Hardest</span>
+      <span class="chip audience">Anyone shortlisting a model from a leaderboard</span>
+      <span class="chip audience">Anyone who has cited a published score in a plan</span>
+      <span class="chip time">45 min</span>
+    </div>
+    <div class="agenda">
+      <span class="a1" style="flex:1">0-3 · Welcome</span>
+      <span class="a2" style="flex:4">3-16 · The three parts of a rank</span>
+      <span class="a3" style="flex:4">16-30 · The lottery and the gap</span>
+      <span class="a4" style="flex:4">30-45 · Writing the licence</span>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <!-- ============ INTRO ============ -->
+  <section class="section" id="intro">
+    <div class="section-kicker">
+      <span class="klabel">Part 0</span>
+      <h2>Where tonight sits</h2>
+    </div>
+    <p class="lede">Session 5 measured what selecting on your own set costs, and session 6 found the lever that controls it. Both assumed you were holding the set. A published rank is the same object one step further away: somebody else chose the task, somebody else collected the data, somebody else decided what counts as an error, and none of those three people had your problem in mind. Session 8 goes one level up again, to a body of evidence rather than a single number.</p>
+
+    <div class="legend">
+      <span class="pill">Live = written together in the 45 minutes</span>
+      <span class="pill">Self-study = the full depth, after class</span>
+      <span class="pill">🔍 Every diagram zooms</span>
+    </div>
+
+    <div class="callout win">
+      <p><strong>★ What you walk out with tonight.</strong> A four-question pass you can run against any leaderboard in about ten minutes, before the number reaches a slide. The reason a rank belongs to a pairing of method and benchmark rather than to the method. The one piece of measured evidence that says which half of a benchmark result travels and which half does not. And the artifact: three sentences that say what the rank licenses for your problem, what it does not, and what you would have to measure yourself to close the difference.</p>
+    </div>
+
+    <details class="card" open>
+      <summary><span class="mode live">Live</span>A benchmark is an instrument, and construct validity is the question<span class="mini">4 min</span><span class="caret">▶</span></summary>
+      <div class="body">
+        <p>Every benchmark returns a number about a specific quantity, under specific conditions, using a specific rule for what counts as wrong. Construct validity asks whether that quantity is the one you care about. It is a different question from whether the reading is accurate, and it is the one that usually goes unasked, because an accurate reading of the wrong quantity looks exactly like an accurate reading.</p>
+        <p>The practical form of the question splits into three, and every leaderboard row answers all three silently. What task was formalised. Whose data it was computed on. How predictions were converted into one number. A rank is a claim about a method paired with those three things, and the pairing is what does not come with you when you copy the number into your own document.</p>
+      </div>
+    </details>
+
+    <details class="card">
+      <summary><span class="mode self">Self-study</span>The words that will keep coming back<span class="mini">4 min</span><span class="caret">▶</span></summary>
+      <div class="body">
+        <ul>
+          <li><strong>Construct validity.</strong> Whether the quantity an instrument measures is the quantity you intended to measure. Precision and reproducibility say nothing about it.</li>
+          <li><strong>Task.</strong> The decision the benchmark formalises: what is predicted, from what inputs, at which moment.</li>
+          <li><strong>Distribution.</strong> Whose data, collected when, by what process, and who is not in it.</li>
+          <li><strong>Scoring rule.</strong> How a set of predictions becomes one number, which is also the decision about which direction of error is allowed to matter.</li>
+          <li><strong>Task set.</strong> The collection of benchmarks a community happens to use. It is a choice, and it participates in the result.</li>
+          <li><strong>Level and ordering.</strong> How well a method scores, against whether it scores better than another one. They do not travel equally well, and most citations carry the wrong one.</li>
+          <li><strong>The licence.</strong> The written statement of what a published number supports for your problem. Three sentences, attached to the citation.</li>
+        </ul>
+      </div>
+    </details>
+  </section>
+
+  <!-- ============ PART 1 ============ -->
+  <section class="section" id="part-1">
+    <div class="section-kicker">
+      <span class="klabel">Part 1 · covers construct validity</span>
+      <h2>Three questions hiding inside one rank</h2>
+      <span class="tag concept">12 min live</span>
+    </div>
+    <p class="lede">Run these against the leaderboard before the number reaches anybody senior. Each one takes a sentence to answer and a sentence to answer for your own problem, and the two sentences side by side are most of the finding.</p>
+
+    <figure class="zoomable">
+      <svg viewBox="0 0 880 360" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Three panels breaking a benchmark rank into its parts. The task: what is predicted, from what inputs, at which moment, written as two sentences of the same shape, the benchmark's and yours. The distribution: whose data, collected when, by what process, and who is missing, against Thornbury as a district group in a deployment year where the wards have already been reorganised. The scoring rule: how predictions become one number and which direction of error is cheap, against a ward staffing decision that does not price the two directions the same. A band underneath states that a rank is a claim about a method paired with one task, one distribution and one scoring rule, that three of those four belong to the benchmark, and that citing the rank as a property of the method drops them.">
+        <style>
+          .p7aH { font: 800 12px Inter, sans-serif; fill: #231A10; }
+          .p7aT { font: 800 11px Inter, sans-serif; fill: #FFFFFF; }
+          .p7aB { font: 400 11px Inter, sans-serif; fill: #231A10; }
+          .p7aM { font: 400 11px Inter, sans-serif; fill: #6B5B47; }
+          .p7aRb { font: 800 12px Inter, sans-serif; fill: #155E75; }
+        </style>
+
+        <text class="p7aH" x="14" y="22">Every leaderboard row answers all three of these, silently, before you arrive.</text>
+
+        <rect x="14" y="44" width="276" height="204" rx="9" fill="#FBF6EF" stroke="#DCCDB8"></rect>
+        <rect x="14" y="44" width="276" height="28" rx="9" fill="#713F12"></rect>
+        <text class="p7aT" x="30" y="63">1 · The task</text>
+        <text class="p7aB" x="30" y="96">What is predicted, from</text>
+        <text class="p7aB" x="30" y="116">what inputs, at which</text>
+        <text class="p7aB" x="30" y="136">moment.</text>
+        <text class="p7aM" x="30" y="168">Write the benchmark's task</text>
+        <text class="p7aM" x="30" y="188">and your own as two</text>
+        <text class="p7aM" x="30" y="208">sentences of the same shape.</text>
+        <text class="p7aM" x="30" y="228">The gap is visible there.</text>
+
+        <rect x="302" y="44" width="276" height="204" rx="9" fill="#FBF6EF" stroke="#DCCDB8"></rect>
+        <rect x="302" y="44" width="276" height="28" rx="9" fill="#4A2A0C"></rect>
+        <text class="p7aT" x="318" y="63">2 · The distribution</text>
+        <text class="p7aB" x="318" y="96">Whose data, collected</text>
+        <text class="p7aB" x="318" y="116">when, by what process,</text>
+        <text class="p7aB" x="318" y="136">and who is missing.</text>
+        <text class="p7aM" x="318" y="168">Thornbury is a district group</text>
+        <text class="p7aM" x="318" y="188">in a deployment year where</text>
+        <text class="p7aM" x="318" y="208">the wards have already been</text>
+        <text class="p7aM" x="318" y="228">reorganised.</text>
+
+        <rect x="590" y="44" width="276" height="204" rx="9" fill="#FBF6EF" stroke="#DCCDB8"></rect>
+        <rect x="590" y="44" width="276" height="28" rx="9" fill="#155E75"></rect>
+        <text class="p7aT" x="606" y="63">3 · The scoring rule</text>
+        <text class="p7aB" x="606" y="96">How predictions become</text>
+        <text class="p7aB" x="606" y="116">one number, and which</text>
+        <text class="p7aB" x="606" y="136">error is treated as cheap.</text>
+        <text class="p7aM" x="606" y="168">A rule that prices both</text>
+        <text class="p7aM" x="606" y="188">directions the same is not</text>
+        <text class="p7aM" x="606" y="208">the rule a ward staffing</text>
+        <text class="p7aM" x="606" y="228">decision runs on.</text>
+
+        <rect x="14" y="262" width="852" height="84" rx="9" fill="#ECFEFF" stroke="#155E75"></rect>
+        <text class="p7aRb" x="28" y="288">A rank is a claim about a method paired with one task, one distribution and one scoring rule.</text>
+        <text class="p7aB" x="28" y="312">Three of those four things belong to the benchmark. Copying the rank into your own document copies the method</text>
+        <text class="p7aB" x="28" y="334">and quietly leaves the other three behind, which is where the impression of transfer comes from.</text>
+      </svg>
+      <figcaption>🔍 Click to zoom - the three answers cost about ten minutes and they are almost never written down anywhere.</figcaption>
+    </figure>
+
+    <details class="card">
+      <summary><span class="mode live">Live</span>Why an accurate reading is the trap<span class="mini">4 min</span><span class="caret">▶</span></summary>
+      <div class="body">
+        <p>Published benchmark numbers are usually computed correctly. The code is often released, the protocol is documented, and a second team running it gets the same figure. All of that is evidence about precision and none of it is evidence about which quantity was measured. A thermometer that reads to two decimal places is still the wrong instrument for measuring a room's humidity, and nobody catches that by checking the decimal places.</p>
+        <p>The failure shows up in a particular way: the team that cites the number is not wrong about the number, so the conversation never lands on anything checkable. Naming the three parts converts it into something checkable. Once the benchmark's task is written as one sentence next to yours, disagreement becomes possible, and disagreement that can be settled is worth far more than agreement that cannot.</p>
+        <div class="callout example">
+          <span class="ex-pill">Real world</span>
+          <p>A vendor's model leads a public clinical prediction benchmark. Thornbury predicts deterioration within 24 hours, on a district group's intake, for a decision where missing a deteriorating patient and pulling a nurse to a stable one cost very different amounts. If the benchmark's outcome window, intake and error pricing differ on any of those three, the lead is still real and it is a lead on a different measurement.</p>
+        </div>
+      </div>
+    </details>
+
+    <details class="card">
+      <summary><span class="mode self">Self-study</span>The fourth question, which is about you<span class="mini">3 min</span><span class="caret">▶</span></summary>
+      <div class="body">
+        <p>After the three, there is a fourth that nobody else can answer: what would this method score on our data. It is the only question whose answer settles an absolute claim, and the reason to ask it last is that the first three tell you how large the gap you are trying to close is likely to be. A benchmark whose task, distribution and scoring rule are all close to yours needs a small confirmation. One that differs on all three needs a measurement, not a confirmation.</p>
+        <p>Asking it also changes what a supplier conversation is about. A rank is not falsifiable by you. A figure computed on a set you kept clean is, which turns a sales claim into a testable one at the cost of some calendar time and no statistics at all.</p>
+      </div>
+    </details>
+  </section>
+
+  <!-- ============ PART 2 ============ -->
+  <section class="section" id="part-2">
+    <div class="section-kicker">
+      <span class="klabel">Part 2 · covers the benchmark lottery</span>
+      <h2>The rank has three inputs and only one is the method</h2>
+      <span class="tag concept">9 min live</span>
+    </div>
+    <p class="lede">Dehghani, Tay, Gritsenko, Zhao, Houlsby, Diaz, Metzler and Vinyals gave the effect a name in 2021. Nobody has to cheat for it to operate, and understanding why is what stops a practitioner from over-reading a lead.</p>
+
+    <figure class="zoomable">
+      <svg viewBox="0 0 880 320" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Three inputs feeding one output. The method, which is the only part you are buying. The task set chosen, largely a historical accident. The distribution and the scoring rule, both fixed before any method ran. All three arrows converge on a box reading first on that benchmark, labelled one number with three sources. A panel on the right quotes Dehghani and colleagues 2021, arXiv 2107.07002, that the benchmark lottery postulates that many factors other than fundamental algorithmic superiority may lead to a method being perceived as superior, and that the relative performance of algorithms may be altered significantly simply by choosing different benchmark tasks. A band underneath says to quote the rank with the benchmark's name attached.">
+        <style>
+          .p7bH { font: 800 12px Inter, sans-serif; fill: #231A10; }
+          .p7bT { font: 800 11px Inter, sans-serif; fill: #FFFFFF; }
+          .p7bBig { font: 800 22px Inter, sans-serif; fill: #FFFFFF; }
+          .p7bW { font: 400 11px Inter, sans-serif; fill: #FFFFFF; }
+          .p7bN { font: 800 11px Inter, sans-serif; fill: #231A10; }
+          .p7bB { font: 400 11px Inter, sans-serif; fill: #231A10; }
+          .p7bM { font: 400 11px Inter, sans-serif; fill: #6B5B47; }
+          .p7bRb { font: 800 12px Inter, sans-serif; fill: #155E75; }
+        </style>
+        <defs>
+          <marker id="p7bAr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#6B5B47"></path></marker>
+        </defs>
+
+        <text class="p7bH" x="14" y="22">What actually produced the number on the slide.</text>
+
+        <rect x="14" y="44" width="212" height="52" rx="8" fill="#FBF6EF" stroke="#DCCDB8"></rect>
+        <text class="p7bN" x="28" y="68">The method</text>
+        <text class="p7bM" x="28" y="86">the only part you are buying</text>
+
+        <rect x="14" y="114" width="212" height="52" rx="8" fill="#FBF6EF" stroke="#DCCDB8"></rect>
+        <text class="p7bN" x="28" y="138">The task set chosen</text>
+        <text class="p7bM" x="28" y="156">largely a historical accident</text>
+
+        <rect x="14" y="184" width="212" height="52" rx="8" fill="#FBF6EF" stroke="#DCCDB8"></rect>
+        <text class="p7bN" x="28" y="208">The data and the rule</text>
+        <text class="p7bM" x="28" y="226">fixed before any method ran</text>
+
+        <line x1="230" y1="70" x2="304" y2="122" stroke="#6B5B47" stroke-width="1.4" marker-end="url(#p7bAr)"></line>
+        <line x1="230" y1="140" x2="304" y2="140" stroke="#6B5B47" stroke-width="1.4" marker-end="url(#p7bAr)"></line>
+        <line x1="230" y1="210" x2="304" y2="158" stroke="#6B5B47" stroke-width="1.4" marker-end="url(#p7bAr)"></line>
+
+        <rect x="312" y="104" width="142" height="76" rx="9" fill="#155E75"></rect>
+        <text class="p7bBig" x="383" y="142" text-anchor="middle">1st</text>
+        <text class="p7bW" x="383" y="164" text-anchor="middle">on that benchmark</text>
+        <text class="p7bM" x="383" y="200" text-anchor="middle">one number, three sources</text>
+
+        <rect x="478" y="44" width="388" height="204" rx="9" fill="#FBF6EF" stroke="#DCCDB8"></rect>
+        <rect x="478" y="44" width="388" height="28" rx="9" fill="#713F12"></rect>
+        <text class="p7bT" x="494" y="63">Why the rank belongs to the pairing</text>
+        <text class="p7bB" x="494" y="96">Dehghani et al. (2021), arXiv 2107.07002, call it the</text>
+        <text class="p7bB" x="494" y="116">benchmark lottery. It "postulates that many factors,</text>
+        <text class="p7bB" x="494" y="136">other than fundamental algorithmic superiority, may</text>
+        <text class="p7bB" x="494" y="156">lead to a method being perceived as superior".</text>
+        <text class="p7bM" x="494" y="188">They show "the relative performance of algorithms may</text>
+        <text class="p7bM" x="494" y="208">be altered significantly simply by choosing different</text>
+        <text class="p7bM" x="494" y="228">benchmark tasks".</text>
+
+        <rect x="14" y="262" width="852" height="48" rx="9" fill="#ECFEFF" stroke="#155E75"></rect>
+        <text class="p7bRb" x="28" y="292">Quote the rank with the benchmark's name attached, or you have quoted a property the method does not have.</text>
+      </svg>
+      <figcaption>🔍 Click to zoom - the method is one of three inputs, and it is the only one anybody ever names.</figcaption>
+    </figure>
+
+    <details class="card">
+      <summary><span class="mode live">Live</span>What the word lottery does and does not mean<span class="mini">4 min</span><span class="caret">▶</span></summary>
+      <div class="body">
+        <p>It does not mean the results are random, and it does not mean anybody gamed anything. It means the set of tasks a community settled on is itself a choice, made before the methods existed and usually for reasons of history rather than design. That choice is part of the answer. A method that suits the tasks in the set will place well in it, and placing well in it is what the word leading means in practice.</p>
+        <p>The practitioner consequence is a counting habit rather than a rule. One benchmark is one instrument reading. If a lead exists on one task set, the claim has survived nothing yet. If it holds across several unlike task sets, it has survived something and the ordering is worth carrying into a shortlist. If the lead exists on exactly the benchmark the authors are best known for, say that out loud when you cite it.</p>
+      </div>
+    </details>
+
+    <details class="card">
+      <summary><span class="mode self">Self-study</span>Why this is not a reason to stop using benchmarks<span class="mini">3 min</span><span class="caret">▶</span></summary>
+      <div class="body">
+        <p>A shared benchmark is how a field makes progress comparable at all. Without one, every claim is a demonstration and nothing can be ranked against anything. Reading the lottery as a reason to discard published evidence replaces a calibrated inference with no inference, which is a worse position to argue from and much harder to correct.</p>
+        <p>The useful reading is about the strength of an inference rather than its existence. A rank is real evidence of modest strength about a comparison, and the strength rises with the number of unlike task sets the comparison survives. That is a dial, not a switch, and treating it as a switch is how teams end up choosing models on vibes after deciding the numbers cannot be trusted.</p>
+      </div>
+    </details>
+  </section>
+
+  <!-- ============ PART 3 ============ -->
+  <section class="section" id="part-3">
+    <div class="section-kicker">
+      <span class="klabel">Part 3 · covers what transfers</span>
+      <h2>The level fell and the ordering held</h2>
+      <span class="tag concept">9 min live</span>
+    </div>
+    <p class="lede">Recht, Roelofs, Schmidt and Shankar built genuinely new test sets and scored the existing models on them. The result has two halves and they point in opposite directions, which is why the retellings usually keep one.</p>
+
+    <figure class="zoomable">
+      <svg viewBox="0 0 880 350" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Two panels. The level did not transfer: on new test sets built the original way, CIFAR-10 fell 3 to 15 percent and ImageNet fell 11 to 14 percent, so the absolute figure is not a forecast of anything. The ordering largely held: accuracy gains on the original test sets translate to larger gains on the new test sets, so a lead is usable evidence about which of two methods is better. A band underneath says to port the ordering into a shortlist and never the level into a forecast, and records that Recht and colleagues put the fall down to the models' limited ability to generalise to slightly harder images rather than to test-set contamination through repeated use.">
+        <style>
+          .p7cH { font: 800 12px Inter, sans-serif; fill: #231A10; }
+          .p7cT { font: 800 11px Inter, sans-serif; fill: #FFFFFF; }
+          .p7cB { font: 400 11px Inter, sans-serif; fill: #231A10; }
+          .p7cM { font: 400 11px Inter, sans-serif; fill: #6B5B47; }
+          .p7cRb { font: 800 12px Inter, sans-serif; fill: #155E75; }
+        </style>
+
+        <text class="p7cH" x="14" y="22">Two halves of one result. Most citations carry the first and drop the second.</text>
+
+        <rect x="14" y="44" width="420" height="200" rx="9" fill="#FBF6EF" stroke="#DCCDB8"></rect>
+        <rect x="14" y="44" width="420" height="28" rx="9" fill="#4A2A0C"></rect>
+        <text class="p7cT" x="30" y="63">The level did not transfer</text>
+        <text class="p7cB" x="30" y="98">New test sets, built the original way:</text>
+        <text class="p7cB" x="30" y="122">CIFAR-10 fell 3 to 15 percent.</text>
+        <text class="p7cB" x="30" y="146">ImageNet fell 11 to 14 percent.</text>
+        <text class="p7cM" x="30" y="180">So the absolute figure on the slide is not</text>
+        <text class="p7cM" x="30" y="200">a forecast of anything, including the same</text>
+        <text class="p7cM" x="30" y="220">models on data collected the same way.</text>
+
+        <rect x="446" y="44" width="420" height="200" rx="9" fill="#FBF6EF" stroke="#DCCDB8"></rect>
+        <rect x="446" y="44" width="420" height="28" rx="9" fill="#155E75"></rect>
+        <text class="p7cT" x="462" y="63">The ordering largely held</text>
+        <text class="p7cB" x="462" y="98">"Accuracy gains on the original test sets</text>
+        <text class="p7cB" x="462" y="122">translate to larger gains on the new</text>
+        <text class="p7cB" x="462" y="146">test sets."</text>
+        <text class="p7cM" x="462" y="180">So a lead is usable evidence about which</text>
+        <text class="p7cM" x="462" y="200">of two methods is better, and that is the</text>
+        <text class="p7cM" x="462" y="220">half you are allowed to carry across.</text>
+
+        <rect x="14" y="258" width="852" height="80" rx="9" fill="#ECFEFF" stroke="#155E75"></rect>
+        <text class="p7cRb" x="28" y="284">Port the ordering into your shortlist. Never port the level into your forecast.</text>
+        <text class="p7cB" x="28" y="308">The authors put the fall down to the models' limited ability to generalise to slightly harder images, not to</text>
+        <text class="p7cB" x="28" y="330">test-set contamination through repeated use, which keeps it a separate effect from anything session 5 measured.</text>
+      </svg>
+      <figcaption>🔍 Click to zoom - the asymmetry is the finding, and most vendor conversations get it exactly backwards.</figcaption>
+    </figure>
+
+    <details class="card">
+      <summary><span class="mode live">Live</span>Three results that pull against each other, kept apart<span class="mini">5 min</span><span class="caret">▶</span></summary>
+      <div class="body">
+        <p>The intuitive explanation for a fresh test set producing worse numbers is that the old one had been scored against so often that the community had quietly fitted to it. Recht, Roelofs, Schmidt and Shankar concluded otherwise for these drops: the cause was the models' limited ability to generalise to slightly harder images rather than contamination through repeated use. Roelofs, Shankar and colleagues went at the same suspicion from another angle, across over one hundred Kaggle competitions where entrants score repeatedly against a public holdout and a separate set decides the final ranking, and found little evidence of substantial adaptive overfitting.</p>
+        <p>Against that, session 5 measured the mechanism directly at Thornbury and it is real: optimism of 0.0027 at one candidate rising to 0.0072 at fifty, then flat. Small, and not zero. Three findings, all sound, and the temptation is to collapse them into a single slogan in one direction or the other. Keeping them apart is the skill. Reuse is a real mechanism with a modest measured cost. The distribution gap is a separate and larger effect. A published number can be hurt by both and they need different responses.</p>
+        <div class="callout example">
+          <span class="ex-pill">Real world</span>
+          <p>Two teams argue about a leaderboard. One says the rankings are meaningless because everyone has overfitted the benchmark. The other says the numbers are fine because a well-run leaderboard uses a hidden set. Neither position survives the evidence: the reuse effect is measurable and small, and the much larger fall in the ImageNet and CIFAR-10 work came from somewhere else entirely. The question that moves the argument forward is which of the two is operating here, and that is answerable.</p>
+        </div>
+      </div>
+    </details>
+
+    <details class="card">
+      <summary><span class="mode self">Self-study</span>What a bigger fall would and would not tell you<span class="mini">3 min</span><span class="caret">▶</span></summary>
+      <div class="body">
+        <p>Suppose you rebuild a benchmark's test set yourself, following its collection process, and your models score several points lower. That fall is consistent with two very different stories: the community fitted to the old set, or your rebuild is slightly harder than the original in ways nobody intended. Recht, Roelofs, Schmidt and Shankar ran into exactly that ambiguity and landed on the second explanation.</p>
+        <p>The observation that separates them is the ordering. If the community had fitted to the old set, the methods that had been tuned hardest against it would fall furthest and the ranking would scramble. If the new set is simply harder, everything falls together and the ranking survives. The ranking surviving, plus gains on the original sets translating to larger gains on the new ones, is what made the second story the better fit. That is a diagnostic you can run yourself whenever you build a second test set.</p>
+      </div>
+    </details>
+  </section>
+
+  <!-- ============ PART 4 ============ -->
+  <section class="section" id="part-4">
+    <div class="section-kicker">
+      <span class="klabel">Part 4 · covers the output</span>
+      <h2>Write the licence before you cite the number</h2>
+      <span class="tag concept">10 min live</span>
+    </div>
+    <p class="lede">The whole pass produces one artifact, and it is three sentences long. It goes next to the citation, in the same document, so that the reader six months from now can see what the rank was asked to carry.</p>
+
+    <figure class="zoomable">
+      <svg viewBox="0 0 880 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Three panels describing the licence statement. What it licenses: that this method is likely better than the one it beat, on that benchmark's task and distribution, which is an ordering and not a level. What it does not license: any figure you can expect on your own patients, and any claim about a task the benchmark did not run. What closes the gap: one number computed on your data, by your team, on a set nobody selected on, with a named owner and a date. A band underneath says three sentences written once and attached to the citation, because a rank without them is a verdict nobody can check.">
+        <style>
+          .p7dH { font: 800 12px Inter, sans-serif; fill: #231A10; }
+          .p7dT { font: 800 11px Inter, sans-serif; fill: #FFFFFF; }
+          .p7dB { font: 400 11px Inter, sans-serif; fill: #231A10; }
+          .p7dM { font: 400 11px Inter, sans-serif; fill: #6B5B47; }
+          .p7dRb { font: 800 12px Inter, sans-serif; fill: #155E75; }
+        </style>
+
+        <text class="p7dH" x="14" y="22">The artifact: three sentences, attached to the citation.</text>
+
+        <rect x="14" y="44" width="276" height="180" rx="9" fill="#FBF6EF" stroke="#DCCDB8"></rect>
+        <rect x="14" y="44" width="276" height="28" rx="9" fill="#713F12"></rect>
+        <text class="p7dT" x="30" y="63">What it licenses</text>
+        <text class="p7dB" x="30" y="96">That this method is likely</text>
+        <text class="p7dB" x="30" y="116">better than the one it beat,</text>
+        <text class="p7dB" x="30" y="136">on that benchmark's task</text>
+        <text class="p7dB" x="30" y="156">and distribution.</text>
+        <text class="p7dM" x="30" y="188">An ordering, not a level.</text>
+
+        <rect x="302" y="44" width="276" height="180" rx="9" fill="#FBF6EF" stroke="#DCCDB8"></rect>
+        <rect x="302" y="44" width="276" height="28" rx="9" fill="#4A2A0C"></rect>
+        <text class="p7dT" x="318" y="63">What it does not</text>
+        <text class="p7dB" x="318" y="96">Any figure to expect on</text>
+        <text class="p7dB" x="318" y="116">your own patients, and any</text>
+        <text class="p7dB" x="318" y="136">claim about a task the</text>
+        <text class="p7dB" x="318" y="156">benchmark did not run.</text>
+        <text class="p7dM" x="318" y="188">Nothing absolute travels.</text>
+
+        <rect x="590" y="44" width="276" height="180" rx="9" fill="#FBF6EF" stroke="#DCCDB8"></rect>
+        <rect x="590" y="44" width="276" height="28" rx="9" fill="#155E75"></rect>
+        <text class="p7dT" x="606" y="63">What closes the gap</text>
+        <text class="p7dB" x="606" y="96">One number computed on</text>
+        <text class="p7dB" x="606" y="116">your data, by your team,</text>
+        <text class="p7dB" x="606" y="136">on a set nobody selected</text>
+        <text class="p7dB" x="606" y="156">on.</text>
+        <text class="p7dM" x="606" y="188">Name the owner and a date.</text>
+
+        <rect x="14" y="238" width="852" height="48" rx="9" fill="#ECFEFF" stroke="#155E75"></rect>
+        <text class="p7dRb" x="28" y="268">A rank cited without these three sentences is a verdict, and a verdict is the one thing nobody can check later.</text>
+      </svg>
+      <figcaption>🔍 Click to zoom - the third panel is the one that turns a sales claim into something you can be wrong about.</figcaption>
+    </figure>
+
+    <div class="steps">
+      <div class="step"><div><p><strong>Name the instrument.</strong> Which benchmark, by name, which version, and who built it. A claim whose instrument cannot be named is not a measurement and the pass stops here.</p></div></div>
+      <div class="step"><div><p><strong>Write the two task sentences.</strong> The benchmark's task and yours, same shape, same length: what is predicted, from what inputs, at which moment. Put them on consecutive lines and read them out loud.</p></div></div>
+      <div class="step"><div><p><strong>Write the two distribution sentences.</strong> Whose data and when, for both. Add the clause that usually decides it: who is in theirs that is not in yours, and who is in yours that is not in theirs.</p></div></div>
+      <div class="step"><div><p><strong>Ask what the scoring rule forgives.</strong> Which direction of error it prices cheaply, and who pays for that error in your setting. If the two answers differ, the rank is measuring a trade-off your operation does not make.</p></div></div>
+      <div class="step"><div><p><strong>Count the unlike task sets the lead survives.</strong> One is a reading. Two unlike ones is a claim. If the lead exists on exactly one benchmark, write that sentence into the citation rather than leaving the reader to discover it.</p></div></div>
+      <div class="step"><div><p><strong>Write the three sentences and attach them.</strong> Licenses, does not license, would close the gap. In the same document as the number, not in a separate review that nobody opens.</p></div></div>
+      <div class="step"><div><p><strong>Turn the third sentence into a task with an owner.</strong> A measurement nobody is scheduled to run is a sentence, not a plan, and the number will be cited unqualified by the second meeting.</p></div></div>
+    </div>
+
+    <div class="prompt-box good"><span class="label">★ The licence, filled in for a Thornbury shortlist</span>
+CLAIM AS RECEIVED
+  "Ranked 1st on &lt;benchmark name&gt;, accuracy &lt;figure&gt;."
+
+INSTRUMENT
+  Benchmark:     &lt;name, version, who built it&gt;
+  Task:          predicts &lt;what&gt; from &lt;inputs&gt; at &lt;moment&gt;
+  Ours:          predicts deterioration within 24 hours from
+                 vitals drift and lab trend, at admission
+  Distribution:  &lt;whose data, collected when, by what process&gt;
+  Ours:          Thornbury district intake, deployment year,
+                 wards already reorganised
+  Scoring rule:  &lt;what counts as wrong, and how much&gt;
+  Ours:          a missed deterioration and a pulled nurse do
+                 not cost the same
+
+LICENCE
+  Licenses:      probably the better of the two methods listed,
+                 on that benchmark's task and distribution.
+  Does not:      any accuracy figure for Thornbury patients.
+                 The level did not transfer in the one place
+                 anybody measured it: 3 to 15 percent on
+                 CIFAR-10, 11 to 14 percent on ImageNet.
+  To close it:   score the candidate on 2,000 Thornbury patients
+                 from a set that took no part in the choice.
+                 Owner: &lt;name&gt;. By: &lt;date&gt;.
+
+LEAD SURVIVES
+  1 task set. Not yet a claim about the method.
+</div>
+
+    <div class="callout tip">
+      <p><strong>The habit to keep.</strong> The licence is written before the number is quoted, not after somebody challenges it. Written first it takes ten minutes and reads as diligence. Written second it takes an hour and reads as a retreat, and by then the unqualified figure is already in three decks and one board pack.</p>
+    </div>
+  </section>
+
+  <!-- ============ QUIZ ============ -->
+  <section class="section" id="quiz">
+    <div class="section-kicker">
+      <span class="klabel">Check yourself</span>
+      <h2>Three questions</h2>
+    </div>
+
+    <div class="quiz-q" data-answer="1">
+      <p class="qtext">A published model leads a clinical benchmark by two points. Which part of that result are you entitled to carry into a Thornbury shortlist?</p>
+      <button class="qopt" type="button">A · The level, because the benchmark was built by a clinical group and Thornbury is a clinical setting</button>
+      <button class="qopt" type="button">B · The ordering, because gains on the original test sets translate to larger gains on new ones while the level itself fell by 3 to 15 percent on CIFAR-10 and 11 to 14 percent on ImageNet</button>
+      <button class="qopt" type="button">C · Neither, because a benchmark computed on somebody else's data supports no inference about your problem</button>
+      <p class="qwhy">The one place anybody built genuinely new test sets and measured both halves, the level fell substantially and the ranking largely survived. Carrying the ordering into a shortlist is supported. Carrying the absolute figure into a forecast is not, and discarding the whole thing throws away real comparative evidence.</p>
+    </div>
+
+    <div class="quiz-q" data-answer="0">
+      <p class="qtext">Two internal teams each cite a different benchmark and reach opposite conclusions about which method is better. What does the benchmark lottery say is going on?</p>
+      <button class="qopt" type="button">A · Relative performance may be altered significantly simply by choosing different benchmark tasks, so each rank belongs to a pairing of method and task set and both reports can be correct</button>
+      <button class="qopt" type="button">B · One team has chosen its benchmark to support a conclusion it already held, and the disagreement is about honesty rather than measurement</button>
+      <button class="qopt" type="button">C · Averaging the two rankings resolves it, since more benchmarks gives a more reliable answer than either alone</button>
+      <p class="qwhy">The lottery postulates that factors other than fundamental algorithmic superiority can make a method be perceived as superior, and nobody has to act in bad faith for that. Averaging unlike instruments does not help either. The question to ask is which instrument measures the quantity your decision needs.</p>
+    </div>
+
+    <div class="quiz-q" data-answer="2">
+      <p class="qtext">A colleague argues that leaderboard rankings are worthless because the community has overfitted the benchmarks. What does the evidence support?</p>
+      <button class="qopt" type="button">A · The argument holds: repeated evaluation against public sets is why fresh test sets produce lower numbers</button>
+      <button class="qopt" type="button">B · The opposite holds: adaptive overfitting has been ruled out, so published rankings can be read at face value</button>
+      <button class="qopt" type="button">C · Neither: the reuse mechanism is real and measured small, Recht et al. attributed the ImageNet and CIFAR-10 drops to harder images rather than reuse, and Roelofs et al. found little adaptive overfitting across over a hundred competitions</button>
+      <p class="qwhy">Session 5 measured the reuse mechanism at Thornbury: optimism of 0.0027 at one candidate, 0.0072 at fifty, then flat, so it is real and modest. The two field results looked for large adaptive overfitting where it should have been worst and did not find it, and they attributed the large falls to a different effect. All three are sound and none of them supports the slogan in either direction.</p>
+    </div>
+    <p class="quiz-score"></p>
+  </section>
+
+  <!-- ============ HOMEWORK ============ -->
+  <section class="section" id="homework">
+    <div class="section-kicker">
+      <span class="klabel">Homework</span>
+      <h2>Before session 8</h2>
+      <span class="tag time">30 min</span>
+    </div>
+    <div class="callout">
+      <p>Take the most impressive external number your team currently relies on and write its licence: what it licenses, what it does not, and what you would have to measure to close the gap. Then add one line that session 8 needs. Find the sentence in the source that says how the data were split between what the model learned from and what it was scored on, and copy it out exactly. If there is no such sentence, write down that there is not. The presence or absence of that one sentence is where next session starts.</p>
+    </div>
+  </section>
+
+  <!-- ============ COVERAGE ============ -->
+  <section class="section" id="official">
+    <div class="section-kicker">
+      <span class="klabel">Sources covered</span>
+      <h2>What tonight maps to</h2>
+    </div>
+    <div class="covered">
+      <div class="covered-row">
+        <span class="status pill solid">✓</span>
+        <span class="name">Construct validity, in three parts</span>
+        <span class="note">The task, the distribution and the scoring rule, each written as a sentence next to your own, run as a pass before the number reaches a slide.</span>
+      </div>
+      <div class="covered-row">
+        <span class="status pill solid">✓</span>
+        <span class="name">The benchmark lottery</span>
+        <span class="note">Dehghani, Tay, Gritsenko, Zhao, Houlsby, Diaz, Metzler and Vinyals (2021), arXiv 2107.07002. A rank is a property of a pairing, and nobody has to cheat for that to be true.</span>
+      </div>
+      <div class="covered-row">
+        <span class="status pill solid">✓</span>
+        <span class="name">The distribution gap, and what survived it</span>
+        <span class="note">Recht, Roelofs, Schmidt and Shankar (2019): 3 to 15 percent on CIFAR-10, 11 to 14 percent on ImageNet, with gains on the original sets still translating to larger gains on the new ones.</span>
+      </div>
+      <div class="covered-row">
+        <span class="status pill solid">✓</span>
+        <span class="name">Three results kept apart</span>
+        <span class="note">Bench B's measured reuse optimism of 0.0027 to 0.0072, the harder-images explanation for the ImageNet and CIFAR-10 drops, and little adaptive overfitting across over a hundred Kaggle competitions.</span>
+      </div>
+      <div class="covered-row">
+        <span class="status pill solid">✓</span>
+        <span class="name">The licence statement</span>
+        <span class="note">Licenses, does not license, would close the gap. Three sentences attached to the citation, with the third turned into a task that has an owner and a date.</span>
+      </div>
+      <div class="covered-row">
+        <span class="status pill light">◐</span>
+        <span class="name">Leakage at the scale of a literature</span>
+        <span class="note">Session 8. Tonight reads one published number; session 8 reads a body of evidence where 294 papers across 17 fields share a flaw.</span>
+      </div>
+      <div class="covered-row">
+        <span class="status pill light">◐</span>
+        <span class="name">What selecting on a set costs</span>
+        <span class="note">Session 5 measured it and session 6 found the lever. Tonight uses both results and does not re-derive either.</span>
+      </div>
+      <div class="covered-row">
+        <span class="status pill inkpill">·</span>
+        <span class="name">How any metric is defined or computed</span>
+        <span class="note">Not covered by design. <strong>learn-model-evaluation-with-phoebe</strong> owns the metrics themselves, drift detection and the eval scorecard.</span>
+      </div>
+      <div class="covered-row">
+        <span class="status pill inkpill">·</span>
+        <span class="name">External validity of an experiment</span>
+        <span class="note">Not covered by design. <strong>learn-experimentation-with-phoebe</strong> owns whether an experimental result travels; tonight is a fitted model's published score.</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ CHEAT SHEET ============ -->
+  <section class="cheat" id="cheatsheet">
+    <h3>Session 7 cheat sheet</h3>
+    <div class="grid-2">
+      <div class="cheat-item"><b>Task, distribution, scoring rule</b><span>The three things hiding inside every rank. Write each one next to yours.</span></div>
+      <div class="cheat-item"><b>Accurate is not valid</b><span>A correct reading of the wrong quantity looks exactly like a correct reading.</span></div>
+      <div class="cheat-item"><b>A rank belongs to a pairing</b><span>Method plus benchmark. Three of the four inputs are not the method.</span></div>
+      <div class="cheat-item"><b>The lottery</b><span>Relative performance may be altered significantly simply by choosing different benchmark tasks.</span></div>
+      <div class="cheat-item"><b>3 to 15, and 11 to 14</b><span>The fall on genuinely new test sets for CIFAR-10 and ImageNet. The level is fragile.</span></div>
+      <div class="cheat-item"><b>The ordering held</b><span>Gains on the original sets translated to larger gains on the new ones. Port that, not the level.</span></div>
+      <div class="cheat-item"><b>Count the task sets</b><span>One lead is a reading. Two unlike ones is a claim. Say which you have.</span></div>
+      <div class="cheat-item"><b>The three sentences</b><span>Licenses, does not, would close it. The third one needs an owner and a date.</span></div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="pagefoot">
+  <div class="wrap">
+    <p>Practitioner session 7 of 10 · learn-ml-epistemology-with-phoebe · by Phoebe Fu</p>
+    <nav class="pagenav">
+      <a href="p6-how-big-a-test-set.html">← Practitioner session 6 · How big does a test set need to be</a>
+      <a href="p8-leakage-at-field-scale.html">Practitioner session 8 · Leakage at the scale of a field →</a>
+    </nav>
+  </div>
+</footer>
+
+<script src="../assets/ep-live.js?v=2"></script>
+<script src="../assets/app.js?v=2"></script>
+</body>
+</html>

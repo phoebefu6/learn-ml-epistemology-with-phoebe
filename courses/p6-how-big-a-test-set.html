@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- social:start -->
+<meta name="description" content="Practitioner session 6 of 10. The size sweep: optimism 0.0091 at a test set of 200 falling to 0.0030 at 2000. At n = 100 the estimate is 0.0071 with a standard error of 0.0030 and cannot even be ranked against n = 200.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Learn with Phoebe">
+<meta property="og:title" content="How big does a test set need to be - learn ML epistemology with phoebe">
+<meta property="og:description" content="Practitioner session 6 of 10. The size sweep with error bars, and why a small test set is dangerous twice over.">
+<meta property="og:url" content="https://phoebefu6.github.io/learn-ml-epistemology-with-phoebe/courses/p6-how-big-a-test-set.html">
+<meta property="og:image" content="https://phoebefu6.github.io/learn-ml-epistemology-with-phoebe/assets/og-cover.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="How big does a test set need to be - learn ML epistemology with phoebe">
+<meta name="twitter:description" content="0.0091 at 200, 0.0030 at 2000. At 100 the estimate cannot even rank itself.">
+<meta name="twitter:image" content="https://phoebefu6.github.io/learn-ml-epistemology-with-phoebe/assets/og-cover.png">
+<!-- social:end -->
+<title>Practitioner session 6 · How big does a test set need to be - learn ML epistemology with phoebe</title>
+<link rel="stylesheet" href="../assets/style.css?v=2">
+</head>
+<body>
+
+<div class="toolbar">
+  <div class="wrap">
+    <span class="crumb"><a href="../index.html">learn-ml-epistemology-with-phoebe</a> / Practitioner session 6 of 10</span>
+    <button class="btn" id="toggle-all" type="button">Expand all</button>
+    <button class="btn primary" id="zoom-toggle" type="button">Projector zoom: off</button>
+  </div>
+</div>
+
+<header class="masthead">
+  <div class="wrap">
+    <div class="eyebrow">Learn ML Epistemology with Phoebe · Practitioner session 6 of 10</div>
+    <h1>How big does a <span class="accent">test set</span> need to be</h1>
+    <p class="sub">Session 5 left one lever unmeasured. Hold the candidate count at 60 and change only the number of rows the test set has, and the optimism runs 0.0091 at 200 rows and 0.0030 at 2000. The trend is clean from 200 upward and well outside the error bars. At 100 rows something more interesting happens: the estimate reads 0.0071 with a standard error of 0.0030, which means it cannot be ranked against the 200-row estimate at all. At that size the measurement of the bias is itself too noisy to trust.</p>
+    <div class="chip-row">
+      <span class="chip level">🔴 Hardest</span>
+      <span class="chip audience">Anyone deciding how to split their rows</span>
+      <span class="chip audience">Anyone about to claim a small margin</span>
+      <span class="chip time">45 min</span>
+    </div>
+    <div class="agenda">
+      <span class="a1" style="flex:1">0-3 · Welcome</span>
+      <span class="a2" style="flex:4">3-17 · The interval around a score</span>
+      <span class="a3" style="flex:4">17-31 · The size sweep, measured</span>
+      <span class="a4" style="flex:3">31-45 · Build-along and Q&amp;A</span>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <!-- ============ INTRO ============ -->
+  <section class="section" id="intro">
+    <div class="section-kicker">
+      <span class="klabel">Part 0</span>
+      <h2>Where tonight sits</h2>
+    </div>
+    <p class="lede">Session 5 showed that selecting on a set inflates the number it reports, and named two things the gap grows with: how many candidates were compared, and how noisy each measurement was. Tonight is the second one, because it is the one under your control at the moment you split the data. A test set has two jobs, estimating an accuracy and ranking things against each other, and a small one fails at both in ways that reinforce each other.</p>
+
+    <div class="legend">
+      <span class="pill">Live = written together in the 45 minutes</span>
+      <span class="pill">Self-study = the full depth, after class</span>
+      <span class="pill">🔍 Every diagram zooms</span>
+    </div>
+
+    <div class="callout win">
+      <p><strong>★ What you walk out with tonight.</strong> The size sweep with its error bars, so you know the shape of the relationship rather than a rule of thumb. A working method for turning a claimed difference into the number of rows it needs, which takes about four lines. The reason a 0.4 point margin is not a finding on a small set. And the observation at n = 100 that is worth more than the rest of the table: an estimate that cannot even rank itself.</p>
+    </div>
+
+    <details class="card" open>
+      <summary><span class="mode live">Live</span>Two jobs, and a small set fails at both<span class="mini">4 min</span><span class="caret">▶</span></summary>
+      <div class="body">
+        <p>The first job is estimation. A test set answers "roughly how accurate is this model", and the answer arrives with a width around it that comes from having counted a finite number of patients. Nobody disputes this and almost nobody reports it.</p>
+        <p>The second job is ranking. A test set answers "is this model better than that one", and that question is harder, because it needs the width around the difference rather than the width around either number. A set that gives a usable answer to the first question can be useless for the second.</p>
+        <p>Session 5 added a third thing a small set does, which is not a failure of the set so much as a consequence of it: selection takes the maximum of noisy measurements, and a noisier measurement gives selection more to work with. The three compound.</p>
+      </div>
+    </details>
+
+    <details class="card">
+      <summary><span class="mode self">Self-study</span>The words that will keep coming back<span class="mini">4 min</span><span class="caret">▶</span></summary>
+      <div class="body">
+        <ul>
+          <li><strong>Standard error.</strong> The typical distance between an estimate and the thing it estimates, from having counted a finite sample rather than the whole world.</li>
+          <li><strong>Interval.</strong> The band around an estimate that is consistent with what was counted. Reporting the point and not the band is the normal practice and the normal mistake.</li>
+          <li><strong>The square-root law.</strong> The noise on an estimate falls with the square root of the row count, so halving it costs four times the rows.</li>
+          <li><strong>Ranking against estimating.</strong> Two different jobs with two different size requirements. Ranking always needs more.</li>
+          <li><strong>The compounding.</strong> A noisier estimate widens the interval and enlarges the selection optimism at the same time. Session 5 measured the second effect at a fixed size; tonight moves the size.</li>
+          <li><strong>Precision against validity.</strong> A bigger set narrows the interval around today's accuracy and says nothing about whether tomorrow resembles today. Session 1 owns that distinction and it does not go away tonight.</li>
+        </ul>
+      </div>
+    </details>
+  </section>
+
+  <!-- ============ PART 1 ============ -->
+  <section class="section" id="part-1">
+    <div class="section-kicker">
+      <span class="klabel">Part 1 · covers the size sweep</span>
+      <h2>The same bias, measured at five sizes</h2>
+      <span class="tag concept">12 min live</span>
+    </div>
+    <p class="lede">Candidate count fixed at 60, forty replications per row, and the only thing changing is how many patients the test set holds. The bars are the error bars on the measurement of the bias itself, which is the part of this table that does the most teaching.</p>
+
+    <figure class="zoomable">
+      <svg viewBox="0 0 880 408" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Five rows of measured optimism with error bars, for test sets of 100, 200, 400, 1000 and 2000 patients. The values read 0.0071 with a standard error of 0.0030 at n equals 100, 0.0091 with 0.0022 at 200, 0.0062 with 0.0017 at 400, 0.0044 with 0.0010 at 1000, and 0.0030 with 0.0006 at 2000. The n equals 100 row is marked out because its bar overlaps the n equals 200 bar. A band underneath states that from 200 upward the trend is clean and well outside the error bars, and that at n equals 100 the estimate cannot be ranked against n equals 200 because at very small test sets even the measurement of the bias is too noisy to trust.">
+        <style>
+          .p6aH { font: 800 12px Inter, sans-serif; fill: #231A10; }
+          .p6aB { font: 400 11px Inter, sans-serif; fill: #231A10; }
+          .p6aM { font: 400 11px Inter, sans-serif; fill: #6B5B47; }
+          .p6aK { font: 800 11px Inter, sans-serif; fill: #231A10; }
+          .p6aKr { font: 800 11px Inter, sans-serif; fill: #155E75; }
+          .p6aRb { font: 800 12px Inter, sans-serif; fill: #155E75; }
+        </style>
+
+        <text class="p6aH" x="14" y="22">The same bias, measured on five test-set sizes. k = 60, mean of 40 replications.</text>
+        <text class="p6aM" x="14" y="42">Bars run plus and minus one standard error of the mean.</text>
+
+        <line x1="140" y1="64" x2="140" y2="270" stroke="#DCCDB8" stroke-width="1.5"></line>
+
+        <text class="p6aKr" x="14" y="84">n = 100</text>
+        <line x1="357" y1="80" x2="673" y2="80" stroke="#155E75" stroke-width="3"></line>
+        <line x1="357" y1="74" x2="357" y2="86" stroke="#155E75" stroke-width="2"></line>
+        <line x1="673" y1="74" x2="673" y2="86" stroke="#155E75" stroke-width="2"></line>
+        <circle cx="515" cy="80" r="5" fill="#155E75"></circle>
+        <text class="p6aB" x="760" y="84">0.0071, se 0.0030</text>
+
+        <text class="p6aK" x="14" y="126">n = 200</text>
+        <line x1="504" y1="122" x2="737" y2="122" stroke="#713F12" stroke-width="3"></line>
+        <line x1="504" y1="116" x2="504" y2="128" stroke="#713F12" stroke-width="2"></line>
+        <line x1="737" y1="116" x2="737" y2="128" stroke="#713F12" stroke-width="2"></line>
+        <circle cx="620" cy="122" r="5" fill="#713F12"></circle>
+        <text class="p6aB" x="760" y="126">0.0091, se 0.0022</text>
+
+        <text class="p6aK" x="14" y="168">n = 400</text>
+        <line x1="378" y1="164" x2="557" y2="164" stroke="#713F12" stroke-width="3"></line>
+        <line x1="378" y1="158" x2="378" y2="170" stroke="#713F12" stroke-width="2"></line>
+        <line x1="557" y1="158" x2="557" y2="170" stroke="#713F12" stroke-width="2"></line>
+        <circle cx="467" cy="164" r="5" fill="#713F12"></circle>
+        <text class="p6aB" x="760" y="168">0.0062, se 0.0017</text>
+
+        <text class="p6aK" x="14" y="210">n = 1000</text>
+        <line x1="320" y1="206" x2="425" y2="206" stroke="#713F12" stroke-width="3"></line>
+        <line x1="320" y1="200" x2="320" y2="212" stroke="#713F12" stroke-width="2"></line>
+        <line x1="425" y1="200" x2="425" y2="212" stroke="#713F12" stroke-width="2"></line>
+        <circle cx="372" cy="206" r="5" fill="#713F12"></circle>
+        <text class="p6aB" x="760" y="210">0.0044, se 0.0010</text>
+
+        <text class="p6aK" x="14" y="252">n = 2000</text>
+        <line x1="267" y1="248" x2="330" y2="248" stroke="#713F12" stroke-width="3"></line>
+        <line x1="267" y1="242" x2="267" y2="254" stroke="#713F12" stroke-width="2"></line>
+        <line x1="330" y1="242" x2="330" y2="254" stroke="#713F12" stroke-width="2"></line>
+        <circle cx="298" cy="248" r="5" fill="#713F12"></circle>
+        <text class="p6aB" x="760" y="252">0.0030, se 0.0006</text>
+
+        <line x1="140" y1="282" x2="800" y2="282" stroke="#DCCDB8" stroke-width="1.5"></line>
+        <line x1="140" y1="282" x2="140" y2="288" stroke="#DCCDB8" stroke-width="1.5"></line>
+        <line x1="272" y1="282" x2="272" y2="288" stroke="#DCCDB8" stroke-width="1.5"></line>
+        <line x1="404" y1="282" x2="404" y2="288" stroke="#DCCDB8" stroke-width="1.5"></line>
+        <line x1="536" y1="282" x2="536" y2="288" stroke="#DCCDB8" stroke-width="1.5"></line>
+        <line x1="668" y1="282" x2="668" y2="288" stroke="#DCCDB8" stroke-width="1.5"></line>
+        <line x1="800" y1="282" x2="800" y2="288" stroke="#DCCDB8" stroke-width="1.5"></line>
+        <text class="p6aM" x="14" y="302">optimism</text>
+        <text class="p6aM" x="140" y="302" text-anchor="middle">0</text>
+        <text class="p6aM" x="272" y="302" text-anchor="middle">0.0025</text>
+        <text class="p6aM" x="404" y="302" text-anchor="middle">0.0050</text>
+        <text class="p6aM" x="536" y="302" text-anchor="middle">0.0075</text>
+        <text class="p6aM" x="668" y="302" text-anchor="middle">0.0100</text>
+        <text class="p6aM" x="800" y="302" text-anchor="middle">0.0125</text>
+
+        <rect x="14" y="316" width="852" height="80" rx="9" fill="#ECFEFF" stroke="#155E75"></rect>
+        <text class="p6aRb" x="28" y="342">From 200 upward the trend is clean and well outside the error bars.</text>
+        <text class="p6aB" x="28" y="364">At n = 100 the estimate is 0.0071 with a standard error of 0.0030, and it cannot be ranked against</text>
+        <text class="p6aB" x="28" y="384">n = 200. At very small test sets even the measurement of the bias is too noisy to trust.</text>
+      </svg>
+      <figcaption>🔍 Click to zoom - four rows form a clean trend and the fifth one demonstrates the problem instead of describing it.</figcaption>
+    </figure>
+
+    <div class="tablescroll">
+      <table class="clean">
+        <thead>
+          <tr><th>Test n</th><th>Optimism</th><th>SE</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>100</td><td>0.0071</td><td>0.0030</td></tr>
+          <tr><td>200</td><td>0.0091</td><td>0.0022</td></tr>
+          <tr><td>400</td><td>0.0062</td><td>0.0017</td></tr>
+          <tr><td>1000</td><td>0.0044</td><td>0.0010</td></tr>
+          <tr><td>2000</td><td>0.0030</td><td>0.0006</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <details class="card">
+      <summary><span class="mode live">Live</span>The row that teaches the most is the one that misbehaves<span class="mini">4 min</span><span class="caret">▶</span></summary>
+      <div class="body">
+        <p>Read the table from 2000 upwards and it is tidy: 0.0030, 0.0044, 0.0062, 0.0091, with error bars small enough that the ordering is not in question. A bigger test set buys back the optimism, cleanly and monotonically. Then the last row breaks the pattern, and it breaks it downwards, reading 0.0071 where the trend wanted something larger than 0.0091.</p>
+        <p>The standard error is what to look at, not the point. At n = 100 it is 0.0030, the largest in the table, and wide enough that the estimate overlaps the one at n = 200. The honest statement is that these two rows cannot be ranked against each other. That is not a defect in the bench; it is the subject of the session arriving one level up. At 100 rows the measurement of the bias is as unreliable as the accuracies the bias was measured from, and a run that reported only the point estimate would have produced an apparently interesting reversal out of nothing.</p>
+      </div>
+    </details>
+
+    <details class="card">
+      <summary><span class="mode self">Self-study</span>Why halving the noise costs four times the rows<span class="mini">3 min</span><span class="caret">▶</span></summary>
+      <div class="body">
+        <p>An accuracy is a proportion counted over independent rows, and the noise on a counted proportion falls with the square root of the row count rather than with the row count itself. Going from 500 rows to 1000 does not halve the width of the interval; it shrinks it by about a third. Halving the width needs four times the rows, and quartering it needs sixteen times.</p>
+        <p>That is why the answer to "should we grow the test set" is so often no in practice and yes in principle. The next increment of precision is always more expensive than the last one, and the returns are visible in the SE column: 0.0030, 0.0022, 0.0017, 0.0010, 0.0006 while the row count goes up twentyfold.</p>
+      </div>
+    </details>
+  </section>
+
+  <!-- ============ PART 2 ============ -->
+  <section class="section" id="part-2">
+    <div class="section-kicker">
+      <span class="klabel">Part 2 · covers the small-margin claim</span>
+      <h2>Beating them by 0.4 points is not a finding</h2>
+      <span class="tag concept">10 min live</span>
+    </div>
+    <p class="lede">The most common claim in a model review is a small margin over an incumbent. It is also the claim most likely to be manufactured by the process that produced it, because a margin of that size is exactly what selection alone buys.</p>
+
+    <figure class="zoomable">
+      <svg viewBox="0 0 880 320" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Three possible authors of a small accuracy gap. Selection: best of 100 candidates reports 0.9569 and best of 1 reports 0.9527, a gap of 0.0042, while real accuracy moved minus 0.0003. Test-set noise: a small set measures anything imprecisely, and at n equals 100 even a 40-replication mean of the bias carries a standard error of 0.0030. A better model: sometimes this is the answer, and nothing in a single reported number separates it from the other two. A band underneath states that a difference the size of the selection effect is not evidence of a better model, and that the test-set size and the candidate count belong beside the score.">
+        <style>
+          .p6bH { font: 800 12px Inter, sans-serif; fill: #231A10; }
+          .p6bT { font: 800 11px Inter, sans-serif; fill: #FFFFFF; }
+          .p6bB { font: 400 11px Inter, sans-serif; fill: #231A10; }
+          .p6bM { font: 400 11px Inter, sans-serif; fill: #6B5B47; }
+        </style>
+
+        <text class="p6bH" x="14" y="22">A gap of 0.4 accuracy points has at least three possible authors.</text>
+
+        <rect x="14" y="40" width="276" height="176" rx="9" fill="#FBF6EF" stroke="#DCCDB8"></rect>
+        <rect x="14" y="40" width="276" height="28" rx="9" fill="#713F12"></rect>
+        <text class="p6bT" x="30" y="59">1 · Selection</text>
+        <text class="p6bB" x="30" y="92">Best of 100 candidates</text>
+        <text class="p6bB" x="30" y="112">reports 0.9569. Best of 1</text>
+        <text class="p6bB" x="30" y="132">reports 0.9527. The gap is</text>
+        <text class="p6bM" x="30" y="152">0.0042, and real accuracy</text>
+        <text class="p6bM" x="30" y="172">moved -0.0003 over the</text>
+        <text class="p6bM" x="30" y="192">same sweep.</text>
+
+        <rect x="302" y="40" width="276" height="176" rx="9" fill="#FBF6EF" stroke="#DCCDB8"></rect>
+        <rect x="302" y="40" width="276" height="28" rx="9" fill="#4A2A0C"></rect>
+        <text class="p6bT" x="318" y="59">2 · Test-set noise</text>
+        <text class="p6bB" x="318" y="92">A small set measures</text>
+        <text class="p6bB" x="318" y="112">anything imprecisely. At</text>
+        <text class="p6bB" x="318" y="132">n = 100 even a mean over</text>
+        <text class="p6bM" x="318" y="152">40 replications carries a</text>
+        <text class="p6bM" x="318" y="172">standard error of 0.0030</text>
+        <text class="p6bM" x="318" y="192">on the bias alone.</text>
+
+        <rect x="590" y="40" width="276" height="176" rx="9" fill="#FBF6EF" stroke="#DCCDB8"></rect>
+        <rect x="590" y="40" width="276" height="28" rx="9" fill="#155E75"></rect>
+        <text class="p6bT" x="606" y="59">3 · A better model</text>
+        <text class="p6bB" x="606" y="92">Sometimes this is the</text>
+        <text class="p6bB" x="606" y="112">answer, and it is the one</text>
+        <text class="p6bB" x="606" y="132">everybody assumes.</text>
+        <text class="p6bM" x="606" y="152">Nothing in a single</text>
+        <text class="p6bM" x="606" y="172">reported number separates</text>
+        <text class="p6bM" x="606" y="192">it from the other two.</text>
+
+        <rect x="14" y="232" width="852" height="72" rx="9" fill="#ECFEFF" stroke="#155E75"></rect>
+        <text class="p6bH" x="28" y="258">A difference the size of the selection effect is not evidence of a better model.</text>
+        <text class="p6bB" x="28" y="282">Report the test-set size and the number of candidates beside the score, or the reader cannot tell which author they are reading.</text>
+      </svg>
+      <figcaption>🔍 Click to zoom - the third author is the only one anybody names, and it is the one the number cannot establish.</figcaption>
+    </figure>
+
+    <details class="card">
+      <summary><span class="mode live">Live</span>Why the difference is noisier than either number<span class="mini">4 min</span><span class="caret">▶</span></summary>
+      <div class="body">
+        <p>Two accuracies measured on independent test sets each carry their own noise, and the difference between them carries both. That is the geometry people skip: a margin needs more rows than a point estimate does, not fewer, even though a margin feels like a smaller quantity.</p>
+        <p>The one saving grace is that scoring both models on the <strong>same</strong> rows removes part of the problem, because patients that are hard for one model are often hard for the other and that shared difficulty cancels out of the difference. It is a real and worthwhile gain, and it is also the reason the same set then ends up arbitrating every comparison anybody makes, which is session 5's problem returning by the back door.</p>
+      </div>
+    </details>
+
+    <details class="card">
+      <summary><span class="mode live">Live</span>Working backwards to the number of rows<span class="mini">4 min</span><span class="caret">▶</span></summary>
+      <div class="body">
+        <p>Start from the decision rather than from the data. Name the smallest difference that would change what anybody does. If a two-point improvement is the threshold for replacing an incumbent, then a set sized to resolve two points is enough and a set sized to resolve a tenth of a point is a waste of rows that would have trained a better model. If the decision genuinely turns on a tenth of a point, the square-root law says what that costs and the honest answer is often that the data does not exist.</p>
+        <p>Doing this in advance has a second effect that matters more than the arithmetic. A team that wrote down "we need to see at least two points" before the run cannot later be impressed by half a point, which is the failure mode this whole track is built around.</p>
+      </div>
+    </details>
+
+    <figure class="zoomable">
+      <svg viewBox="0 0 880 280" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Four steps for sizing a test set from a claimed difference. Step one, the gap: the difference you want to call real, in accuracy points. Step two, the noise: the standard error of one accuracy estimate on a test set of size n. Step three, the pair: two estimates, so the noise on the difference is larger than the noise on either one. Step four, the size: raise n until the noise on the difference is small against the gap. A strip underneath states that the noise shrinks as the square root of n, so halving it costs four times the rows, and that a difference between two estimates is noisier than either estimate.">
+        <style>
+          .p6cH { font: 800 12px Inter, sans-serif; fill: #231A10; }
+          .p6cK { font: 800 11px Inter, sans-serif; fill: #713F12; }
+          .p6cB { font: 400 11px Inter, sans-serif; fill: #231A10; }
+          .p6cM { font: 400 11px Inter, sans-serif; fill: #6B5B47; }
+          .p6cRb { font: 800 12px Inter, sans-serif; fill: #155E75; }
+        </style>
+        <defs>
+          <marker id="p6cAr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#6B5B47"></path></marker>
+        </defs>
+
+        <text class="p6cH" x="14" y="22">Working backwards from the difference you want to defend.</text>
+
+        <rect x="14" y="52" width="194" height="134" rx="9" fill="#FBF6EF" stroke="#DCCDB8"></rect>
+        <text class="p6cK" x="28" y="76">1 · The gap</text>
+        <text class="p6cB" x="28" y="104">The difference you</text>
+        <text class="p6cB" x="28" y="124">want to call real, in</text>
+        <text class="p6cM" x="28" y="144">accuracy points, set</text>
+        <text class="p6cM" x="28" y="164">by the decision.</text>
+
+        <line x1="208" y1="119" x2="228" y2="119" stroke="#6B5B47" stroke-width="1.6" marker-end="url(#p6cAr)"></line>
+
+        <rect x="232" y="52" width="194" height="134" rx="9" fill="#FBF6EF" stroke="#DCCDB8"></rect>
+        <text class="p6cK" x="246" y="76">2 · The noise</text>
+        <text class="p6cB" x="246" y="104">The standard error</text>
+        <text class="p6cB" x="246" y="124">of one accuracy</text>
+        <text class="p6cM" x="246" y="144">estimate on a test</text>
+        <text class="p6cM" x="246" y="164">set of size n.</text>
+
+        <line x1="426" y1="119" x2="446" y2="119" stroke="#6B5B47" stroke-width="1.6" marker-end="url(#p6cAr)"></line>
+
+        <rect x="450" y="52" width="194" height="134" rx="9" fill="#FBF6EF" stroke="#DCCDB8"></rect>
+        <text class="p6cK" x="464" y="76">3 · The pair</text>
+        <text class="p6cB" x="464" y="104">Two estimates, so</text>
+        <text class="p6cB" x="464" y="124">the noise on the</text>
+        <text class="p6cM" x="464" y="144">difference is larger</text>
+        <text class="p6cM" x="464" y="164">than on either one.</text>
+
+        <line x1="644" y1="119" x2="664" y2="119" stroke="#6B5B47" stroke-width="1.6" marker-end="url(#p6cAr)"></line>
+
+        <rect x="668" y="52" width="194" height="134" rx="9" fill="#FBF6EF" stroke="#DCCDB8"></rect>
+        <text class="p6cK" x="682" y="76">4 · The size</text>
+        <text class="p6cB" x="682" y="104">Raise n until the</text>
+        <text class="p6cB" x="682" y="124">noise on the</text>
+        <text class="p6cM" x="682" y="144">difference is small</text>
+        <text class="p6cM" x="682" y="164">against the gap.</text>
+
+        <rect x="14" y="200" width="852" height="62" rx="9" fill="#ECFEFF" stroke="#155E75"></rect>
+        <text class="p6cRb" x="28" y="226">The noise shrinks as the square root of n. Halving it costs four times the rows.</text>
+        <text class="p6cB" x="28" y="248">A difference between two estimates is noisier than either estimate, so a gap needs more rows than a single number does.</text>
+      </svg>
+      <figcaption>🔍 Click to zoom - the first box is a decision, not a statistic, and it is the one teams skip.</figcaption>
+    </figure>
+  </section>
+
+  <!-- ============ PART 3 ============ -->
+  <section class="section" id="part-3">
+    <div class="section-kicker">
+      <span class="klabel">Part 3 · covers the compounding</span>
+      <h2>A small test set is dangerous twice</h2>
+      <span class="tag concept">6 min live</span>
+    </div>
+    <p class="lede">The two failures are not independent problems that happen to co-occur. They have the same cause, which is why the row count is a better lever than anything downstream of it.</p>
+
+    <figure class="zoomable">
+      <svg viewBox="0 0 880 244" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Two costs of a small test set shown side by side. First, the estimate is wide: any accuracy computed on few rows is imprecise, and a difference smaller than the imprecision cannot be read. Second, the selection bias is larger: optimism runs 0.0091 at n equals 200 down to 0.0030 at n equals 2000, because a noisier estimate gives selection more noise to maximise. Both arrows point down to a band stating that one shortage produces both, which is why test-set size is the lever.">
+        <style>
+          .p6dH { font: 800 12px Inter, sans-serif; fill: #231A10; }
+          .p6dHr { font: 800 12px Inter, sans-serif; fill: #155E75; }
+          .p6dB { font: 400 11px Inter, sans-serif; fill: #231A10; }
+          .p6dR { font: 400 11px Inter, sans-serif; fill: #155E75; }
+          .p6dW { font: 800 12px Inter, sans-serif; fill: #FFFFFF; }
+          .p6dWs { font: 400 11px Inter, sans-serif; fill: #EBD9C3; }
+        </style>
+        <defs>
+          <marker id="p6dAr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#6B5B47"></path></marker>
+        </defs>
+
+        <text class="p6dH" x="14" y="22">A small test set carries two costs at once.</text>
+
+        <rect x="14" y="44" width="400" height="110" rx="9" fill="#FBF6EF" stroke="#DCCDB8"></rect>
+        <text class="p6dH" x="28" y="70">1 · The estimate is wide</text>
+        <text class="p6dB" x="28" y="96">Any accuracy computed on few rows is</text>
+        <text class="p6dB" x="28" y="116">imprecise, and a difference smaller than</text>
+        <text class="p6dB" x="28" y="136">the imprecision cannot be read at all.</text>
+
+        <rect x="452" y="44" width="414" height="110" rx="9" fill="#ECFEFF" stroke="#155E75"></rect>
+        <text class="p6dHr" x="466" y="70">2 · The selection bias is larger</text>
+        <text class="p6dR" x="466" y="96">Optimism runs 0.0091 at n = 200 down to</text>
+        <text class="p6dR" x="466" y="116">0.0030 at n = 2000. A noisier estimate gives</text>
+        <text class="p6dR" x="466" y="136">selection more noise to maximise.</text>
+
+        <line x1="214" y1="154" x2="214" y2="172" stroke="#6B5B47" stroke-width="1.6" marker-end="url(#p6dAr)"></line>
+        <line x1="659" y1="154" x2="659" y2="172" stroke="#6B5B47" stroke-width="1.6" marker-end="url(#p6dAr)"></line>
+
+        <rect x="14" y="178" width="852" height="56" rx="9" fill="#713F12"></rect>
+        <text class="p6dW" x="28" y="204">One shortage produces both, which is why test-set size is the lever.</text>
+        <text class="p6dWs" x="28" y="224">The candidate count is the thing people argue about; the row count is the thing that moves.</text>
+      </svg>
+      <figcaption>🔍 Click to zoom - same cause, two symptoms, and only one of them gets discussed in a review.</figcaption>
+    </figure>
+
+    <figure class="zoomable">
+      <svg viewBox="0 0 880 230" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="An unresolved disagreement about where a fixed number of labelled rows should go. One position: spend them on the test set, because a wider training set buys a slightly better model while a wider test set buys the ability to tell whether it is better at all. The other position: spend them on training, because on a small problem the model is the binding constraint and an interval you cannot narrow is worth less than a model you can improve. A band underneath states that both sides are arguing about the same rows and neither has a general answer, and that what settles it locally is the size of the difference the decision turns on.">
+        <style>
+          .p6eH { font: 800 12px Inter, sans-serif; fill: #231A10; }
+          .p6eB { font: 400 11px Inter, sans-serif; fill: #231A10; }
+          .p6eM { font: 400 11px Inter, sans-serif; fill: #6B5B47; }
+        </style>
+
+        <text class="p6eH" x="14" y="22">Where the rows should go, unresolved.</text>
+
+        <rect x="14" y="44" width="420" height="112" rx="9" fill="#FBF6EF" stroke="#DCCDB8"></rect>
+        <text class="p6eH" x="28" y="70">Spend them on the test set</text>
+        <text class="p6eB" x="28" y="96">A wider training set buys a slightly better</text>
+        <text class="p6eB" x="28" y="116">model. A wider test set buys the ability to</text>
+        <text class="p6eB" x="28" y="136">tell whether it is better at all.</text>
+
+        <rect x="446" y="44" width="420" height="112" rx="9" fill="#FBF6EF" stroke="#DCCDB8"></rect>
+        <text class="p6eH" x="460" y="70">Spend them on training</text>
+        <text class="p6eB" x="460" y="96">On a small problem the model is the binding</text>
+        <text class="p6eB" x="460" y="116">constraint. An interval you cannot narrow is</text>
+        <text class="p6eB" x="460" y="136">worth less than a model you can improve.</text>
+
+        <rect x="14" y="166" width="852" height="52" rx="9" fill="#EBD9C3" stroke="#DCCDB8"></rect>
+        <text class="p6eH" x="28" y="192">Both sides are arguing about the same rows, and neither has a general answer.</text>
+        <text class="p6eM" x="28" y="212">What settles it locally is the size of the difference the decision actually turns on.</text>
+      </svg>
+      <figcaption>🔍 Click to zoom - a live disagreement worth naming in the room rather than settling with a default ratio.</figcaption>
+    </figure>
+  </section>
+
+  <!-- ============ PART 4 ============ -->
+  <section class="section" id="part-4">
+    <div class="section-kicker">
+      <span class="klabel">Part 4 · build-along</span>
+      <h2>Run the size sweep, then size your own set</h2>
+      <span class="tag build">14 min build-along</span>
+    </div>
+    <p class="lede">Two blocks against the engine on this page. The first reproduces the size sweep including its error bars, which is the only way the n = 100 row means anything. The second turns a claimed difference into a row count.</p>
+
+    <div class="steps">
+      <div class="step"><div><p><strong>Open the console on this page.</strong> <code class="mono">ep-live.js</code> is loaded here, so <code class="mono">window.THORNBURY</code> already exists with the generator and the selection helpers on it.</p></div></div>
+      <div class="step"><div><p><strong>Run the sweep with the error bars in it.</strong> A mean over replications without its standard error is what produced the apparent reversal at n = 100. Compute both or compute neither.</p></div></div>
+      <div class="step"><div><p><strong>Check the two rows that overlap.</strong> Print the interval at n = 100 and at n = 200 and satisfy yourself that they cannot be ranked.</p></div></div>
+      <div class="step"><div><p><strong>Measure the noise on a single accuracy.</strong> One model, five test-set sizes, the standard error at each. Watch it fall with the square root rather than with the row count.</p></div></div>
+      <div class="step"><div><p><strong>Size a set from a claimed difference.</strong> Feed the smallest margin your team would act on into the last function and see the row count it asks for.</p></div></div>
+      <div class="step"><div><p><strong>Compare it with the set you actually have.</strong> If the required count is larger than the rows in hand, the margin was never measurable and the honest report says so instead of quoting it.</p></div></div>
+    </div>
+
+    <div class="prompt-box good"><span class="label">★ Block 1 · the size sweep, with the standard error that makes it readable</span>
+/* ep-live.js is loaded on this page and exposes window.THORNBURY */
+const T = window.THORNBURY;
+
+const train = T.makeData(3000, 77, 0.90);
+const fresh = T.makeData(6000, 88, 0.90);   /* nobody selects on these */
+
+function optimismAt(n, k, reps) {
+  const gaps = [];
+  for (let r = 0; r &lt; reps; r++) {
+    const test = T.makeData(n, 5000 + r * 13, 0.90);
+    const pool = T.candidatePool(train, k, 20000 + r * 500);
+    const s = T.selectOnTest(pool, test, fresh);
+    gaps.push(s.reported - s.honest);
+  }
+  const mean = gaps.reduce((a, b) =&gt; a + b, 0) / reps;
+  const sq = gaps.reduce((a, b) =&gt; a + (b - mean) * (b - mean), 0) / (reps - 1);
+  return { mean: mean, se: Math.sqrt(sq / reps) };
+}
+
+for (const n of [100, 200, 400, 1000, 2000]) {
+  const o = optimismAt(n, 60, 40);
+  console.log(n, o.mean.toFixed(4), o.se.toFixed(4));
+}
+
+/* 200   0.0091  0.0022
+   2000  0.0030  0.0006
+   The 100 row reads 0.0071 with an se of 0.0030 and overlaps the 200 row.
+   Print the se or the reversal looks like a result. */
+</div>
+
+    <div class="prompt-box good"><span class="label">★ Block 2 · the interval around one score, and the rows a margin needs</span>
+const T = window.THORNBURY;
+
+const train = T.makeData(4000, 101, 0.90);
+const model = T.train(train, 1);            /* 12 tanh units, 30 epochs */
+
+/* the width around a single accuracy: a proportion counted on n rows */
+function seOfAccuracy(model, rows) {
+  const p = T.acc(model, rows);
+  return Math.sqrt(p * (1 - p) / rows.length);
+}
+
+for (const n of [100, 200, 400, 1000, 2000]) {
+  const test = T.makeData(n, 6100 + n, 0.90);
+  console.log(n, T.acc(model, test).toFixed(4), seOfAccuracy(model, test).toFixed(4));
+}
+
+/* the rows a claimed margin needs. Two independent estimates, so the noise
+   on the difference is larger than the noise on either one of them. */
+const big = T.makeData(2000, 6200, 0.90);
+const p = T.acc(model, big);
+
+function rowsNeeded(gap, p, z) {
+  return Math.ceil(2 * z * z * p * (1 - p) / (gap * gap));
+}
+
+console.log(rowsNeeded(0.004, p, 2));   /* rows to defend a four-thousandth margin */
+console.log(rowsNeeded(0.020, p, 2));   /* rows to defend a two-point margin       */
+
+/* Run it before you trust it. The point of the two calls is the ratio
+   between them: a quarter of the margin costs sixteen times the rows. */
+</div>
+
+
+    <div class="callout tip">
+      <p><strong>The habit to keep.</strong> Two numbers belong next to every reported accuracy, and they cost one line: the number of rows it was counted on, and the number of candidates that were compared on those rows. With both, a reader can work out roughly how much of the score to believe. With neither, the score is a point estimate of unknown precision selected by an unknown amount of search, and no amount of decimal places fixes that.</p>
+    </div>
+  </section>
+
+  <!-- ============ QUIZ ============ -->
+  <section class="section" id="quiz">
+    <div class="section-kicker">
+      <span class="klabel">Check yourself</span>
+      <h2>Three questions</h2>
+    </div>
+
+    <div class="quiz-q" data-answer="2">
+      <p class="qtext">The measured optimism reads 0.0091 at n = 200 and 0.0071 at n = 100, which breaks the trend. What is the right reading?</p>
+      <button class="qopt" type="button">A · The bias genuinely turns around below 200 rows, so very small test sets are safer than mid-sized ones</button>
+      <button class="qopt" type="button">B · The n = 100 run had a bug, since a reversal like this cannot happen if the mechanism is real</button>
+      <button class="qopt" type="button">C · The n = 100 estimate carries a standard error of 0.0030 and cannot be ranked against n = 200; at that size the measurement of the bias is itself too noisy to trust</button>
+      <p class="qwhy">The standard error at n = 100 is the largest in the table and wide enough that the two rows overlap. Reading the point estimates alone would turn noise into a reversal, which is the same error the rest of the sweep is warning about, arriving one level up.</p>
+    </div>
+
+    <div class="quiz-q" data-answer="1">
+      <p class="qtext">A team reports that their model beats the incumbent by 0.4 accuracy points, after keeping the best of 60 configurations on a test set of 200 rows. What can be concluded?</p>
+      <button class="qopt" type="button">A · The improvement is small but real, since the same test set was used for both models and the comparison is therefore fair</button>
+      <button class="qopt" type="button">B · Not much: a margin of that size is the size that selection alone buys, and on 200 rows the estimate is too imprecise to separate selection from improvement</button>
+      <button class="qopt" type="button">C · The improvement is real and understated, because selection optimism would have depressed the new model's score rather than raised it</button>
+      <p class="qwhy">Selecting the best of 100 candidates moved reported accuracy by 0.0042 while real accuracy moved -0.0003, so a margin of that magnitude is exactly what a search of that size manufactures. At 200 rows the optimism was measured at 0.0091, which is larger than the claimed margin.</p>
+    </div>
+
+    <div class="quiz-q" data-answer="0">
+      <p class="qtext">Doubling a test set from 500 rows to 1000 does what to the width of the interval around the accuracy?</p>
+      <button class="qopt" type="button">A · Shrinks it by about a third, because the noise falls with the square root of the row count rather than with the row count</button>
+      <button class="qopt" type="button">B · Halves it, since twice the data gives twice the precision</button>
+      <button class="qopt" type="button">C · Leaves it unchanged, because the width depends on the accuracy itself rather than on how many rows it was counted on</button>
+      <p class="qwhy">An accuracy is a proportion counted over rows and its noise falls with the square root of the count. Halving the width needs four times the rows and quartering it needs sixteen times, which is why the next increment of precision always costs more than the last one.</p>
+    </div>
+    <p class="quiz-score"></p>
+  </section>
+
+  <!-- ============ HOMEWORK ============ -->
+  <section class="section" id="homework">
+    <div class="section-kicker">
+      <span class="klabel">Homework</span>
+      <h2>Before session 7</h2>
+      <span class="tag time">30 min</span>
+    </div>
+    <div class="callout">
+      <p>Take the score you reconstructed for session 5 and finish the job: write down the row count of the set it was measured on, the candidate count that was compared on it, and the smallest difference your team would act on. Then run block 2 and see whether the set you have can resolve the difference you care about. Bring one sentence saying either what margin your current set can defend, or how many rows you would need to defend the one you have been quoting. Session 7 moves to numbers somebody else produced, where you will not be able to ask any of these questions.</p>
+    </div>
+  </section>
+
+  <!-- ============ COVERAGE ============ -->
+  <section class="section" id="official">
+    <div class="section-kicker">
+      <span class="klabel">Sources covered</span>
+      <h2>What tonight maps to</h2>
+    </div>
+    <div class="covered">
+      <div class="covered-row">
+        <span class="status pill solid">✓</span>
+        <span class="name">The size sweep with error bars</span>
+        <span class="note">k = 60 and a mean of 40 replications: optimism 0.0071, 0.0091, 0.0062, 0.0044 and 0.0030 at n of 100, 200, 400, 1000 and 2000, with standard errors 0.0030, 0.0022, 0.0017, 0.0010 and 0.0006.</span>
+      </div>
+      <div class="covered-row">
+        <span class="status pill solid">✓</span>
+        <span class="name">The n = 100 row</span>
+        <span class="note">The estimate is 0.0071 with a standard error of 0.0030 and cannot be ranked against n = 200. At very small test sets even the measurement of the bias is too noisy to trust.</span>
+      </div>
+      <div class="covered-row">
+        <span class="status pill solid">✓</span>
+        <span class="name">The interval around an accuracy</span>
+        <span class="note">Why the point estimate is not the finding, why the noise falls with the square root of the row count, and why a difference is noisier than either number in it.</span>
+      </div>
+      <div class="covered-row">
+        <span class="status pill solid">✓</span>
+        <span class="name">Sizing a set from a claimed difference</span>
+        <span class="note">Start from the smallest margin that would change a decision, then work back to the rows. Computed live in block 2 rather than quoted.</span>
+      </div>
+      <div class="covered-row">
+        <span class="status pill solid">✓</span>
+        <span class="name">The compounding with session 5</span>
+        <span class="note">A noisier estimate widens the interval and enlarges the selection optimism from the same shortage of rows, which is why the row count is the lever.</span>
+      </div>
+      <div class="covered-row">
+        <span class="status pill solid">✓</span>
+        <span class="name">Where the rows should go</span>
+        <span class="note">A live disagreement between spending a fixed row budget on training and spending it on the test set, named rather than settled with a default ratio.</span>
+      </div>
+      <div class="covered-row">
+        <span class="status pill light">◐</span>
+        <span class="name">What a benchmark licenses</span>
+        <span class="note">Session 7. Construct validity and the benchmark lottery, for numbers somebody else produced on a set you cannot size.</span>
+      </div>
+      <div class="covered-row">
+        <span class="status pill inkpill">·</span>
+        <span class="name">Precision against validity</span>
+        <span class="note">Owned by session 1. A bigger test set narrows the interval around today's accuracy and says nothing about whether tomorrow resembles today.</span>
+      </div>
+      <div class="covered-row">
+        <span class="status pill inkpill">·</span>
+        <span class="name">Metric definitions and drift detection</span>
+        <span class="note">Not covered by design. <strong>learn-model-evaluation-with-phoebe</strong> defines every metric and owns monitoring.</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ CHEAT SHEET ============ -->
+  <section class="cheat" id="cheatsheet">
+    <h3>Session 6 cheat sheet</h3>
+    <div class="grid-2">
+      <div class="cheat-item"><b>0.0091 at 200, 0.0030 at 2000</b><span>A bigger test set buys back the optimism, cleanly from 200 upward.</span></div>
+      <div class="cheat-item"><b>n = 100 cannot rank itself</b><span>0.0071 with a standard error of 0.0030. The measurement of the bias is as noisy as the thing it measures.</span></div>
+      <div class="cheat-item"><b>Print the standard error</b><span>Without it the n = 100 row looks like a reversal instead of a warning.</span></div>
+      <div class="cheat-item"><b>The square-root law</b><span>Halving the noise costs four times the rows. Quartering it costs sixteen times.</span></div>
+      <div class="cheat-item"><b>A margin needs more rows</b><span>Two estimates carry two lots of noise, so the difference is noisier than either one.</span></div>
+      <div class="cheat-item"><b>Start from the decision</b><span>The smallest difference anybody would act on sets the size, not a default ratio.</span></div>
+      <div class="cheat-item"><b>Dangerous twice</b><span>One shortage of rows widens the interval and enlarges the selection optimism together.</span></div>
+      <div class="cheat-item"><b>Two numbers beside the score</b><span>Rows counted and candidates compared. Without both, a reader cannot discount anything.</span></div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="pagefoot">
+  <div class="wrap">
+    <p>Practitioner session 6 of 10 · learn-ml-epistemology-with-phoebe · by Phoebe Fu</p>
+    <nav class="pagenav">
+      <a href="p5-selecting-on-a-set.html">← Practitioner session 5 · Selecting on a set</a>
+      <a href="p7-reading-a-benchmark.html">Practitioner session 7 · Reading a benchmark →</a>
+    </nav>
+  </div>
+</footer>
+
+<script src="../assets/ep-live.js?v=2"></script>
+<script src="../assets/app.js?v=2"></script>
+</body>
+</html>

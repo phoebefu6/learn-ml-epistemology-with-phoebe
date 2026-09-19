@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- social:start -->
+<meta name="description" content="Leader session 4 of 6. A benchmark is a measurement instrument, and a rank on it is a claim about that benchmark's task, distribution and scoring rule, not about your problem. The benchmark lottery, and the ImageNet result where the level fell but the ordering largely held.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Learn with Phoebe">
+<meta property="og:title" content="What a benchmark licenses - learn ML epistemology with phoebe">
+<meta property="og:description" content="Leader session 4 of 6. What a published benchmark number entitles you to expect on your own problem, which is less than it appears.">
+<meta property="og:url" content="https://phoebefu6.github.io/learn-ml-epistemology-with-phoebe/courses/a4-what-a-benchmark-licenses.html">
+<meta property="og:image" content="https://phoebefu6.github.io/learn-ml-epistemology-with-phoebe/assets/og-cover.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="What a benchmark licenses - learn ML epistemology with phoebe">
+<meta name="twitter:description" content="Change the task set and the ranking moves. A rank is a property of the pairing, not of the method.">
+<meta name="twitter:image" content="https://phoebefu6.github.io/learn-ml-epistemology-with-phoebe/assets/og-cover.png">
+<!-- social:end -->
+<title>Leader session 4 · What a benchmark licenses - learn ML epistemology with phoebe</title>
+<link rel="stylesheet" href="../assets/style.css?v=2">
+</head>
+<body>
+
+<div class="toolbar">
+  <div class="wrap">
+    <span class="crumb"><a href="../index.html">learn-ml-epistemology-with-phoebe</a> / Leader session 4 of 6</span>
+    <button class="btn" id="toggle-all" type="button">Expand all</button>
+    <button class="btn primary" id="zoom-toggle" type="button">Projector zoom: off</button>
+  </div>
+</div>
+
+<header class="masthead">
+  <div class="wrap">
+    <div class="eyebrow">Learn ML Epistemology with Phoebe · Leader session 4 of 6</div>
+    <h1>What a benchmark <span class="accent">licenses</span></h1>
+    <p class="sub">Somebody puts a published number in front of you. A model ranked first on a well-known benchmark, a figure from a paper, a vendor slide with a leaderboard on it. The number is real and the ranking is genuine. The question tonight is a narrow one and it decides how much of your budget that number should move: a benchmark is a measurement instrument, so what exactly did it measure, and is that the thing you care about? A rank is a claim about a task, a distribution and a scoring rule. Your problem is a different task, on a different distribution, scored differently.</p>
+    <div class="chip-row">
+      <span class="chip level">🔴 Hardest</span>
+      <span class="chip audience">Whoever is being sold to</span>
+      <span class="chip audience">Anyone who has quoted a leaderboard in a deck</span>
+      <span class="chip time">45 min</span>
+    </div>
+    <div class="agenda">
+      <span class="a1" style="flex:1">0-3 · Welcome</span>
+      <span class="a2" style="flex:5">3-20 · What a rank is a claim about</span>
+      <span class="a3" style="flex:4">20-40 · Build-along: interrogate a number</span>
+      <span class="a4" style="flex:1">40-45 · Q&amp;A</span>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <!-- ============ INTRO ============ -->
+  <section class="section" id="intro">
+    <div class="section-kicker">
+      <span class="klabel">Part 0</span>
+      <h2>Where tonight sits</h2>
+    </div>
+    <p class="lede">Session 1 laid out three links that carry a score from a test set to a decision: the same world, an untouched draw, and the right target. Session 2 was underspecification and session 3 was what happens once a number becomes a target. Tonight is the third link at the scale of a whole field: <strong>benchmarks</strong>, and what a published rank entitles you to expect on your own problem. Session 5 takes the same question one level up again, to a body of published evidence that was wrong in the same way nearly three hundred times. The running example is still <strong>Thornbury</strong>, the hospital group predicting which patients deteriorate within 24 hours, although tonight most of the evidence comes from outside it.</p>
+
+    <div class="legend">
+      <span class="pill">Live = presented in the 45 minutes</span>
+      <span class="pill">Self-study = the full depth, after class</span>
+      <span class="pill">🔍 Every diagram zooms</span>
+    </div>
+
+    <div class="callout win">
+      <p><strong>★ What you walk out with tonight.</strong> A replacement for the question "what did it score". Instead: what task, whose distribution, what scoring rule, and what would it score on ours. You also walk out with two pieces of evidence you can cite by name: the benchmark lottery, which shows a ranking can move when only the task set moves, and the ImageNet and CIFAR-10 result where genuinely new test sets cost 3 to 15 accuracy points and the ordering of the models largely survived anyway.</p>
+    </div>
+
+    <details class="card" open>
+      <summary><span class="mode live">Live</span>A benchmark is an instrument, so ask what it measures<span class="mini">4 min</span><span class="caret">▶</span></summary>
+      <div class="body">
+        <p>Treat a benchmark the way you would treat any instrument somebody wheels into the room. It has a range, it has conditions it works under, and it returns a number about a specific quantity. The engineering word for the question that matters is <strong>construct validity</strong>: is the thing the instrument measures the thing you care about? Not "is the reading accurate", which is usually yes, but "is it a reading of my quantity", which is usually unexamined.</p>
+        <p>A benchmark score has three parts hiding inside it. There is a <strong>task</strong>, which is a decision someone chose to formalise in a particular way. There is a <strong>distribution</strong>, which is whose data, collected when, by what process. And there is a <strong>scoring rule</strong>, which decides what counts as being wrong and by how much. A rank is a claim about the pairing of a method with those three things. It is not a property of the method that travels with it.</p>
+        <div class="callout example">
+          <span class="ex-pill">Real world</span>
+          <p>A vendor shows Thornbury a model ranked first on a public clinical prediction benchmark. Every part of that claim can be true while none of it transfers: the benchmark's task may be a 30-day outcome where Thornbury needs 24 hours, its distribution may be a teaching hospital's intake rather than a district group's, and its scoring rule may treat the two directions of error as equally costly when Thornbury's ward staff emphatically do not.</p>
+        </div>
+      </div>
+    </details>
+
+    <details class="card">
+      <summary><span class="mode self">Self-study</span>The words tonight keeps using<span class="mini">4 min</span><span class="caret">▶</span></summary>
+      <div class="body">
+        <ul>
+          <li><strong>Construct validity.</strong> Whether the quantity an instrument measures is the quantity you intended to measure. A score can be precise, reproducible and entirely about something else.</li>
+          <li><strong>Task.</strong> The decision a benchmark formalises: what is predicted, from what, at what moment.</li>
+          <li><strong>Distribution.</strong> Whose data the benchmark is built from, collected when and by what process.</li>
+          <li><strong>Scoring rule.</strong> How the benchmark converts a set of predictions into one number, which decides what kind of error is allowed to matter.</li>
+          <li><strong>Task set.</strong> The collection of benchmarks a community happens to have settled on. Change the collection and you can change who wins.</li>
+          <li><strong>Distribution gap.</strong> The distance between the data a number was computed on and the data a model will meet, even when nobody did anything wrong.</li>
+          <li><strong>Level and ordering.</strong> Two different things a benchmark can be evidence for. How well a method does, and whether it does better than another. They are not equally fragile.</li>
+        </ul>
+      </div>
+    </details>
+  </section>
+
+  <!-- ============ PART 1 ============ -->
+  <section class="section" id="part-1">
+    <div class="section-kicker">
+      <span class="klabel">Part 1 · covers the benchmark lottery</span>
+      <h2>Change the task set, change the winner</h2>
+      <span class="tag concept">10 min live</span>
+    </div>
+    <p class="lede">Dehghani, Tay, Gritsenko, Zhao, Houlsby, Diaz, Metzler and Vinyals put a name to something a lot of practitioners had felt and nobody had stated cleanly. Their 2021 paper, arXiv 2107.07002, calls it <strong>the benchmark lottery</strong>, and it "postulates that many factors, other than fundamental algorithmic superiority, may lead to a method being perceived as superior". They go on to show that "the relative performance of algorithms may be altered significantly simply by choosing different benchmark tasks". They argue the fragility reaches across natural language processing, computer vision, information retrieval, recommender systems and reinforcement learning, which is to say it is not one community's local problem.</p>
+
+    <figure class="zoomable">
+      <svg viewBox="0 0 880 348" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="An illustration of the benchmark lottery. The same three methods, A, B and C, are ranked first, second and third under three different benchmark task sets. Under task set 1 the order is A then B then C. Under task set 2 it is C then A then B. Under task set 3 it is B then C then A. Nothing about the three methods changed between the three columns; only the collection of tasks did. A note records that the paper argues this fragility reaches natural language processing, computer vision, information retrieval, recommender systems and reinforcement learning.">
+        <style>
+          .a4aH { font: 800 12px Inter, sans-serif; fill: #231A10; }
+          .a4aT { font: 800 11px Inter, sans-serif; fill: #fff; }
+          .a4aD { font: 800 11px Inter, sans-serif; fill: #231A10; }
+          .a4aB { font: 400 11px Inter, sans-serif; fill: #231A10; }
+          .a4aM { font: 400 11px Inter, sans-serif; fill: #6B5B47; }
+          .a4aR { font: 800 11px Inter, sans-serif; fill: #155E75; }
+        </style>
+
+        <text class="a4aH" x="14" y="22">An illustration of the lottery. The same three methods, three different task sets.</text>
+
+        <rect x="14" y="36" width="276" height="28" rx="7" fill="#4A2A0C"></rect>
+        <text class="a4aT" x="28" y="55">Task set 1</text>
+        <rect x="302" y="36" width="276" height="28" rx="7" fill="#4A2A0C"></rect>
+        <text class="a4aT" x="316" y="55">Task set 2</text>
+        <rect x="590" y="36" width="276" height="28" rx="7" fill="#4A2A0C"></rect>
+        <text class="a4aT" x="604" y="55">Task set 3</text>
+
+        <text class="a4aM" x="22" y="96">1st</text>
+        <rect x="54" y="76" width="236" height="30" rx="7" fill="#713F12"></rect>
+        <text class="a4aT" x="68" y="96">Method A</text>
+        <text class="a4aM" x="310" y="96">1st</text>
+        <rect x="342" y="76" width="236" height="30" rx="7" fill="#D9B892"></rect>
+        <text class="a4aD" x="356" y="96">Method C</text>
+        <text class="a4aM" x="598" y="96">1st</text>
+        <rect x="630" y="76" width="236" height="30" rx="7" fill="#155E75"></rect>
+        <text class="a4aT" x="644" y="96">Method B</text>
+
+        <text class="a4aM" x="22" y="136">2nd</text>
+        <rect x="54" y="116" width="236" height="30" rx="7" fill="#155E75"></rect>
+        <text class="a4aT" x="68" y="136">Method B</text>
+        <text class="a4aM" x="310" y="136">2nd</text>
+        <rect x="342" y="116" width="236" height="30" rx="7" fill="#713F12"></rect>
+        <text class="a4aT" x="356" y="136">Method A</text>
+        <text class="a4aM" x="598" y="136">2nd</text>
+        <rect x="630" y="116" width="236" height="30" rx="7" fill="#D9B892"></rect>
+        <text class="a4aD" x="644" y="136">Method C</text>
+
+        <text class="a4aM" x="22" y="176">3rd</text>
+        <rect x="54" y="156" width="236" height="30" rx="7" fill="#D9B892"></rect>
+        <text class="a4aD" x="68" y="176">Method C</text>
+        <text class="a4aM" x="310" y="176">3rd</text>
+        <rect x="342" y="156" width="236" height="30" rx="7" fill="#155E75"></rect>
+        <text class="a4aT" x="356" y="176">Method B</text>
+        <text class="a4aM" x="598" y="176">3rd</text>
+        <rect x="630" y="156" width="236" height="30" rx="7" fill="#713F12"></rect>
+        <text class="a4aT" x="644" y="176">Method A</text>
+
+        <text class="a4aH" x="14" y="214">Every method is identical in all three columns. Only the collection of tasks moved.</text>
+
+        <rect x="14" y="228" width="852" height="52" rx="9" fill="#FBF6EF" stroke="#DCCDB8"></rect>
+        <text class="a4aB" x="28" y="252">The paper argues the fragility reaches natural language processing, computer vision, information</text>
+        <text class="a4aB" x="28" y="272">retrieval, recommender systems and reinforcement learning. It is not one community's local problem.</text>
+
+        <rect x="14" y="290" width="852" height="46" rx="9" fill="#ECFEFF" stroke="#155E75"></rect>
+        <text class="a4aR" x="28" y="313">If the ranking moves when the task set moves, the rank is a property of the pairing.</text>
+        <text class="a4aB" x="28" y="330">It belongs to the method and the benchmark together, and it does not travel to your problem alone.</text>
+      </svg>
+      <figcaption>🔍 Click to zoom - a schematic of the claim, not measured results. The point is the shape: the order changes and the methods do not.</figcaption>
+    </figure>
+
+    <details class="card">
+      <summary><span class="mode live">Live</span>Nobody has to cheat for the lottery to operate<span class="mini">4 min</span><span class="caret">▶</span></summary>
+      <div class="body">
+        <p>The word lottery does a lot of work here and it is worth being careful with it. It does not mean the results are random or that anyone has gamed anything. It means that the set of tasks a community happens to have adopted is itself a choice, usually a historical accident, and that choice participates in the result. Whoever picked the task set picked part of the answer, long before any method was trained.</p>
+        <p>For a leader this reframes what a rank is worth in an argument. Two teams citing different benchmarks to support opposite conclusions are not necessarily disagreeing about facts. They may both be reporting correctly, from different instruments, about different quantities. The useful move is not to litigate which leaderboard is the real one. It is to ask what each one measures and which one is closer to the decision you are about to make.</p>
+      </div>
+    </details>
+
+    <details class="card">
+      <summary><span class="mode self">Self-study</span>Why benchmarks still earn their keep<span class="mini">3 min</span><span class="caret">▶</span></summary>
+      <div class="body">
+        <p>None of this is an argument for ignoring benchmarks, and a leader who takes it that way has taken the wrong thing. A shared benchmark is how a field makes progress legible at all: without one, every claim is a demo and nothing can be compared. The lottery result is a caution about the strength of the inference, not a reason to stop measuring.</p>
+        <p>The healthy version is a habit rather than a rule. Treat one benchmark as one instrument reading. Ask for a second one before you believe an ordering, and ask for a third before you believe an ordering is large. When a method leads across several unlike task sets, the claim has survived something. When it leads on exactly the benchmark its authors are best known for, you have learned considerably less.</p>
+      </div>
+    </details>
+  </section>
+
+  <!-- ============ PART 2 ============ -->
+  <section class="section" id="part-2">
+    <div class="section-kicker">
+      <span class="klabel">Part 2 · covers the distribution gap, measured</span>
+      <h2>What happens when somebody builds a fresh test set</h2>
+      <span class="tag concept">8 min live</span>
+    </div>
+    <p class="lede">Recht, Roelofs, Schmidt and Shankar asked a question in 2019 that sounds almost too simple: "Do ImageNet Classifiers Generalize to ImageNet?" They built genuinely new test sets, following the original collection process as closely as they could, and scored the existing models on them. Accuracy fell by 3 to 15 percent on CIFAR-10 and 11 to 14 percent on ImageNet. That is the half of the result everyone remembers. The other half matters just as much, and tonight both halves get said in the same breath.</p>
+
+    <figure class="zoomable">
+      <svg viewBox="0 0 880 352" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="How far accuracy fell on genuinely new test sets built to follow the original collection process. On CIFAR-10 the drop ranged from 3 to 15 accuracy points. On ImageNet it ranged from 11 to 14 accuracy points. The axis runs from 0 to 16 accuracy points lost. A note records the second half of the result: accuracy gains on the original test sets translate to larger gains on the new test sets, so the ordering of the models largely held, and the authors concluded the cause was the models' limited ability to generalise to slightly harder images rather than test-set contamination.">
+        <style>
+          .a4bH { font: 800 12px Inter, sans-serif; fill: #231A10; }
+          .a4bT { font: 800 11px Inter, sans-serif; fill: #fff; }
+          .a4bN { font: 800 11px Inter, sans-serif; fill: #231A10; }
+          .a4bB { font: 400 11px Inter, sans-serif; fill: #231A10; }
+          .a4bM { font: 400 11px Inter, sans-serif; fill: #6B5B47; }
+          .a4bR { font: 800 11px Inter, sans-serif; fill: #155E75; }
+        </style>
+
+        <text class="a4bH" x="14" y="22">How far accuracy fell on genuinely new test sets, collected the original way.</text>
+
+        <line x1="200" y1="52" x2="200" y2="190" stroke="#DCCDB8" stroke-width="1"></line>
+        <line x1="360" y1="52" x2="360" y2="190" stroke="#DCCDB8" stroke-width="1"></line>
+        <line x1="520" y1="52" x2="520" y2="190" stroke="#DCCDB8" stroke-width="1"></line>
+        <line x1="680" y1="52" x2="680" y2="190" stroke="#DCCDB8" stroke-width="1"></line>
+        <line x1="840" y1="52" x2="840" y2="190" stroke="#DCCDB8" stroke-width="1"></line>
+
+        <text class="a4bN" x="14" y="84">CIFAR-10</text>
+        <text class="a4bM" x="14" y="102">new test set</text>
+        <rect x="320" y="70" width="480" height="30" rx="6" fill="#713F12"></rect>
+        <text class="a4bT" x="334" y="90">3 to 15 points lower</text>
+
+        <text class="a4bN" x="14" y="144">ImageNet</text>
+        <text class="a4bM" x="14" y="162">new test set</text>
+        <rect x="640" y="130" width="120" height="30" rx="6" fill="#155E75"></rect>
+        <text class="a4bT" x="648" y="150">11 to 14 points</text>
+
+        <line x1="200" y1="190" x2="840" y2="190" stroke="#6B5B47" stroke-width="1.4"></line>
+        <text class="a4bM" x="200" y="208" text-anchor="middle">0</text>
+        <text class="a4bM" x="360" y="208" text-anchor="middle">4</text>
+        <text class="a4bM" x="520" y="208" text-anchor="middle">8</text>
+        <text class="a4bM" x="680" y="208" text-anchor="middle">12</text>
+        <text class="a4bM" x="840" y="208" text-anchor="middle">16</text>
+        <text class="a4bM" x="200" y="228">accuracy points lost, measured against the original test set</text>
+
+        <rect x="14" y="244" width="852" height="100" rx="9" fill="#ECFEFF" stroke="#155E75"></rect>
+        <text class="a4bR" x="28" y="268">The level fell. The ordering largely held. Both halves are the finding.</text>
+        <text class="a4bB" x="28" y="292">"Accuracy gains on the original test sets translate to larger gains on the new test sets", so the better model was</text>
+        <text class="a4bB" x="28" y="312">usually still the better model. The authors put the cause down to the models' limited ability to generalise to</text>
+        <text class="a4bB" x="28" y="332">slightly harder images, not to contamination of the test set through repeated use.</text>
+      </svg>
+      <figcaption>🔍 Click to zoom - the bars show the size of the fall, not the accuracies themselves. The panel is the half of the result that gets dropped in retellings.</figcaption>
+    </figure>
+
+    <details class="card">
+      <summary><span class="mode live">Live</span>Two findings that people insist on separating<span class="mini">4 min</span><span class="caret">▶</span></summary>
+      <div class="body">
+        <p>The first half, the drop, is quoted constantly as proof that published numbers are inflated. The second half, that the ranking largely survived, is quoted much less because it is less alarming. Reporting either one alone gives a false picture, and a leader who only carries the first will make bad decisions in a predictable direction: refusing to use comparative evidence at all, which is worse than using it carefully.</p>
+        <p>Put together they say something quite specific. A benchmark number is decent evidence about <strong>which</strong> method is better and poor evidence about <strong>how well</strong> any of them will do on your data. The ordering is the part that transferred; the level is the part that did not. That asymmetry is not a technicality, it is exactly the shape of what a benchmark can license, and most vendor conversations get it backwards by leading with the absolute figure.</p>
+        <div class="callout example">
+          <span class="ex-pill">Real world</span>
+          <p>Thornbury is choosing between two vendor models, both citing the same public benchmark, one two points ahead of the other. The defensible reading is that the leading model is probably the better of the two. The indefensible reading is the one on the slide: that either of them will hit the benchmark figure on Thornbury's patients. Nothing in that number was computed on a district hospital group's intake.</p>
+        </div>
+      </div>
+    </details>
+
+    <details class="card">
+      <summary><span class="mode live">Live</span>Note what the authors ruled out<span class="mini">3 min</span><span class="caret">▶</span></summary>
+      <div class="body">
+        <p>The obvious story about a fresh test set producing worse numbers is that the old test set had been overused, scored against so many times that the community had quietly fitted to it. Recht, Roelofs, Schmidt and Shankar concluded otherwise: the drops came from the models' limited ability to generalise to slightly harder images, rather than from test-set contamination through repeated use.</p>
+        <p>That conclusion should sit awkwardly next to session 3, and it is meant to. Session 3 measured a real cost to selecting against a set, found it under one accuracy point and saturating. This result says the much larger fall on new data came from somewhere else entirely. Both can be true and both are: reuse is a real mechanism with a small measured cost, and the distribution gap is a separate and larger effect. Holding the two apart is most of what it takes to read this literature honestly.</p>
+      </div>
+    </details>
+
+    <details class="card">
+      <summary><span class="mode self">Self-study</span>Why "what would it score on ours" is the whole question<span class="mini">3 min</span><span class="caret">▶</span></summary>
+      <div class="body">
+        <p>The practical consequence is worth stating flatly. A benchmark number is evidence about relative method quality under one measurement regime, and close to no evidence about the absolute performance you will see. Asking "what did it score" is a weaker question than asking "what task, whose distribution, and what would it score on ours", and the second question costs nothing except the willingness to look less impressed for a minute.</p>
+        <p>It also has a clean procurement consequence. If the absolute figure does not transfer, then the only number that can settle an absolute question is one computed on your data, by your team, on a set you kept clean. A vendor who will not agree to that is telling you something. A vendor who will has just converted an unfalsifiable claim into a falsifiable one, which is where session 6 picks up.</p>
+      </div>
+    </details>
+  </section>
+
+  <!-- ============ PART 3 ============ -->
+  <section class="section" id="part-3">
+    <div class="section-kicker">
+      <span class="klabel">Part 3 · build-along</span>
+      <h2>Take a published number apart in front of everyone</h2>
+      <span class="tag build">20 min build-along</span>
+    </div>
+    <p class="lede">No laptop. Bring the most impressive external number anyone in the room has been shown recently: a vendor slide, a paper cited in a strategy document, an internal team quoting a public leaderboard. Work through it out loud. The aim is not to discredit it. The aim is to convert it from a verdict into evidence of a known size.</p>
+
+    <div class="steps">
+      <div class="step"><div><p><strong>Find the instrument.</strong> Which benchmark, by name, and who built it. If the slide cannot say, you are looking at a claim with no instrument behind it and the exercise is already over.</p></div></div>
+      <div class="step"><div><p><strong>State the task in one sentence, as a job.</strong> What is predicted, from what inputs, at what moment. Then say your own task the same way and put the two sentences side by side. Most of the gap is visible right there.</p></div></div>
+      <div class="step"><div><p><strong>Name the distribution.</strong> Whose data, collected when, by what process, and who is in it that is not in yours. "Patients from a teaching hospital in 2019" and "our intake now" are different populations even when every column matches.</p></div></div>
+      <div class="step"><div><p><strong>Ask what the scoring rule forgives.</strong> Which direction of error does it treat as cheap? Who pays for that error in your setting? This is session 1's third link, the right target, arriving at the scale of a whole field.</p></div></div>
+      <div class="step"><div><p><strong>Ask for a second benchmark.</strong> Does the ordering hold on an unlike task set? One is a reading, two is a claim, three is a pattern. If the lead exists on exactly one leaderboard, say so out loud and let the room hear it.</p></div></div>
+      <div class="step"><div><p><strong>Convert the rank into a testable question.</strong> "You are probably the better of the two" is what the evidence supports. Write down what it would take to learn the absolute number on your own data, and who would run it.</p></div></div>
+    </div>
+
+    <div class="callout tip">
+      <p><strong>The one-sentence version to take into a meeting.</strong> "That rank tells me you are likely better than the alternative on that benchmark's task and distribution; it does not tell me what you will score on ours, so what would it take to find that out?" It is not a hostile question. It is the only one that turns a leaderboard position into something a decision can rest on.</p>
+    </div>
+  </section>
+
+  <!-- ============ QUIZ ============ -->
+  <section class="section" id="quiz">
+    <div class="section-kicker">
+      <span class="klabel">Check yourself</span>
+      <h2>Three questions</h2>
+    </div>
+
+    <div class="quiz-q" data-answer="2">
+      <p class="qtext">A vendor's model is ranked first on a well-known public benchmark. What does that rank entitle you to expect on your own problem?</p>
+      <button class="qopt" type="button">A · That it will perform at roughly the benchmark figure on your data, since the benchmark is a representative sample of the domain</button>
+      <button class="qopt" type="button">B · Nothing at all, since benchmarks measure artificial tasks and cannot support any inference about a real deployment</button>
+      <button class="qopt" type="button">C · Evidence about relative method quality under one measurement regime, and close to no evidence about the absolute performance you will see</button>
+      <p class="qwhy">The ordering is the part that tends to transfer and the level is the part that does not. Recht, Roelofs, Schmidt and Shankar measured exactly this shape: accuracy fell by 3 to 15 points on CIFAR-10 and 11 to 14 on ImageNet against genuinely new test sets, while gains on the original sets still translated to larger gains on the new ones.</p>
+    </div>
+
+    <div class="quiz-q" data-answer="1">
+      <p class="qtext">Recht, Roelofs, Schmidt and Shankar built new ImageNet and CIFAR-10 test sets and accuracy dropped. What did they conclude the cause was?</p>
+      <button class="qopt" type="button">A · The original test sets had been reused so many times that the community had fitted to them</button>
+      <button class="qopt" type="button">B · The models' limited ability to generalise to slightly harder images, rather than test-set contamination</button>
+      <button class="qopt" type="button">C · Errors in how the new test sets were collected, which made them harder than intended by mistake</button>
+      <p class="qwhy">Contamination through repeated use is the intuitive story and the authors ruled it out as the explanation for these drops. That keeps it separate from session 3's finding, where selecting against a set does carry a real cost, measured under one accuracy point and saturating. Two mechanisms, different sizes, both real.</p>
+    </div>
+
+    <div class="quiz-q" data-answer="0">
+      <p class="qtext">Two internal teams cite different benchmarks and reach opposite conclusions about which method is better. What does the benchmark lottery say about that?</p>
+      <button class="qopt" type="button">A · Relative performance can be altered significantly simply by choosing different benchmark tasks, so each rank belongs to a pairing of method and task set</button>
+      <button class="qopt" type="button">B · One of the two teams has almost certainly chosen its benchmark dishonestly to support a conclusion it already held</button>
+      <button class="qopt" type="button">C · The disagreement can be settled by averaging the two rankings, since more benchmarks means a more reliable answer</button>
+      <p class="qwhy">The lottery postulates that factors other than fundamental algorithmic superiority can make a method be perceived as superior, and nobody has to act in bad faith for that to happen. Averaging unlike instruments does not fix it either; the question is which instrument measures the quantity your decision needs.</p>
+    </div>
+    <p class="quiz-score"></p>
+  </section>
+
+  <!-- ============ HOMEWORK ============ -->
+  <section class="section" id="homework">
+    <div class="section-kicker">
+      <span class="klabel">Homework</span>
+      <h2>Before session 5</h2>
+      <span class="tag time">30 min</span>
+    </div>
+    <div class="callout">
+      <p>Find one published result your area currently relies on that nobody in your team produced. A paper in a strategy document, a vendor's cited study, an industry figure that gets repeated. Write down two things about it: what data it was computed on, and how the data were split between what the model learned from and what it was scored on. If you cannot find out, note that too. Session 5 is about what a reader should do with evidence they did not produce, and that missing answer is the starting point.</p>
+    </div>
+  </section>
+
+  <!-- ============ COVERAGE ============ -->
+  <section class="section" id="official">
+    <div class="section-kicker">
+      <span class="klabel">Sources covered</span>
+      <h2>What tonight maps to</h2>
+    </div>
+    <div class="covered">
+      <div class="covered-row">
+        <span class="status pill solid">✓</span>
+        <span class="name">Construct validity of a benchmark</span>
+        <span class="note">A benchmark as a measurement instrument, and the task, distribution and scoring rule hiding inside every rank.</span>
+      </div>
+      <div class="covered-row">
+        <span class="status pill solid">✓</span>
+        <span class="name">The benchmark lottery</span>
+        <span class="note">Dehghani, Tay, Gritsenko, Zhao, Houlsby, Diaz, Metzler and Vinyals (2021), arXiv 2107.07002, and the five areas they argue it reaches.</span>
+      </div>
+      <div class="covered-row">
+        <span class="status pill solid">✓</span>
+        <span class="name">The distribution gap, measured</span>
+        <span class="note">Recht, Roelofs, Schmidt and Shankar (2019): 3 to 15 points on CIFAR-10, 11 to 14 on ImageNet, with the ordering largely surviving.</span>
+      </div>
+      <div class="covered-row">
+        <span class="status pill light">◐</span>
+        <span class="name">Leakage across a whole literature</span>
+        <span class="note">Session 5. Tonight asks what one published number licenses; session 5 asks what to do when nearly three hundred of them share a flaw.</span>
+      </div>
+      <div class="covered-row">
+        <span class="status pill light">◐</span>
+        <span class="name">Turning a claim into a falsifiable one</span>
+        <span class="note">Session 6. Tonight ends on "what would it score on ours"; session 6 makes writing the answer down in advance the habit.</span>
+      </div>
+      <div class="covered-row">
+        <span class="status pill inkpill">·</span>
+        <span class="name">How any metric is defined or computed</span>
+        <span class="note">Not covered by design. <strong>learn-model-evaluation-with-phoebe</strong> owns the metrics themselves and the eval scorecard.</span>
+      </div>
+      <div class="covered-row">
+        <span class="status pill inkpill">·</span>
+        <span class="name">External validity of an experiment</span>
+        <span class="note">Not covered by design. <strong>learn-experimentation-with-phoebe</strong> owns whether an experimental result travels; tonight is about a fitted model's score.</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ CHEAT SHEET ============ -->
+  <section class="cheat" id="cheatsheet">
+    <h3>Session 4 cheat sheet</h3>
+    <div class="grid-2">
+      <div class="cheat-item"><b>A benchmark is an instrument</b><span>Ask what quantity it reads, not whether the reading is accurate. That is construct validity.</span></div>
+      <div class="cheat-item"><b>Three parts inside a rank</b><span>A task, a distribution, a scoring rule. A rank is a claim about the pairing with all three.</span></div>
+      <div class="cheat-item"><b>The lottery</b><span>Factors other than fundamental algorithmic superiority can make a method be perceived as superior.</span></div>
+      <div class="cheat-item"><b>Move the task set, move the winner</b><span>Relative performance may be altered significantly simply by choosing different benchmark tasks.</span></div>
+      <div class="cheat-item"><b>Five areas, not one</b><span>NLP, computer vision, information retrieval, recommender systems, reinforcement learning.</span></div>
+      <div class="cheat-item"><b>3 to 15, and 11 to 14</b><span>The fall on genuinely new test sets for CIFAR-10 and ImageNet. The level is fragile.</span></div>
+      <div class="cheat-item"><b>The ordering held</b><span>Gains on the original sets translated to larger gains on the new ones. Harder images, not contamination.</span></div>
+      <div class="cheat-item"><b>The better question</b><span>Not "what did it score" but "what task, whose distribution, and what would it score on ours".</span></div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="pagefoot">
+  <div class="wrap">
+    <p>Leader session 4 of 6 · learn-ml-epistemology-with-phoebe · by Phoebe Fu</p>
+    <nav class="pagenav">
+      <a href="a3-when-the-number-is-a-target.html">← Leader session 3 · When the number is a target</a>
+      <a href="a5-a-whole-literature-wrong.html">Leader session 5 · A whole literature, wrong the same way →</a>
+    </nav>
+  </div>
+</footer>
+
+<script src="../assets/app.js?v=2"></script>
+</body>
+</html>

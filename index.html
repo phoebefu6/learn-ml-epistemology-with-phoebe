@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- social:start -->
+<meta name="description" content="Sixteen sessions on what licenses belief in a model: the assumptions under a held-out score, underspecification, what selecting on a test set costs, benchmarks, leakage at the scale of a field, and the falsifier. Free, in your browser.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Learn with Phoebe">
+<meta property="og:title" content="Learn ML Epistemology with Phoebe">
+<meta property="og:description" content="0.949 where it was measured, 0.765 where it was deployed. Nothing about the model changed.">
+<meta property="og:url" content="https://phoebefu6.github.io/learn-ml-epistemology-with-phoebe/">
+<meta property="og:image" content="https://phoebefu6.github.io/learn-ml-epistemology-with-phoebe/assets/og-cover.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Learn ML Epistemology with Phoebe">
+<meta name="twitter:description" content="Why believe a model? Sixteen sessions and two benches that train in your browser.">
+<meta name="twitter:image" content="https://phoebefu6.github.io/learn-ml-epistemology-with-phoebe/assets/og-cover.png">
+<!-- social:end -->
+<title>Learn ML Epistemology with Phoebe</title>
+<link rel="stylesheet" href="assets/style.css?v=2">
+<style>
+
+  .stats-row { display: flex; gap: 2.4rem; margin-top: 1.5rem; flex-wrap: wrap; }
+  .stat b { display: block; font-size: 2.1rem; font-weight: 800; line-height: 1.05; font-variant-numeric: tabular-nums; }
+  .stat span { font-size: .72rem; opacity: .85; text-transform: uppercase; letter-spacing: .09em; font-weight: 600; }
+
+  .course-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr)); gap: 1rem; margin-top: 1.5rem; }
+  .course-card {
+    border: 1px solid var(--hairline);
+    border-top: 4px solid var(--diff, var(--indigo));
+    border-radius: var(--radius);
+    padding: 1.2rem 1.3rem 1.1rem;
+    display: flex;
+    flex-direction: column;
+    gap: .5rem;
+    text-decoration: none;
+    color: var(--ink);
+    background: #fff;
+    transition: box-shadow .15s ease, border-color .15s ease, transform .15s ease;
+    position: relative;
+  }
+  .course-card:hover { border-color: var(--indigo-soft); border-top-color: var(--diff, var(--indigo)); box-shadow: 0 8px 28px rgba(113,63,18,.16); transform: translateY(-3px); }
+  .course-card .cicon { font-size: 1.7rem; line-height: 1; }
+  .course-card .cnum { font-size: .72rem; font-weight: 700; color: var(--indigo); text-transform: uppercase; letter-spacing: .1em; }
+  .course-card h3 { font-size: 1.05rem; font-weight: 800; line-height: 1.3; }
+  .course-card p { font-size: .85rem; color: var(--muted); flex: 1; }
+  .course-card .meta { display: flex; gap: .4rem; flex-wrap: wrap; }
+
+  .diff-legend { display: flex; gap: 1rem; margin-top: 1.6rem; font-size: .74rem; color: var(--muted); font-weight: 600; flex-wrap: wrap; }
+  .diff-legend i { display: inline-block; width: .85rem; height: .35rem; border-radius: 999px; margin-right: .35rem; vertical-align: middle; }
+
+  .paths { margin-top: 2.6rem; }
+  .paths h2 { font-size: 1.3rem; font-weight: 800; margin-bottom: .3rem; }
+  .paths .plede { color: var(--muted); font-size: .92rem; margin-bottom: .8rem; }
+  .path { display: flex; gap: .55rem; align-items: center; padding: .75rem 0; border-bottom: .5px solid var(--hairline); flex-wrap: wrap; }
+  .path:last-child { border-bottom: none; }
+  .path b { min-width: 15.5rem; font-size: .9rem; }
+  .path .pstep { background: var(--indigo-50); color: var(--indigo); border-radius: 999px; padding: .16rem .68rem; font-weight: 700; font-size: .8rem; text-decoration: none; transition: all .12s ease; }
+  .path .pstep:hover { background: var(--indigo); color: #fff; }
+  .path .parr { color: var(--faint); font-weight: 700; }
+
+  .mm-section { margin-top: 1.6rem; }
+  .mm-section h2 { font-size: 1.3rem; font-weight: 800; margin-bottom: .2rem; }
+  .mm-section .mm-lede { color: var(--muted); font-size: .92rem; margin-bottom: .4rem; }
+  .mm-wrap { border: 1px solid var(--hairline); border-radius: var(--radius); background: linear-gradient(180deg,#fff,#FBF6EF); padding: .6rem; overflow-x: auto; }
+  .mm-svg { width: 100%; height: auto; display: block; max-width: 60rem; margin: 0 auto; min-width: 34rem; }
+  .mm-link { cursor: pointer; text-decoration: none; }
+  .mm-node rect { transition: opacity .15s ease, filter .15s ease; }
+  .mm-node text { pointer-events: none; }
+  .mm-link:hover .mm-node rect { filter: brightness(1.06); }
+  .mm-edge { transition: opacity .15s ease; }
+
+</style>
+</head>
+<body>
+
+<header class="masthead">
+  <div class="wrap">
+    <div class="eyebrow">Learn with Phoebe · Data Science</div>
+    <h1>Learn <span class="accent">ML Epistemology</span> with Phoebe</h1>
+    <p class="sub">Thornbury's triage model scores 0.949 on patients it never trained on. A year later the hospital group reorganises its wards and the same model, unchanged and never retrained, scores 0.765. Nothing in the pipeline was wrong: the split was honest, the metric was sensible, the number reproduced. What failed was an assumption nobody had written down. This is a course about the question underneath every accuracy figure, which is what licenses the belief that a model will work on data it has not seen. Six leader sessions on reading a claim, ten practitioner sessions on testing one, and two benches that train real networks in your browser so the arguments can be checked rather than repeated.</p>
+    <div class="stats-row">
+      <div class="stat"><b data-count="16">16</b><span>sessions, two tracks</span></div>
+      <div class="stat"><b data-count="20">20</b><span>models differing only by a seed</span></div>
+      <div class="stat"><b data-count="294">294</b><span>papers found with leakage</span></div>
+      <div class="stat"><b data-count="2">2</b><span>benches that train in the page</span></div>
+      <div class="stat"><b data-count="45">45</b><span>min per session</span></div>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <section class="section">
+    <div class="paths" style="margin-top:0">
+      <h2>Leader track 🧾 <span style="font-size:.85rem;font-weight:600;color:var(--muted)">· six sessions, no code</span></h2>
+      <p class="plede">For whoever approves the deployment. What a score claims, why two equally good models are not the same model, what a benchmark licenses, how to treat evidence you did not produce, and the question to ask before your name goes on it.</p>
+    </div>
+    <div class="course-grid">
+      <a class="course-card" href="courses/a1-what-a-test-score-entitles-you-to.html" style="--diff:#FBBF24">
+        <span class="cicon">🧾</span>
+        <span class="cnum">Leader session 1 · start here</span>
+        <h3>What a test score entitles you to</h3>
+        <p>A held-out number is a claim about a future that resembles the past. Three assumptions carry it, and one of them is nobody's fault when it breaks.</p>
+        <span class="meta"><span class="pill amber">▶ Start here</span></span>
+      </a>
+      <a class="course-card" href="courses/a2-equally-good-differently-wrong.html" style="--diff:#FB923C">
+        <span class="cicon">🎲</span>
+        <span class="cnum">Leader session 2</span>
+        <h3>Equally good, differently wrong</h3>
+        <p>Twenty models, one pipeline, identical where you looked and three to eleven times more spread where you did not.</p>
+      </a>
+      <a class="course-card" href="courses/a3-when-the-number-is-a-target.html" style="--diff:#FB923C">
+        <span class="cicon">🎯</span>
+        <span class="cnum">Leader session 3</span>
+        <h3>When the number is a target</h3>
+        <p>What selecting against a test set does to it, measured, against the field evidence that says it matters less than feared.</p>
+      </a>
+      <a class="course-card" href="courses/a4-what-a-benchmark-licenses.html" style="--diff:#F87171">
+        <span class="cicon">🏆</span>
+        <span class="cnum">Leader session 4</span>
+        <h3>What a benchmark licenses</h3>
+        <p>Construct validity and the benchmark lottery: a rank is a property of a pairing, not of a method.</p>
+      </a>
+      <a class="course-card" href="courses/a5-a-whole-literature-wrong.html" style="--diff:#F87171">
+        <span class="cicon">📚</span>
+        <span class="cnum">Leader session 5</span>
+        <h3>A whole literature, wrong the same way</h3>
+        <p>294 papers across 17 fields, and what to do about evidence you did not produce.</p>
+      </a>
+      <a class="course-card" href="courses/a6-what-would-change-your-mind.html" style="--diff:#F87171">
+        <span class="cicon">🔄</span>
+        <span class="cnum">Leader session 6</span>
+        <h3>What would change your mind</h3>
+        <p>The falsifier, written before the result. A claim with no falsifier is not a weak claim, it is not a claim.</p>
+      </a>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="paths" style="margin-top:0">
+      <h2>Practitioner track ⚖️ <span style="font-size:.85rem;font-weight:600;color:var(--muted)">· ten sessions, hands on</span></h2>
+      <p class="plede">For the people who produce the evidence. The split, the shortcut, the seed sweep, stress tests, selection, test-set size, benchmarks, leakage at field scale, a finding that died on its second data draw, and a capstone bench.</p>
+    </div>
+    <div class="course-grid">
+      <a class="course-card" href="courses/p1-the-assumption-under-the-split.html" style="--diff:#FBBF24">
+        <span class="cicon">✂️</span>
+        <span class="cnum">Practitioner session 1 · start here</span>
+        <h3>The assumption under the split</h3>
+        <p>What a random split buys, and the three deployments where it is a lie about the world.</p>
+        <span class="meta"><span class="pill amber">▶ Start here</span></span>
+      </a>
+      <a class="course-card" href="courses/p2-the-shortcut.html" style="--diff:#FB923C">
+        <span class="cicon">🔀</span>
+        <span class="cnum">Practitioner session 2</span>
+        <h3>The shortcut</h3>
+        <p>A feature that predicts without causing. Flip it on every patient and count how many predictions move.</p>
+      </a>
+      <a class="course-card" href="courses/p3-twenty-seeds-one-pipeline.html" style="--diff:#FB923C">
+        <span class="cicon">🌱</span>
+        <span class="cnum">Practitioner session 3</span>
+        <h3>Twenty seeds, one pipeline</h3>
+        <p>Change nothing but the seed. Held-out spread 0.003 to 0.019; shifted spread 0.034 to 0.051.</p>
+      </a>
+      <a class="course-card" href="courses/p4-stress-tests.html" style="--diff:#FB923C">
+        <span class="cicon">🧪</span>
+        <span class="cnum">Practitioner session 4</span>
+        <h3>Stress tests</h3>
+        <p>Designing the shifted set, and what a stress test can and cannot establish.</p>
+      </a>
+      <a class="course-card" href="courses/p5-selecting-on-a-set.html" style="--diff:#F87171">
+        <span class="cicon">🔎</span>
+        <span class="cnum">Practitioner session 5</span>
+        <h3>Selecting on a set</h3>
+        <p>The reported number climbs to 0.9569 while the honest number sits at 0.9497. The gap is the optimism.</p>
+      </a>
+      <a class="course-card" href="courses/p6-how-big-a-test-set.html" style="--diff:#F87171">
+        <span class="cicon">📏</span>
+        <span class="cnum">Practitioner session 6</span>
+        <h3>How big does a test set need to be</h3>
+        <p>Selection optimism 0.0091 at n=200 and 0.0030 at n=2000. At n=100 the estimate is too noisy to rank itself.</p>
+      </a>
+      <a class="course-card" href="courses/p7-reading-a-benchmark.html" style="--diff:#F87171">
+        <span class="cicon">📖</span>
+        <span class="cnum">Practitioner session 7</span>
+        <h3>Reading a benchmark</h3>
+        <p>What transfers from a published ranking to your problem, which is less than it appears.</p>
+      </a>
+      <a class="course-card" href="courses/p8-leakage-at-field-scale.html" style="--diff:#F87171">
+        <span class="cicon">🕳️</span>
+        <span class="cnum">Practitioner session 8</span>
+        <h3>Leakage at the scale of a field</h3>
+        <p>Eight types, 17 disciplines, 294 papers. A structural failure, not a careless one.</p>
+      </a>
+      <a class="course-card" href="courses/p9-the-finding-that-did-not-survive.html" style="--diff:#EF4444">
+        <span class="cicon">💥</span>
+        <span class="cnum">Practitioner session 9</span>
+        <h3>The finding that did not survive</h3>
+        <p>A correlation of -0.89 that looked like the headline, until the fourth data draw returned +0.09.</p>
+      </a>
+      <a class="course-card" href="courses/p10-the-credibility-bench.html" style="--diff:#EF4444">
+        <span class="cicon">⚖️</span>
+        <span class="cnum">Practitioner session 10</span>
+        <h3>The credibility bench</h3>
+        <p>Both benches live. Train them yourself, then write the falsifier before you look.</p>
+      </a>
+    </div>
+    <div class="diff-legend">
+      <span><i style="background:#FBBF24"></i>Foundations</span>
+      <span><i style="background:#FB923C"></i>Working depth</span>
+      <span><i style="background:#F87171"></i>Advanced</span>
+      <span><i style="background:#EF4444"></i>Hardest</span>
+    </div>
+  </section>
+
+  <section class="section mm-section">
+    <h2>The whole thing on one page</h2>
+    <p class="mm-lede">Every idea in the course and the session that owns it. Click any node to jump there.</p>
+    <div class="mm-wrap"><div id="mindmap"></div></div>
+  </section>
+
+  <section class="section">
+    <div class="paths">
+      <h2>Three ways through</h2>
+      <p class="plede">Everyone starts at session 1 of their track. These are the shortest useful routes if you cannot take all sixteen.</p>
+      <div class="path"><b>I approve the deployments</b>
+        <a class="pstep" href="courses/a1-what-a-test-score-entitles-you-to.html">What a score claims</a><span class="parr">→</span>
+        <a class="pstep" href="courses/a2-equally-good-differently-wrong.html">Which model shipped</a><span class="parr">→</span>
+        <a class="pstep" href="courses/a6-what-would-change-your-mind.html">The falsifier</a>
+      </div>
+      <div class="path"><b>I produce the evidence</b>
+        <a class="pstep" href="courses/p2-the-shortcut.html">The shortcut</a><span class="parr">→</span>
+        <a class="pstep" href="courses/p3-twenty-seeds-one-pipeline.html">Twenty seeds</a><span class="parr">→</span>
+        <a class="pstep" href="courses/p5-selecting-on-a-set.html">Selection</a><span class="parr">→</span>
+        <a class="pstep" href="courses/p10-the-credibility-bench.html">The bench</a>
+      </div>
+      <div class="path"><b>I read other people's results</b>
+        <a class="pstep" href="courses/a4-what-a-benchmark-licenses.html">Benchmarks</a><span class="parr">→</span>
+        <a class="pstep" href="courses/a5-a-whole-literature-wrong.html">A literature</a><span class="parr">→</span>
+        <a class="pstep" href="courses/p7-reading-a-benchmark.html">What transfers</a><span class="parr">→</span>
+        <a class="pstep" href="courses/p8-leakage-at-field-scale.html">Leakage</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="paths">
+      <h2>What is real here</h2>
+      <p class="plede">Both benches train networks when you click. Nothing is a stored result.</p>
+      <table class="pp-strip" style="width:100%;border-collapse:collapse">
+        <tr><td style="padding:.5rem 0;font-weight:700">The patients</td><td style="padding:.5rem 0;color:var(--muted)">Generated from relationships written out in <span class="mono">assets/ep-live.js</span>: two signals cause deterioration, one ward does not</td></tr>
+        <tr><td style="padding:.5rem 0;font-weight:700">Every model</td><td style="padding:.5rem 0;color:var(--muted)">Three inputs, twelve tanh hidden units, trained by stochastic gradient descent in the page</td></tr>
+        <tr><td style="padding:.5rem 0;font-weight:700">Every accuracy</td><td style="padding:.5rem 0;color:var(--muted)">Counted on data the model did not train on. Nothing is hard-coded</td></tr>
+        <tr><td style="padding:.5rem 0;font-weight:700">The finding that died</td><td style="padding:.5rem 0;color:var(--muted)">A correlation of -0.89 looked like the headline until the fourth draw returned +0.09. Session 9 keeps the record</td></tr>
+      </table>
+    </div>
+  </section>
+
+  <footer class="pagefoot">
+    <span class="meta">part of <a href="https://phoebefu6.github.io/learn-with-phoebe/">Learn with Phoebe ↗</a> · by Phoebe Fu · memorization and double descent live in <a href="https://phoebefu6.github.io/learn-deep-learning-with-phoebe/">learn deep learning ↗</a>, leak mechanics in <a href="https://phoebefu6.github.io/learn-model-risk-with-phoebe/">learn model risk ↗</a>, and the metrics in <a href="https://phoebefu6.github.io/learn-model-evaluation-with-phoebe/">learn model evaluation ↗</a></span>
+  </footer>
+
+</main>
+
+<script>
+window.MINDMAP_DATA = {
+  "title": "ML\nEpistemology",
+  "centerColor": "#4A2A0C",
+  "sessions": [
+    {
+      "label": "What a score claims",
+      "href": "courses/a1-what-a-test-score-entitles-you-to.html",
+      "concepts": [
+        {
+          "label": "The same world",
+          "href": "courses/p1-the-assumption-under-the-split.html"
+        },
+        {
+          "label": "An untouched draw",
+          "href": "courses/p5-selecting-on-a-set.html"
+        },
+        {
+          "label": "The right target",
+          "href": "courses/a4-what-a-benchmark-licenses.html"
+        }
+      ]
+    },
+    {
+      "label": "Underspecification",
+      "href": "courses/a2-equally-good-differently-wrong.html",
+      "concepts": [
+        {
+          "label": "Twenty seeds",
+          "href": "courses/p3-twenty-seeds-one-pipeline.html"
+        },
+        {
+          "label": "The shortcut",
+          "href": "courses/p2-the-shortcut.html"
+        },
+        {
+          "label": "Stress tests",
+          "href": "courses/p4-stress-tests.html"
+        }
+      ]
+    },
+    {
+      "label": "Selection",
+      "href": "courses/a3-when-the-number-is-a-target.html",
+      "concepts": [
+        {
+          "label": "Reported vs honest",
+          "href": "courses/p5-selecting-on-a-set.html"
+        },
+        {
+          "label": "Test-set size",
+          "href": "courses/p6-how-big-a-test-set.html"
+        }
+      ]
+    },
+    {
+      "label": "Benchmarks",
+      "href": "courses/a4-what-a-benchmark-licenses.html",
+      "concepts": [
+        {
+          "label": "Construct validity",
+          "href": "courses/p7-reading-a-benchmark.html"
+        },
+        {
+          "label": "The benchmark lottery",
+          "href": "courses/p7-reading-a-benchmark.html"
+        }
+      ]
+    },
+    {
+      "label": "Borrowed evidence",
+      "href": "courses/a5-a-whole-literature-wrong.html",
+      "concepts": [
+        {
+          "label": "294 papers, 17 fields",
+          "href": "courses/p8-leakage-at-field-scale.html"
+        },
+        {
+          "label": "Eight leakage types",
+          "href": "courses/p8-leakage-at-field-scale.html"
+        }
+      ]
+    },
+    {
+      "label": "Believing responsibly",
+      "href": "courses/a6-what-would-change-your-mind.html",
+      "concepts": [
+        {
+          "label": "The falsifier",
+          "href": "courses/a6-what-would-change-your-mind.html"
+        },
+        {
+          "label": "A finding that died",
+          "href": "courses/p9-the-finding-that-did-not-survive.html"
+        },
+        {
+          "label": "The bench",
+          "href": "courses/p10-the-credibility-bench.html"
+        }
+      ]
+    }
+  ]
+};
+</script>
+<script src="assets/mindmap.js?v=2"></script>
+<script src="assets/app.js?v=2"></script>
+</body>
+</html>

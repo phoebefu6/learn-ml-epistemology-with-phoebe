@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- social:start -->
+<meta name="description" content="Leader session 2 of 6. Twenty models from one pipeline, differing only by the random seed. Indistinguishable on held-out data, and 2.7 to 11.3 times more spread out once the wards move.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Learn with Phoebe">
+<meta property="og:title" content="Equally good, differently wrong - learn ML epistemology with phoebe">
+<meta property="og:description" content="Leader session 2 of 6. Underspecification in plain terms, and why 'we validated the model' does not identify which model was deployed.">
+<meta property="og:url" content="https://phoebefu6.github.io/learn-ml-epistemology-with-phoebe/courses/a2-equally-good-differently-wrong.html">
+<meta property="og:image" content="https://phoebefu6.github.io/learn-ml-epistemology-with-phoebe/assets/og-cover.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Equally good, differently wrong - learn ML epistemology with phoebe">
+<meta name="twitter:description" content="Same data, same architecture, same schedule. Only the seed differs, and the models are not the same model.">
+<meta name="twitter:image" content="https://phoebefu6.github.io/learn-ml-epistemology-with-phoebe/assets/og-cover.png">
+<!-- social:end -->
+<title>Leader session 2 · Equally good, differently wrong - learn ML epistemology with phoebe</title>
+<link rel="stylesheet" href="../assets/style.css?v=2">
+</head>
+<body>
+
+<div class="toolbar">
+  <div class="wrap">
+    <span class="crumb"><a href="../index.html">learn-ml-epistemology-with-phoebe</a> / Leader session 2 of 6</span>
+    <button class="btn" id="toggle-all" type="button">Expand all</button>
+    <button class="btn primary" id="zoom-toggle" type="button">Projector zoom: off</button>
+  </div>
+</div>
+
+<header class="masthead">
+  <div class="wrap">
+    <div class="eyebrow">Learn ML Epistemology with Phoebe · Leader session 2 of 6</div>
+    <h1>Equally good, <span class="accent">differently wrong</span></h1>
+    <p class="sub">Run the Thornbury pipeline twenty times. Same data, same architecture, same training schedule. The only thing that differs is the random seed, which sets the initial weights and the order the examples arrive in. On held-out data the twenty models are close enough to be treated as one model, and in practice they are: somebody picks one, the review sees one number, the paperwork says the model was validated. Once the wards are reorganised those twenty pull apart by several times as much. They were never the same model. Nothing anyone looked at could have told them apart.</p>
+    <div class="chip-row">
+      <span class="chip level">🔴 Hardest</span>
+      <span class="chip audience">Whoever approves the deployment</span>
+      <span class="chip audience">Anyone who signs off on a retrain</span>
+      <span class="chip time">45 min</span>
+    </div>
+    <div class="agenda">
+      <span class="a1" style="flex:1">0-3 · Welcome</span>
+      <span class="a2" style="flex:5">3-20 · Twenty models, one pipeline</span>
+      <span class="a3" style="flex:4">20-40 · Build-along: which model did we approve</span>
+      <span class="a4" style="flex:1">40-45 · Q&amp;A</span>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <!-- ============ INTRO ============ -->
+  <section class="section" id="intro">
+    <div class="section-kicker">
+      <span class="klabel">Part 0</span>
+      <h2>Where session 1 left the argument</h2>
+    </div>
+    <p class="lede">Session 1 ended with a held-out score of 0.949 that fell to 0.765 when an arrangement in the world expired, and with the observation that no amount of extra held-out data would have warned anybody. Tonight goes one level further down. It turns out the pipeline does not even return one model. It returns a family of models that agree almost exactly on the data you looked at and disagree substantially on the data you did not, and the choice between them is made by an arbitrary number nobody records. Session 3 is what happens to a measurement once people start selecting against it. The example is still <strong>Thornbury</strong>, the hospital group predicting which patients deteriorate within 24 hours.</p>
+
+    <div class="legend">
+      <span class="pill">Live = presented in the 45 minutes</span>
+      <span class="pill">Self-study = the full depth, after class</span>
+      <span class="pill">🔍 Every diagram zooms</span>
+    </div>
+
+    <div class="callout win">
+      <p><strong>★ What you walk out with tonight.</strong> A working definition of underspecification you can use in a review, taken from the paper that named it. The Thornbury measurement: twenty seeds, a held-out spread of 0.019 and a shifted spread of 0.051 on the first draw, and a shifted spread larger than the held-out spread in all five draws. And the governance sentence that follows from it: "we validated the model" does not say which model was deployed, so a retrain with a new seed is a new model carrying the old paperwork.</p>
+    </div>
+
+    <details class="card" open>
+      <summary><span class="mode live">Live</span>What underspecification actually says<span class="mini">5 min</span><span class="caret">▶</span></summary>
+      <div class="body">
+        <p>The term comes from D'Amour et al. (2020), "Underspecification Presents Challenges for Credibility in Modern Machine Learning". Their definition is worth reading slowly, because every word in it is load-bearing: <strong>"An ML pipeline is underspecified when it can return many predictors with equivalently strong held-out performance in the training domain."</strong> Not "a badly built pipeline". Not "a pipeline with a bug". A pipeline that does its job, returns a strong model, and could just as easily have returned a different strong model.</p>
+        <p>The consequence they state is the part that belongs in a review: <strong>"Predictors returned by underspecified pipelines are often treated as equivalent based on their training domain performance, but we show here that such predictors can behave very differently in deployment domains."</strong> Treated as equivalent is the phrase to sit with. Nobody decides to treat them as equivalent; it happens by default, because the only evidence on the table says they are.</p>
+        <p>This is not a quirk of one field. D'Amour et al. ran stress tests across computer vision, medical imaging, natural language processing, clinical risk prediction from electronic health records, and medical genomics. The paper carries forty authors, which is itself a signal of how much ground they had to cover to establish that the pattern was general rather than local.</p>
+        <div class="callout example">
+          <span class="ex-pill">Real world</span>
+          <p>At Thornbury the pipeline is fixed: 4,000 training patients, the same three inputs, the same small network, the same number of passes over the data. Run it twenty times and you get twenty models whose held-out accuracies sit inside a band 0.019 wide. Any one of them would pass the same review with the same slide.</p>
+        </div>
+      </div>
+    </details>
+
+    <details class="card">
+      <summary><span class="mode self">Self-study</span>The words used tonight<span class="mini">4 min</span><span class="caret">▶</span></summary>
+      <div class="body">
+        <ul>
+          <li><strong>Pipeline.</strong> Everything that turns data into a fitted model: the features, the architecture, the training schedule, the stopping rule. Fixed here, deliberately.</li>
+          <li><strong>Seed.</strong> The arbitrary number that sets the initial weights and the order examples arrive in. The only thing that varies across the twenty models tonight.</li>
+          <li><strong>Underspecification.</strong> A pipeline that can return many models with equally strong held-out performance which behave differently once deployed.</li>
+          <li><strong>Spread.</strong> The distance between the best and worst of the twenty on one set. Held-out spread and shifted spread are measured on different sets, from the same twenty models.</li>
+          <li><strong>Stress test.</strong> Scoring the family on data chosen to break a specific assumption, rather than on more data of the same kind. It separates models that a held-out set cannot.</li>
+          <li><strong>Behavioural reliance.</strong> How much a model's answers move when one named feature is changed and nothing else is. Measured here by flipping the ward on every patient and counting changed predictions.</li>
+          <li><strong>Data draw.</strong> One fresh sample of patients from the same world. Repeating a finding across draws is how you learn whether the finding is about the world or about the sample. Session 6 returns to this.</li>
+        </ul>
+      </div>
+    </details>
+  </section>
+
+  <!-- ============ PART 1 ============ -->
+  <section class="section" id="part-1">
+    <div class="section-kicker">
+      <span class="klabel">Part 1 · covers the twenty models</span>
+      <h2>Indistinguishable where you looked</h2>
+      <span class="tag concept">10 min live</span>
+    </div>
+    <p class="lede">The cleanest way to see underspecification is to hold everything constant except the one thing nobody writes down. Twenty runs, one pipeline, twenty seeds. Then score all twenty twice: once on held-out patients from the collection year, once on patients from the year the wards were reorganised.</p>
+
+    <figure class="zoomable">
+      <svg viewBox="0 0 880 340" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Twenty models from one pipeline plotted on a shared accuracy axis. On the held-out set from the collection year the twenty sit in a tight band 0.019 wide around a mean accuracy of 0.949. On the shifted set from the deployment year the same twenty sit in a band 0.051 wide around a mean of 0.765. The shifted band is 2.7 times wider and the whole cluster has moved far down the axis.">
+        <style>
+          .a2aH { font: 800 12px Inter, sans-serif; fill: #231A10; }
+          .a2aB { font: 400 11px Inter, sans-serif; fill: #231A10; }
+          .a2aM { font: 400 11px Inter, sans-serif; fill: #6B5B47; }
+          .a2aK { font: 800 11px Inter, sans-serif; fill: #231A10; }
+          .a2aR { font: 800 11px Inter, sans-serif; fill: #155E75; }
+        </style>
+
+        <text class="a2aH" x="14" y="22">Twenty models. One pipeline. The seed is the only difference.</text>
+
+        <text class="a2aK" x="14" y="68">Held out, collection year</text>
+        <rect x="744.8" y="76" width="59.3" height="28" rx="6" fill="#EBD9C3" stroke="#DCCDB8"></rect>
+        <text class="a2aM" x="734" y="94" text-anchor="end">spread 0.019</text>
+        <circle cx="744.8" cy="90" r="3.4" fill="#713F12" stroke="#FFFFFF" stroke-width="0.7"></circle>
+        <circle cx="748.0" cy="90" r="3.4" fill="#713F12" stroke="#FFFFFF" stroke-width="0.7"></circle>
+        <circle cx="751.1" cy="90" r="3.4" fill="#713F12" stroke="#FFFFFF" stroke-width="0.7"></circle>
+        <circle cx="754.2" cy="90" r="3.4" fill="#713F12" stroke="#FFFFFF" stroke-width="0.7"></circle>
+        <circle cx="757.3" cy="90" r="3.4" fill="#713F12" stroke="#FFFFFF" stroke-width="0.7"></circle>
+        <circle cx="760.4" cy="90" r="3.4" fill="#713F12" stroke="#FFFFFF" stroke-width="0.7"></circle>
+        <circle cx="763.6" cy="90" r="3.4" fill="#713F12" stroke="#FFFFFF" stroke-width="0.7"></circle>
+        <circle cx="766.7" cy="90" r="3.4" fill="#713F12" stroke="#FFFFFF" stroke-width="0.7"></circle>
+        <circle cx="769.8" cy="90" r="3.4" fill="#713F12" stroke="#FFFFFF" stroke-width="0.7"></circle>
+        <circle cx="772.9" cy="90" r="3.4" fill="#713F12" stroke="#FFFFFF" stroke-width="0.7"></circle>
+        <circle cx="776.0" cy="90" r="3.4" fill="#713F12" stroke="#FFFFFF" stroke-width="0.7"></circle>
+        <circle cx="779.2" cy="90" r="3.4" fill="#713F12" stroke="#FFFFFF" stroke-width="0.7"></circle>
+        <circle cx="782.3" cy="90" r="3.4" fill="#713F12" stroke="#FFFFFF" stroke-width="0.7"></circle>
+        <circle cx="785.4" cy="90" r="3.4" fill="#713F12" stroke="#FFFFFF" stroke-width="0.7"></circle>
+        <circle cx="788.5" cy="90" r="3.4" fill="#713F12" stroke="#FFFFFF" stroke-width="0.7"></circle>
+        <circle cx="791.6" cy="90" r="3.4" fill="#713F12" stroke="#FFFFFF" stroke-width="0.7"></circle>
+        <circle cx="794.8" cy="90" r="3.4" fill="#713F12" stroke="#FFFFFF" stroke-width="0.7"></circle>
+        <circle cx="797.9" cy="90" r="3.4" fill="#713F12" stroke="#FFFFFF" stroke-width="0.7"></circle>
+        <circle cx="801.0" cy="90" r="3.4" fill="#713F12" stroke="#FFFFFF" stroke-width="0.7"></circle>
+        <circle cx="804.1" cy="90" r="3.4" fill="#713F12" stroke="#FFFFFF" stroke-width="0.7"></circle>
+        <text class="a2aM" x="14" y="116">mean accuracy 0.949</text>
+
+        <text class="a2aK" x="14" y="152">Shifted, deployment year</text>
+        <rect x="120.8" y="160" width="159.2" height="28" rx="6" fill="#ECFEFF" stroke="#155E75"></rect>
+        <text class="a2aM" x="292" y="178">spread 0.051, which is 2.7 times wider</text>
+        <circle cx="120.8" cy="174" r="3.4" fill="#155E75"></circle>
+        <circle cx="129.2" cy="174" r="3.4" fill="#155E75"></circle>
+        <circle cx="137.6" cy="174" r="3.4" fill="#155E75"></circle>
+        <circle cx="146.0" cy="174" r="3.4" fill="#155E75"></circle>
+        <circle cx="154.3" cy="174" r="3.4" fill="#155E75"></circle>
+        <circle cx="162.7" cy="174" r="3.4" fill="#155E75"></circle>
+        <circle cx="171.1" cy="174" r="3.4" fill="#155E75"></circle>
+        <circle cx="179.5" cy="174" r="3.4" fill="#155E75"></circle>
+        <circle cx="187.8" cy="174" r="3.4" fill="#155E75"></circle>
+        <circle cx="196.2" cy="174" r="3.4" fill="#155E75"></circle>
+        <circle cx="204.6" cy="174" r="3.4" fill="#155E75"></circle>
+        <circle cx="213.0" cy="174" r="3.4" fill="#155E75"></circle>
+        <circle cx="221.3" cy="174" r="3.4" fill="#155E75"></circle>
+        <circle cx="229.7" cy="174" r="3.4" fill="#155E75"></circle>
+        <circle cx="238.1" cy="174" r="3.4" fill="#155E75"></circle>
+        <circle cx="246.5" cy="174" r="3.4" fill="#155E75"></circle>
+        <circle cx="254.8" cy="174" r="3.4" fill="#155E75"></circle>
+        <circle cx="263.2" cy="174" r="3.4" fill="#155E75"></circle>
+        <circle cx="271.6" cy="174" r="3.4" fill="#155E75"></circle>
+        <circle cx="280.0" cy="174" r="3.4" fill="#155E75"></circle>
+        <text class="a2aM" x="14" y="200">mean accuracy 0.765</text>
+
+        <line x1="60" y1="228" x2="840" y2="228" stroke="#DCCDB8" stroke-width="1.4"></line>
+        <line x1="153.6" y1="224" x2="153.6" y2="232" stroke="#6B5B47" stroke-width="1.2"></line>
+        <line x1="309.6" y1="224" x2="309.6" y2="232" stroke="#6B5B47" stroke-width="1.2"></line>
+        <line x1="465.6" y1="224" x2="465.6" y2="232" stroke="#6B5B47" stroke-width="1.2"></line>
+        <line x1="621.6" y1="224" x2="621.6" y2="232" stroke="#6B5B47" stroke-width="1.2"></line>
+        <line x1="777.6" y1="224" x2="777.6" y2="232" stroke="#6B5B47" stroke-width="1.2"></line>
+        <text class="a2aM" x="153.6" y="248" text-anchor="middle">0.75</text>
+        <text class="a2aM" x="309.6" y="248" text-anchor="middle">0.80</text>
+        <text class="a2aM" x="465.6" y="248" text-anchor="middle">0.85</text>
+        <text class="a2aM" x="621.6" y="248" text-anchor="middle">0.90</text>
+        <text class="a2aM" x="777.6" y="248" text-anchor="middle">0.95</text>
+
+        <rect x="14" y="266" width="852" height="60" rx="9" fill="#FBF6EF" stroke="#DCCDB8"></rect>
+        <text class="a2aR" x="28" y="288">Positions inside each band are illustrative. The band widths are the measured spreads.</text>
+        <text class="a2aB" x="28" y="312">Data draw 1 of 5. Every one of the twenty would have been approved on the number to the right.</text>
+      </svg>
+      <figcaption>🔍 Click to zoom - a tight clump where the score was taken, a wide one where it was spent.</figcaption>
+    </figure>
+
+    <details class="card">
+      <summary><span class="mode live">Live</span>The seed is not a hyperparameter anybody argues about<span class="mini">4 min</span><span class="caret">▶</span></summary>
+      <div class="body">
+        <p>Teams argue about architecture, features and regularisation, and those arguments leave a trail: a decision log, a slide, a comparison table. The seed leaves nothing. It is the number a library picks when nobody supplies one, and it is not usually in the model card, the review pack or the change request. The twenty models tonight differ by exactly that and nothing else.</p>
+        <p>Which makes the finding awkward to file. It is not a data problem, because the data are identical. It is not an architecture problem, because the architecture is identical. It is a property of the pipeline as a whole: the training data plus the design constrain the model a great deal, and then they stop constraining it, and something arbitrary finishes the job.</p>
+      </div>
+    </details>
+
+    <details class="card">
+      <summary><span class="mode live">Live</span>How differently they behave, measured directly<span class="mini">4 min</span><span class="caret">▶</span></summary>
+      <div class="body">
+        <p>Accuracy is a summary, and two models can reach the same summary by different routes. A blunter instrument is to change one input and watch what happens. At Thornbury the test is to flip the ward on every patient, leave the two clinical signals alone, and count how many predictions change their answer.</p>
+        <p>Across the twenty seeds that number runs from <strong>0.70 to 1.00</strong>. Some of these models change their mind about seven patients in ten when only the ward moves. Others change their mind about every single one. All of them scored about 0.949. If you had asked the review "how much does this model lean on the ward", the honest answer would have been "which of the twenty are you asking about", and nobody in the room would have had a way to tell.</p>
+        <div class="callout example">
+          <span class="ex-pill">Real world</span>
+          <p>A reliance of 1.00 and a reliance of 0.70 are different clinical objects. One of them changes its recommendation for every patient the moment a bed is reassigned. The other does so for most of them. Both are wearing the same accuracy figure, and the accuracy figure is what the approval was based on.</p>
+        </div>
+      </div>
+    </details>
+
+    <details class="card">
+      <summary><span class="mode self">Self-study</span>Why a tighter held-out band makes this worse, not better<span class="mini">3 min</span><span class="caret">▶</span></summary>
+      <div class="body">
+        <p>The instinct on seeing a held-out spread of 0.019 is relief: the pipeline is stable. On draw 4 the held-out spread is 0.003, which is tighter still, and it is the worst case in the whole table. The shifted spread there is 0.034, eleven times the held-out spread. The tighter the agreement where you looked, the more confidently the family will be treated as one model, and the less the agreement was telling you.</p>
+        <p>This is the same shape as session 1's point about buying a larger test set. Precision on the quantity you can measure is cheap and reassuring. It is not evidence about the quantity you care about, and when it is high it actively suppresses the question.</p>
+      </div>
+    </details>
+  </section>
+
+  <!-- ============ PART 2 ============ -->
+  <section class="section" id="part-2">
+    <div class="section-kicker">
+      <span class="klabel">Part 2 · covers what holds and what does not</span>
+      <h2>Five draws, one robust finding and one that is not</h2>
+      <span class="tag concept">8 min live</span>
+    </div>
+    <p class="lede">One measurement is an anecdote. The bench was therefore repeated on five independent draws of patients from the same world, twenty models each. Two things come out of that table, and they have very different standing. Saying which is which out loud is most of the discipline being taught tonight.</p>
+
+    <figure class="zoomable">
+      <svg viewBox="0 0 880 404" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Five data draws as rows, each showing the held-out spread and the shifted spread as bars to scale with the ratio and the correlation. Draw one, 0.019 and 0.051, ratio 2.7 times, correlation minus 0.89. Draw two, 0.008 and 0.038, ratio 4.8 times, correlation plus 0.03. Draw three, 0.012 and 0.046, ratio 4.0 times, correlation minus 0.87. Draw four, 0.003 and 0.034, ratio 11.3 times, correlation plus 0.09. Draw five, 0.016 and 0.048, ratio 3.0 times, correlation minus 0.75. The shifted bar is longer in every row, while the correlation column has no pattern at all.">
+        <style>
+          .a2bH { font: 800 12px Inter, sans-serif; fill: #231A10; }
+          .a2bK { font: 800 11px Inter, sans-serif; fill: #231A10; }
+          .a2bB { font: 400 11px Inter, sans-serif; fill: #231A10; }
+          .a2bM { font: 400 11px Inter, sans-serif; fill: #6B5B47; }
+          .a2bR { font: 800 11px Inter, sans-serif; fill: #155E75; }
+        </style>
+
+        <text class="a2bH" x="14" y="22">Every row is a fresh draw of patients and a fresh set of twenty models.</text>
+        <text class="a2bK" x="14" y="44">Draw</text>
+        <text class="a2bK" x="84" y="44">Spread across 20 models, bars to scale</text>
+        <text class="a2bK" x="600" y="44">Ratio</text>
+        <text class="a2bK" x="700" y="44">corr(held, shifted)</text>
+        <line x1="14" y1="52" x2="866" y2="52" stroke="#DCCDB8" stroke-width="1.2"></line>
+
+        <text class="a2bB" x="14" y="84">1</text>
+        <rect x="84" y="66" width="156.5" height="12" rx="4" fill="#D9B892"></rect>
+        <text class="a2bM" x="248.5" y="75">held out 0.019</text>
+        <rect x="84" y="84" width="420.0" height="12" rx="4" fill="#155E75"></rect>
+        <text class="a2bM" x="512" y="95">shifted 0.051</text>
+        <text class="a2bK" x="600" y="84">2.7x</text>
+        <text class="a2bM" x="700" y="84">-0.89</text>
+
+        <text class="a2bB" x="14" y="134">2</text>
+        <rect x="84" y="116" width="65.9" height="12" rx="4" fill="#D9B892"></rect>
+        <text class="a2bM" x="157.9" y="125">held out 0.008</text>
+        <rect x="84" y="134" width="312.9" height="12" rx="4" fill="#155E75"></rect>
+        <text class="a2bM" x="404.9" y="145">shifted 0.038</text>
+        <text class="a2bK" x="600" y="134">4.8x</text>
+        <text class="a2bM" x="700" y="134">+0.03</text>
+
+        <text class="a2bB" x="14" y="184">3</text>
+        <rect x="84" y="166" width="98.8" height="12" rx="4" fill="#D9B892"></rect>
+        <text class="a2bM" x="190.8" y="175">held out 0.012</text>
+        <rect x="84" y="184" width="378.8" height="12" rx="4" fill="#155E75"></rect>
+        <text class="a2bM" x="470.8" y="195">shifted 0.046</text>
+        <text class="a2bK" x="600" y="184">4.0x</text>
+        <text class="a2bM" x="700" y="184">-0.87</text>
+
+        <text class="a2bB" x="14" y="234">4</text>
+        <rect x="84" y="216" width="24.7" height="12" rx="4" fill="#D9B892"></rect>
+        <text class="a2bM" x="116.7" y="225">held out 0.003</text>
+        <rect x="84" y="234" width="280.0" height="12" rx="4" fill="#155E75"></rect>
+        <text class="a2bM" x="372" y="245">shifted 0.034</text>
+        <text class="a2bK" x="600" y="234">11.3x</text>
+        <text class="a2bM" x="700" y="234">+0.09</text>
+
+        <text class="a2bB" x="14" y="284">5</text>
+        <rect x="84" y="266" width="131.8" height="12" rx="4" fill="#D9B892"></rect>
+        <text class="a2bM" x="223.8" y="275">held out 0.016</text>
+        <rect x="84" y="284" width="395.3" height="12" rx="4" fill="#155E75"></rect>
+        <text class="a2bM" x="487.3" y="295">shifted 0.048</text>
+        <text class="a2bK" x="600" y="284">3.0x</text>
+        <text class="a2bM" x="700" y="284">-0.75</text>
+
+        <rect x="14" y="316" width="852" height="76" rx="9" fill="#FBF6EF" stroke="#DCCDB8"></rect>
+        <text class="a2bR" x="28" y="340">Robust: the shifted bar is longer in five rows out of five, by 2.7 to 11.3 times.</text>
+        <text class="a2bB" x="28" y="364">Not robust: the correlation column runs from -0.89 to +0.09 with no pattern. Held-out accuracy is</text>
+        <text class="a2bB" x="28" y="386">close to uninformative about shifted accuracy, in either direction.</text>
+      </svg>
+      <figcaption>🔍 Click to zoom - one column repeats itself in every row and one column does not.</figcaption>
+    </figure>
+
+    <details class="card">
+      <summary><span class="mode live">Live</span>The finding that holds in five draws out of five<span class="mini">4 min</span><span class="caret">▶</span></summary>
+      <div class="body">
+        <p>In every draw the shifted spread is larger than the held-out spread, by between 2.7 and 11.3 times. Models that are indistinguishable where you looked are distinguishable where you did not. That sentence is the whole of underspecification stated as a measurement, and it is stable enough to build a policy on.</p>
+        <p>What it buys you in a review is a specific expectation. Whatever agreement the validation showed between candidate models, expect several times more disagreement once anything about the world changes. The held-out set is the setting in which the family looks most alike, by construction, because that is the set the pipeline was tuned against.</p>
+      </div>
+    </details>
+
+    <details class="card">
+      <summary><span class="mode live">Live</span>The finding that does not hold, and why it is being told to you anyway<span class="mini">5 min</span><span class="caret">▶</span></summary>
+      <div class="body">
+        <p>The correlation between a model's held-out accuracy and its shifted accuracy runs from <strong>-0.89 on draw 1 to +0.09 on draw 4</strong>. There is no pattern in that column. The honest reading is the flat one: held-out accuracy does not predict shifted accuracy, and it does not reliably anti-predict it either. It is close to uninformative about it.</p>
+        <p>The tempting sentence, and the one to refuse, is "the best model on the held-out set is the worst under shift". It is vivid, it sounds like wisdom, and one draw of this bench supported it beautifully before another draw destroyed it. Practitioner session 9 tells that story in full; tonight the point is only that the sentence is not available, and neither is its opposite.</p>
+        <div class="callout tip">
+          <p><strong>What to do with a number you cannot use.</strong> The correlation column is not a failed measurement, it is a finding about how much a single measurement is worth. A leader who has seen this table asks a different question of any single-run result: was it repeated on fresh data, and did it come out the same way. Session 6 turns that into the question you ask before approving anything.</p>
+        </div>
+      </div>
+    </details>
+
+    <details class="card">
+      <summary><span class="mode live">Live</span>The governance consequence, in one sentence<span class="mini">4 min</span><span class="caret">▶</span></summary>
+      <div class="body">
+        <p>Here is the version for a board paper. <strong>"We validated the model" does not identify which model was deployed.</strong> The validation identifies the pipeline and a performance band. Inside that band sits a family of models with behavioural reliance on a single feature ranging from 0.70 to 1.00, and the member of the family that shipped was chosen by an unrecorded number.</p>
+        <p>The direct operational consequence is about retraining. A retrain on refreshed data with a new seed returns a different member of the family, and it will pass the same validation with a similar number, because that is what the band means. So the change is invisible to the control that is supposed to catch changes. The paperwork carries over; the behaviour does not have to.</p>
+        <p>None of this makes retraining wrong. It makes "unchanged performance" the wrong evidence that nothing changed. What would be evidence is the behavioural measure: does the new model lean on the same features by the same amount as the one it replaces.</p>
+      </div>
+    </details>
+
+    <details class="card">
+      <summary><span class="mode self">Self-study</span>Where the term came from and how far it reaches<span class="mini">3 min</span><span class="caret">▶</span></summary>
+      <div class="body">
+        <p>D'Amour et al. did not find this in one domain and generalise. They built stress tests in computer vision, medical imaging, natural language processing, clinical risk prediction from electronic health records, and medical genomics, and found the same shape in each: strong and equivalent held-out performance, divergent behaviour once the deployment conditions moved. Forty authors on one paper is what covering that much ground costs.</p>
+        <p>Cite it as D'Amour et al. A short author list invented for convenience will be wrong, and on a paper with this many contributors it is also unfair. Thornbury is a much smaller and fully controlled version of the same experiment, which is why every relationship in it can be checked against what the model actually learned.</p>
+      </div>
+    </details>
+  </section>
+
+  <!-- ============ PART 3 ============ -->
+  <section class="section" id="part-3">
+    <div class="section-kicker">
+      <span class="klabel">Part 3 · build-along</span>
+      <h2>Find out which model you approved</h2>
+      <span class="tag build">20 min build-along</span>
+    </div>
+    <p class="lede">No laptop. Take the model you brought from session 1's homework and establish, out loud, whether anybody in the room can identify the individual model in production as opposed to the pipeline that produced it. The answer is usually no, and the useful part is discovering exactly where the trail stops.</p>
+
+    <div class="steps">
+      <div class="step"><div><p><strong>Ask for the seed.</strong> Literally: what random seed produced the model currently serving. If the answer is "it is in the code somewhere" or "we did not set one", write that down. It is not a failing, it is the normal state, and it is the fact the rest of the exercise depends on.</p></div></div>
+      <div class="step"><div><p><strong>Ask how many candidates the pipeline produced.</strong> From session 1's homework you should have a number. Ask what separated the one that shipped from the runner-up, and whether anybody kept the runner-up.</p></div></div>
+      <div class="step"><div><p><strong>Ask for the band, not the number.</strong> Instead of "what is the accuracy", ask what the best and worst of those candidates scored. The width of that band is your held-out spread. Expect several times more disagreement under any change in the world.</p></div></div>
+      <div class="step"><div><p><strong>Name the feature you would flip.</strong> Pick the one input whose meaning depends on a current arrangement: a site code, a channel, a region, a supplier, a form version. That is your ward.</p></div></div>
+      <div class="step"><div><p><strong>Ask for the reliance measure, and be ready for silence.</strong> If we changed only that feature on every record, what fraction of predictions would change. If nobody knows, you have found the measurement that would have distinguished the family members, and it has never been taken.</p></div></div>
+      <div class="step"><div><p><strong>Write the retrain clause.</strong> One sentence for the model's documentation: a retrain is approved on unchanged performance plus an unchanged reliance measure on the named feature, not on performance alone. This is the sentence that stops a new model inheriting the old paperwork.</p></div></div>
+    </div>
+
+    <div class="callout tip">
+      <p><strong>The one-sentence version to take into a meeting.</strong> "Our validation certifies the pipeline and a performance band; it does not identify the model in production, so before we retrain I want the reliance measure on [feature] for the old and the new one." A team that can produce those two numbers knows which model it has. A team that cannot has a band and a hope.</p>
+    </div>
+  </section>
+
+  <!-- ============ QUIZ ============ -->
+  <section class="section" id="quiz">
+    <div class="section-kicker">
+      <span class="klabel">Check yourself</span>
+      <h2>Three questions</h2>
+    </div>
+
+    <div class="quiz-q" data-answer="2">
+      <p class="qtext">Twenty Thornbury models differ only by their random seed. On draw 4 the held-out spread is 0.003, the tightest in the table. What does that tightness tell you?</p>
+      <button class="qopt" type="button">A · The pipeline is unusually stable on that draw, so the family can safely be treated as one model</button>
+      <button class="qopt" type="button">B · The seed stopped mattering on that draw, because the training data fully determined the model</button>
+      <button class="qopt" type="button">C · Very little about deployment; the shifted spread on that same draw is 0.034, or 11.3 times as wide</button>
+      <p class="qwhy">Draw 4 has the tightest held-out agreement and the largest ratio in the table. Agreement on the set the pipeline was tuned against is the setting in which the family looks most alike, so a small held-out spread makes the family more likely to be treated as one model, not less likely to behave as many.</p>
+    </div>
+
+    <div class="quiz-q" data-answer="1">
+      <p class="qtext">Across the five draws the correlation between held-out and shifted accuracy runs from -0.89 to +0.09. What is the defensible conclusion?</p>
+      <button class="qopt" type="button">A · The best model on held-out data tends to be the worst under shift, so pick the second-best candidate</button>
+      <button class="qopt" type="button">B · Held-out accuracy is close to uninformative about shifted accuracy; it neither predicts it nor reliably anti-predicts it</button>
+      <button class="qopt" type="button">C · The bench is broken, since a correlation should not move that much between runs</button>
+      <p class="qwhy">A single draw produced -0.89 and a memorable rule to go with it, and another draw returned +0.09 and removed it. The column has no pattern, which is a real finding about how little one run is worth. Option A is exactly the sentence that did not survive.</p>
+    </div>
+
+    <div class="quiz-q" data-answer="0">
+      <p class="qtext">Your team proposes a routine retrain on refreshed data. Validation will be repeated and must clear the same accuracy bar. What is the gap in that control?</p>
+      <button class="qopt" type="button">A · A new seed returns a different member of the family, which will clear the same bar while behaving differently, so unchanged performance is not evidence that nothing changed</button>
+      <button class="qopt" type="button">B · Refreshed data is always closer to deployment conditions, so the accuracy bar will be too easy to clear</button>
+      <button class="qopt" type="button">C · There is no gap, since repeating the original validation is the strictest available check</button>
+      <p class="qwhy">The validation certifies the pipeline and a band, and every member of the family sits inside the band by definition. Reliance on the named feature ran from 0.70 to 1.00 across seeds at identical accuracy, so the behavioural measure is the thing to compare before and after, not the score.</p>
+    </div>
+    <p class="quiz-score"></p>
+  </section>
+
+  <!-- ============ HOMEWORK ============ -->
+  <section class="section" id="homework">
+    <div class="section-kicker">
+      <span class="klabel">Homework</span>
+      <h2>Before session 3</h2>
+      <span class="tag time">30 min</span>
+    </div>
+    <div class="callout">
+      <p>Find out how many times your team has scored a model against the same evaluation set. Not how many models were trained, which you asked last time, but how many times that one set has been looked at: thresholds tuned on it, variants compared on it, a decision revisited after a disappointing result. Ask for a rough count and whether the set has ever been retired and replaced. The answer is usually larger than anybody expects and nobody is in trouble for it. Session 3 measures what that count costs, and the answer is smaller than the folklore says.</p>
+    </div>
+  </section>
+
+  <!-- ============ COVERAGE ============ -->
+  <section class="section" id="official">
+    <div class="section-kicker">
+      <span class="klabel">Sources covered</span>
+      <h2>What tonight maps to</h2>
+    </div>
+    <div class="covered">
+      <div class="covered-row">
+        <span class="status pill solid">✓</span>
+        <span class="name">D'Amour et al. (2020), "Underspecification Presents Challenges for Credibility in Modern Machine Learning"</span>
+        <span class="note">The definition and the deployment consequence, both verbatim, and the five domains their stress tests cover. Forty authors, cited as D'Amour et al.</span>
+      </div>
+      <div class="covered-row">
+        <span class="status pill solid">✓</span>
+        <span class="name">Twenty seeds, one pipeline, measured</span>
+        <span class="note">Held-out spread 0.019 against shifted spread 0.051 on draw 1; mean held-out 0.949 and mean shifted 0.765.</span>
+      </div>
+      <div class="covered-row">
+        <span class="status pill solid">✓</span>
+        <span class="name">What is robust across five draws</span>
+        <span class="note">The shifted spread exceeds the held-out spread in five rows out of five, by 2.7 to 11.3 times.</span>
+      </div>
+      <div class="covered-row">
+        <span class="status pill solid">✓</span>
+        <span class="name">What is not robust, stated as such</span>
+        <span class="note">The correlation swings from -0.89 to +0.09. No claim that the best held-out model is the worst under shift.</span>
+      </div>
+      <div class="covered-row">
+        <span class="status pill solid">✓</span>
+        <span class="name">Behavioural reliance on the ward</span>
+        <span class="note">Flipping the ward on every patient changes 0.70 to 1.00 of predictions depending on the seed, at the same accuracy.</span>
+      </div>
+      <div class="covered-row">
+        <span class="status pill light">◐</span>
+        <span class="name">The finding that did not survive one more draw</span>
+        <span class="note">Named in a clause tonight. Practitioner session 9 tells it in full, including how to test a claim before publishing it.</span>
+      </div>
+      <div class="covered-row">
+        <span class="status pill light">◐</span>
+        <span class="name">What selecting on a set costs</span>
+        <span class="note">Session 3 measures it, against the field evidence that argues against alarm.</span>
+      </div>
+      <div class="covered-row">
+        <span class="status pill inkpill">·</span>
+        <span class="name">Memorization, random labels and double descent</span>
+        <span class="note">Not covered by design. <strong>learn-deep-learning-with-phoebe</strong> session 05 owns how a network can fit noise and what the interpolation threshold means.</span>
+      </div>
+      <div class="covered-row">
+        <span class="status pill inkpill">·</span>
+        <span class="name">Leak mechanics inside one validation</span>
+        <span class="note">Not covered by design. <strong>learn-model-risk-with-phoebe</strong> p3 owns target leakage as a validation finding.</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ CHEAT SHEET ============ -->
+  <section class="cheat" id="cheatsheet">
+    <h3>Session 2 cheat sheet</h3>
+    <div class="grid-2">
+      <div class="cheat-item"><b>The definition</b><span>A pipeline is underspecified when it can return many predictors with equivalently strong held-out performance.</span></div>
+      <div class="cheat-item"><b>Only the seed differs</b><span>Same data, same architecture, same schedule. Twenty models, and the trail stops at a number nobody records.</span></div>
+      <div class="cheat-item"><b>0.019 against 0.051</b><span>Draw 1: the shifted spread is 2.7 times the held-out spread. Across five draws, 2.7 to 11.3 times.</span></div>
+      <div class="cheat-item"><b>Robust in 5 of 5</b><span>Indistinguishable where you looked, distinguishable where you did not. Build policy on this one.</span></div>
+      <div class="cheat-item"><b>Not robust</b><span>corr(held, shifted) runs -0.89 to +0.09. Held-out accuracy is close to uninformative about shifted accuracy.</span></div>
+      <div class="cheat-item"><b>Tighter is not safer</b><span>The tightest held-out spread, 0.003, sits with the largest ratio, 11.3 times.</span></div>
+      <div class="cheat-item"><b>Reliance 0.70 to 1.00</b><span>Flip the ward, count changed predictions. Same score, very different clinical objects.</span></div>
+      <div class="cheat-item"><b>The governance line</b><span>"We validated the model" does not say which model shipped. A new seed is a new model with the old paperwork.</span></div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="pagefoot">
+  <div class="wrap">
+    <p>Leader session 2 of 6 · learn-ml-epistemology-with-phoebe · by Phoebe Fu</p>
+    <nav class="pagenav">
+      <a href="a1-what-a-test-score-entitles-you-to.html">← Leader session 1 · What a test score entitles you to</a>
+      <a href="a3-when-the-number-is-a-target.html">Leader session 3 · When the number is a target →</a>
+    </nav>
+  </div>
+</footer>
+
+<script src="../assets/app.js?v=2"></script>
+</body>
+</html>

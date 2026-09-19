@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- social:start -->
+<meta name="description" content="Practitioner session 3 of 10. Change nothing but the random seed, train twenty models through one pipeline, and the held-out column stays inside 0.019 while the shifted column spreads to 0.051. Across five data draws the shifted spread is 2.7 to 11.3 times the held-out spread.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Learn with Phoebe">
+<meta property="og:title" content="Twenty seeds, one pipeline - learn ML epistemology with phoebe">
+<meta property="og:description" content="Practitioner session 3 of 10. Underspecification measured: identical where you looked, 2.7 to 11.3 times wider where you did not.">
+<meta property="og:url" content="https://phoebefu6.github.io/learn-ml-epistemology-with-phoebe/courses/p3-twenty-seeds-one-pipeline.html">
+<meta property="og:image" content="https://phoebefu6.github.io/learn-ml-epistemology-with-phoebe/assets/og-cover.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Twenty seeds, one pipeline - learn ML epistemology with phoebe">
+<meta name="twitter:description" content="One pipeline reports one number and hides twenty. The seed sweep that shows it, in ten lines.">
+<meta name="twitter:image" content="https://phoebefu6.github.io/learn-ml-epistemology-with-phoebe/assets/og-cover.png">
+<!-- social:end -->
+<title>Practitioner session 3 · Twenty seeds, one pipeline - learn ML epistemology with phoebe</title>
+<link rel="stylesheet" href="../assets/style.css?v=2">
+</head>
+<body>
+
+<div class="toolbar">
+  <div class="wrap">
+    <span class="crumb"><a href="../index.html">learn-ml-epistemology-with-phoebe</a> / Practitioner session 3 of 10</span>
+    <button class="btn" id="toggle-all" type="button">Expand all</button>
+    <button class="btn primary" id="zoom-toggle" type="button">Projector zoom: off</button>
+  </div>
+</div>
+
+<header class="masthead">
+  <div class="wrap">
+    <div class="eyebrow">Learn ML Epistemology with Phoebe · Practitioner session 3 of 10</div>
+    <h1>Twenty seeds, <span class="accent">one pipeline</span></h1>
+    <p class="sub">Session 2 measured one model and found it leaning on the ward. Tonight the pipeline is run twenty times with nothing changed but the random seed, and both columns are read. On draw 1 the twenty held-out scores sit inside a band of 0.019 and the twenty shifted scores sprawl across 0.051. Across five data draws the shifted spread beat the held-out spread every time, by 2.7 to 11.3 times. A pipeline that reports one number is reporting one draw from a distribution it never shows you.</p>
+    <div class="chip-row">
+      <span class="chip level">🔴 Hardest</span>
+      <span class="chip audience">Anyone who retrains and ships whatever comes out</span>
+      <span class="chip audience">Anyone who has fixed a seed to make results reproduce</span>
+      <span class="chip time">45 min</span>
+    </div>
+    <div class="agenda">
+      <span class="a1" style="flex:1">0-3 · Welcome</span>
+      <span class="a2" style="flex:4">3-16 · Underspecification</span>
+      <span class="a3" style="flex:4">16-30 · Five draws</span>
+      <span class="a4" style="flex:4">30-45 · Seed sweep and Q&amp;A</span>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <!-- ============ INTRO ============ -->
+  <section class="section" id="intro">
+    <div class="section-kicker">
+      <span class="klabel">Part 0</span>
+      <h2>Where tonight sits</h2>
+    </div>
+    <p class="lede">Session 2 left a printout with two columns: held-out accuracy flat across seeds, reliance on the ward moving from 0.70 to 1.00. Tonight adds the third column, the one from the deployment year, and turns the whole thing into a measurement with a name. The name is underspecification, the measurement is a pair of spreads, and the ratio between them is the number to carry into a review. Session 4 designs the world those shifted scores are computed in.</p>
+
+    <div class="legend">
+      <span class="pill">Live = written together in the 45 minutes</span>
+      <span class="pill">Self-study = the full depth, after class</span>
+      <span class="pill">🔍 Every diagram zooms</span>
+    </div>
+
+    <div class="callout win">
+      <p><strong>★ What you walk out with tonight.</strong> A seed sweep you can run on your own model tonight, ten lines on top of whatever training code you already have. The two spreads it produces and the order to read them in. The Thornbury reference numbers, 0.019 against 0.051 on draw 1 and a ratio between 2.7 and 11.3 across five draws, so you know what a serious gap looks like. And the reason a fixed seed makes a result reproduce without making it true.</p>
+    </div>
+
+    <details class="card" open>
+      <summary><span class="mode live">Live</span>Underspecification, operationally<span class="mini">5 min</span><span class="caret">▶</span></summary>
+      <div class="body">
+        <p>D'Amour et al. (2020) define it in one sentence: <em>"An ML pipeline is underspecified when it can return many predictors with equivalently strong held-out performance in the training domain."</em> Read it as a property of the pipeline rather than of any model that came out of it. The pipeline is the data, the architecture, the loss, the optimiser and the schedule. Run it twice with different seeds and it hands you two different predictors. If those two score the same held out, the pipeline did not determine which one you got, and the held-out score cannot tell you which one you are holding.</p>
+        <p>The operational test is short. Vary something that should not matter, hold everything that should matter fixed, and score the results in more than one place. At Thornbury the thing that should not matter is the random seed, which sets the initial weights and the order the examples arrive in. Nothing else moves: same 4,000 training patients, same three inputs into twelve tanh hidden units into one logit, same schedule.</p>
+        <p>The same authors are blunt about the consequence: "Predictors returned by underspecified pipelines are often treated as equivalent based on their training domain performance, but we show here that such predictors can behave very differently in deployment domains."</p>
+      </div>
+    </details>
+
+    <details class="card">
+      <summary><span class="mode self">Self-study</span>The words that will keep coming back<span class="mini">4 min</span><span class="caret">▶</span></summary>
+      <div class="body">
+        <ul>
+          <li><strong>Underspecification.</strong> A pipeline that can return many predictors with equally strong held-out performance, which then behave differently in deployment. A property of the pipeline.</li>
+          <li><strong>Seed sweep.</strong> Running the same pipeline n times with only the random seed changed, and keeping every score rather than the best one.</li>
+          <li><strong>Spread.</strong> Highest minus lowest across the sweep. Blunt on purpose: it is the quantity a reviewer can check by eye against a printed list.</li>
+          <li><strong>The ratio.</strong> Shifted spread divided by held-out spread. How much wider the models are where nobody measured them than where everybody did.</li>
+          <li><strong>Data draw.</strong> A regenerated world: new training, held-out and shifted patients from the same recipe. Five of them exist, and a finding that appears in one is not yet a finding.</li>
+          <li><strong>The standing pair.</strong> Mean held-out 0.949 and mean shifted 0.765 across the five draws.</li>
+        </ul>
+      </div>
+    </details>
+  </section>
+
+  <!-- ============ PART 1 ============ -->
+  <section class="section" id="part-1">
+    <div class="section-kicker">
+      <span class="klabel">Part 1 · covers one pipeline, twenty models</span>
+      <h2>Identical where you looked</h2>
+      <span class="tag concept">13 min live</span>
+    </div>
+    <p class="lede">Draw 1, twenty seeds. Every one of the twenty models is scored twice: on 2,000 held-out patients from the collection year and on 2,000 shifted patients from the deployment year. The two columns are drawn below on the same horizontal scale, which is the only fair way to compare them.</p>
+
+    <figure class="zoomable">
+      <svg viewBox="0 0 880 396" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="One pipeline run twenty times. The chain shows the same 4,000 training patients, the same architecture of three inputs into twelve tanh hidden units into one logit, and the same schedule, with only the random seed differing. Below, two bands drawn on the same horizontal scale: the twenty held-out scores lie within a band of 0.019 around a mean of 0.949, and the twenty shifted scores lie within a band of 0.051 around a mean of 0.765, which is 2.7 times wider on this draw.">
+        <style>
+          .p3aH { font: 800 12px Inter, sans-serif; fill: #231A10; }
+          .p3aT { font: 800 11px Inter, sans-serif; fill: #FFFFFF; }
+          .p3aB { font: 400 11px Inter, sans-serif; fill: #231A10; }
+          .p3aM { font: 400 11px Inter, sans-serif; fill: #6B5B47; }
+          .p3aR { font: 800 12px Inter, sans-serif; fill: #155E75; }
+          .p3aRs { font: 400 11px Inter, sans-serif; fill: #155E75; }
+        </style>
+        <defs>
+          <marker id="p3aAr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#6B5B47"></path></marker>
+        </defs>
+
+        <text class="p3aH" x="14" y="22">Draw 1. One pipeline, twenty runs, one difference between them.</text>
+
+        <rect x="14" y="38" width="196" height="54" rx="9" fill="#EBD9C3" stroke="#DCCDB8"></rect>
+        <text class="p3aB" x="28" y="60">Same 4,000 patients</text>
+        <text class="p3aM" x="28" y="80">collection year, ward at 90%</text>
+
+        <line x1="214" y1="65" x2="240" y2="65" stroke="#6B5B47" stroke-width="1.6" marker-end="url(#p3aAr)"></line>
+
+        <rect x="244" y="38" width="196" height="54" rx="9" fill="#EBD9C3" stroke="#DCCDB8"></rect>
+        <text class="p3aB" x="258" y="60">Same architecture</text>
+        <text class="p3aM" x="258" y="80">3 inputs, 12 tanh, 1 logit</text>
+
+        <line x1="444" y1="65" x2="470" y2="65" stroke="#6B5B47" stroke-width="1.6" marker-end="url(#p3aAr)"></line>
+
+        <rect x="474" y="38" width="176" height="54" rx="9" fill="#EBD9C3" stroke="#DCCDB8"></rect>
+        <text class="p3aB" x="488" y="60">Same schedule</text>
+        <text class="p3aM" x="488" y="80">SGD, 30 epochs</text>
+
+        <line x1="654" y1="65" x2="680" y2="65" stroke="#6B5B47" stroke-width="1.6" marker-end="url(#p3aAr)"></line>
+
+        <rect x="684" y="38" width="182" height="54" rx="9" fill="#713F12"></rect>
+        <text class="p3aT" x="698" y="60">Seed 1 to 20</text>
+        <text class="p3aT" x="698" y="80" style="font-weight:400">weights and example order</text>
+
+        <text class="p3aH" x="14" y="128">Both bands below are drawn on the same horizontal scale.</text>
+
+        <text class="p3aB" x="14" y="166">Held out, collection year</text>
+        <rect x="14" y="176" width="133" height="22" rx="5" fill="#713F12"></rect>
+        <circle cx="26" cy="187" r="3" fill="#FBF6EF"></circle>
+        <circle cx="45" cy="187" r="3" fill="#FBF6EF"></circle>
+        <circle cx="62" cy="187" r="3" fill="#FBF6EF"></circle>
+        <circle cx="79" cy="187" r="3" fill="#FBF6EF"></circle>
+        <circle cx="96" cy="187" r="3" fill="#FBF6EF"></circle>
+        <circle cx="113" cy="187" r="3" fill="#FBF6EF"></circle>
+        <circle cx="134" cy="187" r="3" fill="#FBF6EF"></circle>
+        <text class="p3aR" x="163" y="192">0.019 wide</text>
+        <text class="p3aM" x="256" y="192">twenty models, mean 0.949</text>
+
+        <text class="p3aB" x="14" y="242">Shifted, deployment year</text>
+        <rect x="14" y="252" width="357" height="22" rx="5" fill="#155E75"></rect>
+        <circle cx="30" cy="263" r="3" fill="#ECFEFF"></circle>
+        <circle cx="74" cy="263" r="3" fill="#ECFEFF"></circle>
+        <circle cx="118" cy="263" r="3" fill="#ECFEFF"></circle>
+        <circle cx="163" cy="263" r="3" fill="#ECFEFF"></circle>
+        <circle cx="207" cy="263" r="3" fill="#ECFEFF"></circle>
+        <circle cx="251" cy="263" r="3" fill="#ECFEFF"></circle>
+        <circle cx="296" cy="263" r="3" fill="#ECFEFF"></circle>
+        <circle cx="340" cy="263" r="3" fill="#ECFEFF"></circle>
+        <text class="p3aR" x="387" y="268">0.051 wide</text>
+        <text class="p3aM" x="480" y="268">the same twenty models, mean 0.765</text>
+
+        <rect x="14" y="298" width="852" height="84" rx="9" fill="#FBF6EF" stroke="#DCCDB8"></rect>
+        <text class="p3aR" x="28" y="322">2.7 times wider on this draw, and wider on every draw that was run.</text>
+        <text class="p3aB" x="28" y="344">Nothing in the held-out column separates these twenty models. Everything in the shifted column does.</text>
+        <text class="p3aRs" x="28" y="366">A review that sees only the first band is being shown a number the pipeline did not determine.</text>
+      </svg>
+      <figcaption>🔍 Click to zoom - the same twenty models, drawn to the same scale, in the two places they were scored.</figcaption>
+    </figure>
+
+    <details class="card">
+      <summary><span class="mode live">Live</span>Why a fixed seed makes this worse, not better<span class="mini">4 min</span><span class="caret">▶</span></summary>
+      <div class="body">
+        <p>Fixing the seed is good hygiene and it is the standard advice, because it makes a result reproduce. What it does not do is make the result representative. A fixed seed picks one draw from the distribution the pipeline can produce and then hides the fact that there was a distribution, because every rerun returns the same point and the printout looks stable.</p>
+        <p>The two habits are not in conflict, they answer different questions. Fix the seed when you want a build to be byte-identical tomorrow. Sweep the seed when you want to know what your pipeline is capable of returning. A team that only ever does the first has a reproducible number and no idea how much of it was luck.</p>
+      </div>
+    </details>
+
+    <details class="card">
+      <summary><span class="mode live">Live</span>What the reliance column adds<span class="mini">4 min</span><span class="caret">▶</span></summary>
+      <div class="body">
+        <p>Session 2's measurement runs alongside the two accuracies for free, because it needs nothing but predictions. Across twenty seeds at Thornbury the reliance on the ward runs from 0.70 to 1.00: some models change their mind about 7 patients in 10 when only the ward moves, others about all of them.</p>
+        <p>That column is the mechanism underneath the spread. The models that lean hardest on the arrangement are the ones with the most to lose when it goes, and the held-out score is blind to the difference because the arrangement still holds on the held-out rows. Three columns, two of which move and one of which does not, is the whole finding in a printout you can put on one slide.</p>
+      </div>
+    </details>
+
+    <details class="card">
+      <summary><span class="mode self">Self-study</span>What the seed actually controls, and why that is enough<span class="mini">3 min</span><span class="caret">▶</span></summary>
+      <div class="body">
+        <p>Two things only: the initial weights, and the order the training examples arrive in. Both are usually described as implementation details, and both are outside the specification of what the model is supposed to be. Nobody writes a model card that says which permutation of the training set was used.</p>
+        <p>That is exactly what makes the sweep convincing. If a quantity nobody considers part of the model produces a 0.051 spread in deployment accuracy, then the specification is not pinning down the thing that matters. A larger perturbation, a different architecture or a different feature set would produce a bigger spread and prove much less, because those are things the specification was never claiming to fix.</p>
+      </div>
+    </details>
+  </section>
+
+  <!-- ============ PART 2 ============ -->
+  <section class="section" id="part-2">
+    <div class="section-kicker">
+      <span class="klabel">Part 2 · covers the five data draws</span>
+      <h2>One draw is an anecdote</h2>
+      <span class="tag concept">13 min live</span>
+    </div>
+    <p class="lede">Draw 1 is one world. Regenerate the training, held-out and shifted patients from the same recipe with a new seed and you get another. Five of them were run, twenty models each. One thing survived all five and one thing did not, and the difference between those two outcomes is the most useful part of the bench.</p>
+
+    <figure class="zoomable">
+      <svg viewBox="0 0 880 340" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Five data draws, each with two bars on one shared scale. Draw 1: held-out spread 0.019, shifted spread 0.051, ratio 2.7 times, correlation minus 0.89. Draw 2: 0.008 and 0.038, ratio 4.8 times, correlation plus 0.03. Draw 3: 0.012 and 0.046, ratio 4.0 times, correlation minus 0.87. Draw 4: 0.003 and 0.034, ratio 11.3 times, correlation plus 0.09. Draw 5: 0.016 and 0.048, ratio 3.0 times, correlation minus 0.75. The shifted bar is longer in all five, while the correlation changes sign between draws.">
+        <style>
+          .p3bH { font: 800 12px Inter, sans-serif; fill: #231A10; }
+          .p3bB { font: 400 11px Inter, sans-serif; fill: #231A10; }
+          .p3bM { font: 400 11px Inter, sans-serif; fill: #6B5B47; }
+          .p3bK { font: 800 11px Inter, sans-serif; fill: #231A10; }
+          .p3bR { font: 800 11px Inter, sans-serif; fill: #155E75; }
+        </style>
+
+        <text class="p3bH" x="14" y="20">Five draws. Held-out spread on top, shifted spread below, one shared scale.</text>
+
+        <text class="p3bK" x="14" y="46">Draw</text>
+        <text class="p3bK" x="104" y="46">Spreads</text>
+        <text class="p3bK" x="600" y="46">Ratio</text>
+        <text class="p3bK" x="700" y="46">corr(held, shifted)</text>
+        <line x1="14" y1="54" x2="866" y2="54" stroke="#DCCDB8" stroke-width="1"></line>
+
+        <text class="p3bB" x="14" y="76">1</text>
+        <rect x="104" y="66" width="133" height="10" rx="3" fill="#713F12"></rect>
+        <text class="p3bM" x="247" y="76">0.019</text>
+        <rect x="104" y="80" width="357" height="10" rx="3" fill="#155E75"></rect>
+        <text class="p3bM" x="471" y="90">0.051</text>
+        <text class="p3bR" x="600" y="84">2.7x</text>
+        <text class="p3bM" x="700" y="84">-0.89</text>
+
+        <text class="p3bB" x="14" y="126">2</text>
+        <rect x="104" y="116" width="56" height="10" rx="3" fill="#713F12"></rect>
+        <text class="p3bM" x="170" y="126">0.008</text>
+        <rect x="104" y="130" width="266" height="10" rx="3" fill="#155E75"></rect>
+        <text class="p3bM" x="380" y="140">0.038</text>
+        <text class="p3bR" x="600" y="134">4.8x</text>
+        <text class="p3bM" x="700" y="134">+0.03</text>
+
+        <text class="p3bB" x="14" y="176">3</text>
+        <rect x="104" y="166" width="84" height="10" rx="3" fill="#713F12"></rect>
+        <text class="p3bM" x="198" y="176">0.012</text>
+        <rect x="104" y="180" width="322" height="10" rx="3" fill="#155E75"></rect>
+        <text class="p3bM" x="436" y="190">0.046</text>
+        <text class="p3bR" x="600" y="184">4.0x</text>
+        <text class="p3bM" x="700" y="184">-0.87</text>
+
+        <text class="p3bB" x="14" y="226">4</text>
+        <rect x="104" y="216" width="21" height="10" rx="3" fill="#713F12"></rect>
+        <text class="p3bM" x="135" y="226">0.003</text>
+        <rect x="104" y="230" width="238" height="10" rx="3" fill="#155E75"></rect>
+        <text class="p3bM" x="352" y="240">0.034</text>
+        <text class="p3bR" x="600" y="234">11.3x</text>
+        <text class="p3bM" x="700" y="234">+0.09</text>
+
+        <text class="p3bB" x="14" y="276">5</text>
+        <rect x="104" y="266" width="112" height="10" rx="3" fill="#713F12"></rect>
+        <text class="p3bM" x="226" y="276">0.016</text>
+        <rect x="104" y="280" width="336" height="10" rx="3" fill="#155E75"></rect>
+        <text class="p3bM" x="450" y="290">0.048</text>
+        <text class="p3bR" x="600" y="284">3.0x</text>
+        <text class="p3bM" x="700" y="284">-0.75</text>
+
+        <line x1="14" y1="302" x2="866" y2="302" stroke="#DCCDB8" stroke-width="1"></line>
+        <text class="p3bR" x="14" y="324">Five out of five on the ratio. The correlation changes sign between draws, so it is not a finding.</text>
+      </svg>
+      <figcaption>🔍 Click to zoom - the column that repeats and the column that does not, side by side.</figcaption>
+    </figure>
+
+    <details class="card">
+      <summary><span class="mode live">Live</span>The part that repeated<span class="mini">4 min</span><span class="caret">▶</span></summary>
+      <div class="body">
+        <p>In five draws out of five the shifted spread was larger than the held-out spread, by 2.7, 4.8, 4.0, 11.3 and 3.0 times. The absolute numbers are worth holding too: the held-out spreads are thousandths, from 0.003 to 0.019, and the shifted spreads are hundredths, from 0.034 to 0.051. Twenty models that agree to within three thousandths of an accuracy point on draw 4 disagree by thirty-four thousandths once the ward arrangement changes.</p>
+        <p>Nothing here required an unusual world or an adversarial perturbation. The training set is 4,000 patients with two genuine signals in it, the model is small, and the shift is one arrangement in a hospital group changing. The spread is what the pipeline was always able to produce; the shifted set is only the place where it becomes visible.</p>
+      </div>
+    </details>
+
+    <details class="card">
+      <summary><span class="mode live">Live</span>The part that did not repeat, and why it is here<span class="mini">4 min</span><span class="caret">▶</span></summary>
+      <div class="body">
+        <p>The correlation between held-out and shifted accuracy reads -0.89 on draw 1, +0.03 on draw 2, -0.87 on draw 3, +0.09 on draw 4 and -0.75 on draw 5. A first run of this bench produced -0.89 and, with it, a headline: the best model on the held-out set is the worst under shift. One more data draw destroyed it.</p>
+        <p>Two readings of that column are both defensible from the numbers alone. One says the negative values in three draws out of five point at a real inverse relationship that the two positive draws are too noisy to show. The other says a quantity whose sign moves between draws is uninformative and the negatives are coincidence. Neither reading is settled by five draws, and the second is the one that survives contact with more of them so far. What is not defensible is quoting draw 1 on its own, which is how the first version of this bench nearly shipped. Session 9 takes the whole episode apart.</p>
+      </div>
+    </details>
+
+    <details class="card">
+      <summary><span class="mode self">Self-study</span>One number, and the distribution behind it<span class="mini">4 min</span><span class="caret">▶</span></summary>
+      <div class="body">
+        <p>A standard pipeline run prints one accuracy. That number is a sample of size one from the set of models the pipeline can return, and the sampling was done by whatever seed happened to be in the config file. Reporting it as the model's accuracy is the same move as reporting one patient's blood pressure as the ward's.</p>
+        <p>The fix is not to report the best of twenty, which is session 5's mistake in a different costume. It is to report the range. "0.949 held out, twenty seeds inside 0.019" is a stronger sentence than "0.949", and "0.765 shifted, twenty seeds inside 0.051" is a much weaker one than "0.765", which is the point.</p>
+      </div>
+    </details>
+  </section>
+
+  <!-- ============ PART 3 ============ -->
+  <section class="section" id="part-3">
+    <div class="section-kicker">
+      <span class="klabel">Part 3 · build-along</span>
+      <h2>Run the sweep, read it in order</h2>
+      <span class="tag build">15 min build-along</span>
+    </div>
+    <p class="lede">The sweep is a loop around training code you already have. Reading it takes discipline, because the ratio is the headline and the headline is the last thing to look at.</p>
+
+    <figure class="zoomable">
+      <svg viewBox="0 0 880 316" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Three steps for reading a seed sweep in order. Step one, read the absolute spreads, thousandths against hundredths at Thornbury. Step two, read the ratio, which at Thornbury ran from 2.7 to 11.3 times across five draws. Step three, read the reliance column, which ran from 0.70 to 1.00 and says which models have the most to lose. A warning band notes that a ratio near one means two different things depending on whether both spreads are thousandths or both are hundredths.">
+        <style>
+          .p3cH { font: 800 12px Inter, sans-serif; fill: #231A10; }
+          .p3cN { font: 800 15px Inter, sans-serif; fill: #FFFFFF; }
+          .p3cK { font: 800 11px Inter, sans-serif; fill: #231A10; }
+          .p3cB { font: 400 11px Inter, sans-serif; fill: #231A10; }
+          .p3cM { font: 400 11px Inter, sans-serif; fill: #6B5B47; }
+          .p3cR { font: 800 11px Inter, sans-serif; fill: #155E75; }
+          .p3cRs { font: 400 11px Inter, sans-serif; fill: #155E75; }
+        </style>
+
+        <text class="p3cH" x="14" y="22">Read the sweep in this order. The ratio is third for a reason.</text>
+
+        <rect x="14" y="40" width="272" height="168" rx="9" fill="#FBF6EF" stroke="#DCCDB8"></rect>
+        <circle cx="42" cy="68" r="14" fill="#713F12"></circle>
+        <text class="p3cN" x="37" y="73">1</text>
+        <text class="p3cK" x="66" y="72">The absolute spreads</text>
+        <text class="p3cB" x="28" y="102">Highest minus lowest, in each</text>
+        <text class="p3cB" x="28" y="122">column, before any division.</text>
+        <text class="p3cM" x="28" y="150">Thornbury held out: 0.003 to 0.019</text>
+        <text class="p3cM" x="28" y="170">Thornbury shifted: 0.034 to 0.051</text>
+        <text class="p3cM" x="28" y="192">Thousandths against hundredths.</text>
+
+        <rect x="304" y="40" width="272" height="168" rx="9" fill="#FBF6EF" stroke="#DCCDB8"></rect>
+        <circle cx="332" cy="68" r="14" fill="#713F12"></circle>
+        <text class="p3cN" x="327" y="73">2</text>
+        <text class="p3cK" x="356" y="72">The ratio</text>
+        <text class="p3cB" x="318" y="102">Shifted spread divided by</text>
+        <text class="p3cB" x="318" y="122">held-out spread.</text>
+        <text class="p3cM" x="318" y="150">Thornbury: 2.7, 4.8, 4.0, 11.3, 3.0</text>
+        <text class="p3cM" x="318" y="170">across the five data draws.</text>
+        <text class="p3cM" x="318" y="192">Above one in five out of five.</text>
+
+        <rect x="594" y="40" width="272" height="168" rx="9" fill="#FBF6EF" stroke="#DCCDB8"></rect>
+        <circle cx="622" cy="68" r="14" fill="#713F12"></circle>
+        <text class="p3cN" x="617" y="73">3</text>
+        <text class="p3cK" x="646" y="72">The reliance column</text>
+        <text class="p3cB" x="608" y="102">Flip the suspect feature, count</text>
+        <text class="p3cB" x="608" y="122">the predictions that change.</text>
+        <text class="p3cM" x="608" y="150">Thornbury: 0.70 to 1.00 on the ward</text>
+        <text class="p3cM" x="608" y="170">across the same twenty seeds.</text>
+        <text class="p3cM" x="608" y="192">Says which models have most to lose.</text>
+
+        <rect x="14" y="224" width="852" height="78" rx="9" fill="#ECFEFF" stroke="#155E75"></rect>
+        <text class="p3cR" x="28" y="248">A ratio near one means two completely different things.</text>
+        <text class="p3cRs" x="28" y="270">Both spreads in thousandths: the shift you built cannot see the difference between these models.</text>
+        <text class="p3cRs" x="28" y="292">Both spreads in hundredths: the pipeline is unstable everywhere, including where you reported it.</text>
+      </svg>
+      <figcaption>🔍 Click to zoom - the ratio is uninterpretable until both spreads have been read on their own.</figcaption>
+    </figure>
+
+    <div class="steps">
+      <div class="step"><div><p><strong>Build the three sets once.</strong> Training and held-out from the collection year, shifted from the deployment year. They are fixed for the whole sweep, so every model is scored on identical rows and any difference is the model.</p></div></div>
+      <div class="step"><div><p><strong>Loop the seed, keep everything.</strong> Twenty runs, three numbers each: held-out accuracy, shifted accuracy, reliance on the suspect feature. Append every row. Nothing is discarded and nothing is ranked yet.</p></div></div>
+      <div class="step"><div><p><strong>Take both spreads before the ratio.</strong> Highest minus lowest in each column. Write both down in full digits, because the ratio throws away the information that tells you which situation you are in.</p></div></div>
+      <div class="step"><div><p><strong>Divide, and say how many draws it held for.</strong> One ratio from one world is a number, not a result. Regenerate the data and run it again before the ratio goes anywhere near a slide.</p></div></div>
+      <div class="step"><div><p><strong>Point it at your own model.</strong> Any pipeline with a seed argument qualifies, including gradient boosting and anything with dropout or subsampling. Five seeds is enough to see whether the spread is thousandths or hundredths.</p></div></div>
+      <div class="step"><div><p><strong>Do not pick the winner.</strong> The sweep is a measurement of the pipeline, not a tournament between models. Choosing the best of twenty on the shifted set is the subject of session 5, and it costs something.</p></div></div>
+    </div>
+
+    <div class="prompt-box good"><span class="label">★ Block 1 · the sweep, against the engine on this site</span>
+// assets/ep-live.js exposes window.THORNBURY
+var T = window.THORNBURY;
+
+var DRAW = 101;                              // draw 1; the others are 555, 909, 4242, 7
+var trainRows = T.makeData(4000, DRAW,     0.90);   // collection year
+var heldRows  = T.makeData(2000, DRAW + 1, 0.90);   // collection year, not trained on
+var shiftRows = T.makeData(2000, DRAW + 2, 0.50);   // deployment year, ward reorganised
+
+var rows = [];
+for (var s = 1; s &lt;= 20; s++) {
+  var m = T.train(trainRows, 1000 + s);      // 3 inputs, 12 tanh units, 1 logit
+  rows.push({
+    seed:    s,
+    held:    T.acc(m, heldRows),
+    shifted: T.acc(m, shiftRows),
+    ward:    T.relianceOnWard(m, heldRows)
+  });
+}
+
+// T.train's defaults are the whole specification: hidden 12, epochs 30,
+// lr 0.08, l2 2e-4. The second argument is the only thing moving in that loop.
+</div>
+
+    <div class="prompt-box good"><span class="label">★ Block 2 · both spreads, then the ratio</span>
+function spread(xs) { return Math.max.apply(null, xs) - Math.min.apply(null, xs); }
+
+var held    = rows.map(function (r) { return r.held; });
+var shifted = rows.map(function (r) { return r.shifted; });
+var ward    = rows.map(function (r) { return r.ward; });
+
+var hs = spread(held), ss = spread(shifted);
+
+console.log("held-out spread", hs.toFixed(3));        // 0.019 on draw 1
+console.log("shifted spread ", ss.toFixed(3));        // 0.051 on draw 1
+console.log("ratio          ", (ss / hs).toFixed(1)); // 2.7 on draw 1
+
+console.log("reliance range ",
+            Math.min.apply(null, ward).toFixed(2), "to",
+            Math.max.apply(null, ward).toFixed(2));   // 0.70 to 1.00 across seeds
+
+// Then change DRAW to 555, 909, 4242 and 7 and run the whole thing again.
+// The ratio came out 2.7, 4.8, 4.0, 11.3 and 3.0. Five worlds, one direction.
+</div>
+
+    <div class="prompt-box good"><span class="label">★ Block 3 · the same sweep around your own training code</span>
+import numpy as np
+
+# fit_model(seed) is whatever you already have: it must accept a seed and
+# return something with a .predict. X_held / X_shift are fixed for the sweep.
+records = []
+for seed in range(20):
+    model = fit_model(seed)
+    records.append({
+        "seed":    seed,
+        "held":    float((model.predict(X_held)  == y_held).mean()),
+        "shifted": float((model.predict(X_shift) == y_shift).mean()),
+    })
+
+held    = np.array([r["held"]    for r in records])
+shifted = np.array([r["shifted"] for r in records])
+
+print("held-out spread", round(float(np.ptp(held)),    4))
+print("shifted spread ", round(float(np.ptp(shifted)), 4))
+print("ratio          ", round(float(np.ptp(shifted) / np.ptp(held)), 1))
+
+# No shifted set yet? Then you have one column and no ratio, which is an
+# honest state to be in. Session 4 is about building the second column.
+</div>
+
+    <div class="callout tip">
+      <p><strong>The habit to keep.</strong> Whenever a model is about to be approved on a single accuracy figure, ask how many seeds produced it. If the answer is one, the figure is a sample of size one from a distribution nobody has looked at, and twenty minutes of compute converts it into a range. Report the range next to the number: "0.949 held out, twenty seeds inside 0.019, 0.765 shifted, twenty seeds inside 0.051" is a claim somebody can check.</p>
+    </div>
+  </section>
+
+  <!-- ============ QUIZ ============ -->
+  <section class="section" id="quiz">
+    <div class="section-kicker">
+      <span class="klabel">Check yourself</span>
+      <h2>Three questions</h2>
+    </div>
+
+    <div class="quiz-q" data-answer="2">
+      <p class="qtext">Twenty Thornbury models differ only by the random seed. On draw 1 the held-out spread is 0.019 and the shifted spread is 0.051. What does that license you to say?</p>
+      <button class="qopt" type="button">A · The pipeline is unstable and the held-out score of 0.949 should not be trusted as an estimate of held-out accuracy</button>
+      <button class="qopt" type="button">B · Seeds matter, so the seed should be treated as a hyperparameter and tuned on the held-out set</button>
+      <button class="qopt" type="button">C · The pipeline did not determine which model you got, and the held-out column cannot tell the twenty apart while the shifted column can</button>
+      <p class="qwhy">The held-out estimate is fine and precise: twenty models land inside nineteen thousandths of it. The problem is that the number the review sees is identical across models that behave differently once the ward arrangement changes. Tuning the seed on the held-out set would select on a quantity that carries almost no information about the shifted column, which is session 5's territory.</p>
+    </div>
+
+    <div class="quiz-q" data-answer="1">
+      <p class="qtext">Draw 1 gives a correlation of -0.89 between held-out and shifted accuracy. Across the five draws the values are -0.89, +0.03, -0.87, +0.09 and -0.75. What goes in the write-up?</p>
+      <button class="qopt" type="button">A · That the relationship is negative in the majority of draws, so the best held-out model tends to be the worst under shift</button>
+      <button class="qopt" type="button">B · That the sign moves between draws, so held-out accuracy is close to uninformative about shifted accuracy in either direction</button>
+      <button class="qopt" type="button">C · That the correlation is unstable because twenty seeds is too small a sample, and the fix is more seeds</button>
+      <p class="qwhy">A quantity that reads -0.89 in one world and +0.09 in the next has not established a direction. More seeds per draw would tighten each estimate without addressing the thing that moved, which was the data draw. The first version of this bench nearly shipped the majority reading, and session 9 is about how close that came.</p>
+    </div>
+
+    <div class="quiz-q" data-answer="0">
+      <p class="qtext">A colleague runs the sweep on their own model and reports a ratio of 1.1. What do you need before you can interpret it?</p>
+      <button class="qopt" type="button">A · The two absolute spreads, because a ratio near one means something different when both spreads are thousandths than when both are hundredths</button>
+      <button class="qopt" type="button">B · The mean accuracy on each set, because the ratio is only meaningful relative to the level of performance</button>
+      <button class="qopt" type="button">C · Nothing further; a ratio near one means the models agree everywhere and the pipeline is well specified</button>
+      <p class="qwhy">Both spreads in thousandths means the stress set cannot distinguish these models, which may say more about the stress set than about the pipeline. Both spreads in hundredths means the pipeline is unstable in both places, including the one that was reported. The division hides exactly the digits that separate those two situations.</p>
+    </div>
+    <p class="quiz-score"></p>
+  </section>
+
+  <!-- ============ HOMEWORK ============ -->
+  <section class="section" id="homework">
+    <div class="section-kicker">
+      <span class="klabel">Homework</span>
+      <h2>Before session 4</h2>
+      <span class="tag time">30 min</span>
+    </div>
+    <div class="callout">
+      <p>Run block 3 on a model your team owns, with five seeds rather than twenty, and record the held-out spread in full digits. Most pipelines have a seed somewhere even if nobody set it deliberately. Then write one sentence naming a shift you could score those same five models on: something about the world that is true now and might not be in a year. Bring the sentence rather than the spread. Session 4 is about whether that shift is one you can defend, and the first draft of it is usually wrong in an instructive way.</p>
+    </div>
+  </section>
+
+  <!-- ============ COVERAGE ============ -->
+  <section class="section" id="official">
+    <div class="section-kicker">
+      <span class="klabel">Sources covered</span>
+      <h2>What tonight maps to</h2>
+    </div>
+    <div class="covered">
+      <div class="covered-row">
+        <span class="status pill solid">✓</span>
+        <span class="name">Underspecification, operationally</span>
+        <span class="note">D'Amour et al. (2020): a pipeline that can return many predictors with equally strong held-out performance, which behave differently in deployment. A property of the pipeline, tested by varying something that should not matter.</span>
+      </div>
+      <div class="covered-row">
+        <span class="status pill solid">✓</span>
+        <span class="name">Bench A, draw 1</span>
+        <span class="note">Twenty models inside 0.019 held out and 0.051 shifted, a ratio of 2.7 times, with mean accuracies of 0.949 and 0.765.</span>
+      </div>
+      <div class="covered-row">
+        <span class="status pill solid">✓</span>
+        <span class="name">All five data draws</span>
+        <span class="note">Ratios of 2.7, 4.8, 4.0, 11.3 and 3.0. The shifted spread was wider in five draws out of five.</span>
+      </div>
+      <div class="covered-row">
+        <span class="status pill solid">✓</span>
+        <span class="name">How to run a seed sweep</span>
+        <span class="note">Fixed sets, one loop, three columns kept, both spreads read before the ratio, and the same loop around any pipeline that takes a seed.</span>
+      </div>
+      <div class="covered-row">
+        <span class="status pill solid">✓</span>
+        <span class="name">How to read the ratio</span>
+        <span class="note">Absolute spreads first, ratio second, reliance third, and the two different meanings of a ratio near one.</span>
+      </div>
+      <div class="covered-row">
+        <span class="status pill light">◐</span>
+        <span class="name">Designing the shifted set</span>
+        <span class="note">Session 4. What a stress test can and cannot establish, and D'Amour et al.'s five application domains.</span>
+      </div>
+      <div class="covered-row">
+        <span class="status pill light">◐</span>
+        <span class="name">The correlation that changed sign</span>
+        <span class="note">Session 9 owns the full account of the finding that one more data draw destroyed.</span>
+      </div>
+      <div class="covered-row">
+        <span class="status pill light">◐</span>
+        <span class="name">What picking the best of twenty costs</span>
+        <span class="note">Session 5 measures it rather than asserting it.</span>
+      </div>
+      <div class="covered-row">
+        <span class="status pill inkpill">·</span>
+        <span class="name">Memorization, random labels and double descent</span>
+        <span class="note">Not covered by design. <strong>learn-deep-learning-with-phoebe</strong> session 05 owns how a network can fit noise and what the interpolation threshold means.</span>
+      </div>
+      <div class="covered-row">
+        <span class="status pill inkpill">·</span>
+        <span class="name">Metric definitions and drift detection</span>
+        <span class="note">Not covered by design. <strong>learn-model-evaluation-with-phoebe</strong> defines every metric and owns monitoring.</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ CHEAT SHEET ============ -->
+  <section class="cheat" id="cheatsheet">
+    <h3>Session 3 cheat sheet</h3>
+    <div class="grid-2">
+      <div class="cheat-item"><b>Underspecified pipeline</b><span>It can return many predictors with equally strong held-out performance. The score does not identify which one you have.</span></div>
+      <div class="cheat-item"><b>Vary what should not matter</b><span>The seed sets initial weights and example order. Nobody claims those are part of the model.</span></div>
+      <div class="cheat-item"><b>0.019 against 0.051</b><span>Draw 1, twenty models. Thousandths where you looked, hundredths where you did not.</span></div>
+      <div class="cheat-item"><b>2.7 to 11.3 times</b><span>The ratio across five data draws. Wider off-test in five out of five.</span></div>
+      <div class="cheat-item"><b>Spreads before the ratio</b><span>A ratio of one means different things at thousandths and at hundredths. Read both columns raw.</span></div>
+      <div class="cheat-item"><b>Reliance third</b><span>0.70 to 1.00 on the ward. It says which of the twenty have the most to lose.</span></div>
+      <div class="cheat-item"><b>A fixed seed hides the range</b><span>It buys reproducibility, not representativeness. Sweep to see what the pipeline can return.</span></div>
+      <div class="cheat-item"><b>The sign that moved</b><span>-0.89 to +0.09 across draws. One draw is not a finding, and that near-miss is session 9.</span></div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="pagefoot">
+  <div class="wrap">
+    <p>Practitioner session 3 of 10 · learn-ml-epistemology-with-phoebe · by Phoebe Fu</p>
+    <nav class="pagenav">
+      <a href="p2-the-shortcut.html">← Practitioner session 2 · The shortcut</a>
+      <a href="p4-stress-tests.html">Practitioner session 4 · Stress tests →</a>
+    </nav>
+  </div>
+</footer>
+
+<script src="../assets/app.js?v=2"></script>
+</body>
+</html>

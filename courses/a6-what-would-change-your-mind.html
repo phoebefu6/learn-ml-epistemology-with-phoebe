@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- social:start -->
+<meta name="description" content="Leader session 6 of 6. The question to ask before approving a model, and the discipline of writing the falsifier down in advance. Five earlier sessions turn into five questions and five answers that would change an approver's mind.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Learn with Phoebe">
+<meta property="og:title" content="What would change your mind - learn ML epistemology with phoebe">
+<meta property="og:description" content="Leader session 6 of 6. A named metric, a named population, a threshold and a date. A claim with no falsifier is not a weak claim.">
+<meta property="og:url" content="https://phoebefu6.github.io/learn-ml-epistemology-with-phoebe/courses/a6-what-would-change-your-mind.html">
+<meta property="og:image" content="https://phoebefu6.github.io/learn-ml-epistemology-with-phoebe/assets/og-cover.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="What would change your mind - learn ML epistemology with phoebe">
+<meta name="twitter:description" content="One sentence at approval turns a reorganisation from a mystery into a scheduled check.">
+<meta name="twitter:image" content="https://phoebefu6.github.io/learn-ml-epistemology-with-phoebe/assets/og-cover.png">
+<!-- social:end -->
+<title>Leader session 6 · What would change your mind - learn ML epistemology with phoebe</title>
+<link rel="stylesheet" href="../assets/style.css?v=2">
+</head>
+<body>
+
+<div class="toolbar">
+  <div class="wrap">
+    <span class="crumb"><a href="../index.html">learn-ml-epistemology-with-phoebe</a> / Leader session 6 of 6</span>
+    <button class="btn" id="toggle-all" type="button">Expand all</button>
+    <button class="btn primary" id="zoom-toggle" type="button">Projector zoom: off</button>
+  </div>
+</div>
+
+<header class="masthead">
+  <div class="wrap">
+    <div class="eyebrow">Learn ML Epistemology with Phoebe · Leader session 6 of 6</div>
+    <h1>What would <span class="accent">change your mind</span></h1>
+    <p class="sub">Approval meetings end with a decision and almost never with a condition. The question that does the most work is the one nobody asks last: what would we have to see to stop believing this? At Thornbury the answer was cheap. The model scored 0.949 on patients from the collection year, it leaned on a ward arrangement that agreed with the outcome about 90 percent of the time, and one sentence written at approval would have turned the reorganisation from a mystery into a scheduled check. Tonight turns the five earlier sessions into five questions, and each question into an answer specific enough to change an approver's mind.</p>
+    <div class="chip-row">
+      <span class="chip level">🔴 Hardest</span>
+      <span class="chip audience">Whoever signs the approval</span>
+      <span class="chip audience">Anyone who chairs a model review</span>
+      <span class="chip time">45 min</span>
+    </div>
+    <div class="agenda">
+      <span class="a1" style="flex:1">0-3 · Welcome</span>
+      <span class="a2" style="flex:4">3-16 · Five questions</span>
+      <span class="a3" style="flex:3">16-25 · Anatomy of a falsifier</span>
+      <span class="a4" style="flex:5">25-45 · Build-along and close</span>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <!-- ============ INTRO ============ -->
+  <section class="section" id="intro">
+    <div class="section-kicker">
+      <span class="klabel">Part 0</span>
+      <h2>Where tonight sits</h2>
+    </div>
+    <p class="lede">Five sessions have each taken one way a number can be true and still fail to support the decision it is carrying. A score that depends on an arrangement. A pipeline that could have returned a different model with the same score. A set that started choosing instead of measuring. A benchmark that measured somebody else's task. A body of published evidence with a known flaw running through it. Tonight collapses all five into the last question in a review, and into the one line that makes the answer checkable later.</p>
+
+    <div class="legend">
+      <span class="pill">Live = presented in the 45 minutes</span>
+      <span class="pill">Self-study = the full depth, after class</span>
+      <span class="pill">🔍 Every diagram zooms</span>
+    </div>
+
+    <div class="callout win">
+      <p><strong>★ What you walk out with tonight.</strong> Five questions you can ask in any model review, each with the specific answer that would settle it. The four parts a falsifier needs before it can ever fire: a named metric, a named population, a threshold and a date. And one written sentence for the next model you approve, with an owner against it.</p>
+    </div>
+
+    <details class="card" open>
+      <summary><span class="mode live">Live</span>A claim with no falsifier is not a weak claim<span class="mini">4 min</span><span class="caret">▶</span></summary>
+      <div class="body">
+        <p>"The model performs well" survives every observation. So does "it may degrade over time", and so does "we will keep an eye on it". Nothing that could happen next quarter is inconsistent with any of them, which means none of them is doing work. A claim with no falsifier is not a weak claim; it is not a claim, because there is no state of the world it rules out.</p>
+        <p>The repair is small and it is entirely a matter of when. Written after the drop, a threshold is a negotiation about whether the drop counts. Written at approval, the same threshold is an agreement, and the only thing left to do in March is read a number. The sentence costs a minute in the meeting where everyone is calm and saves the argument in the meeting where nobody is.</p>
+        <div class="callout example">
+          <span class="ex-pill">Real world</span>
+          <p>Thornbury approved on 0.949 held out. The ward agreed with the outcome about 90 percent of the time in the collection year and about 50 percent after the reorganisation, and the same model scored 0.765. Every ingredient of the falsifier existed at approval: the metric was already being computed, the population was already defined, and the reorganisation was already on a project plan somewhere in the group.</p>
+        </div>
+      </div>
+    </details>
+
+    <details class="card">
+      <summary><span class="mode self">Self-study</span>Where practitioners disagree about falsifiers<span class="mini">4 min</span><span class="caret">▶</span></summary>
+      <div class="body">
+        <p>One camp treats the falsifier as a logical test: the observation arrives, the claim is refuted, the model comes out. The other camp points out that no single observation ever refutes a model claim on its own, because a bad number can always be attributed to the sample, the threshold, an implementation change or an unusual month. On that reading a falsifier is not a test at all; it is a commitment device, useful because it removes the option of choosing the explanation after seeing the number.</p>
+        <p>The disagreement is real and it is not settled. What both sides accept is the part that matters for a review: the threshold has to be written before the data arrives, because whoever writes it afterwards is choosing the verdict. Pick whichever justification you find convincing and write the same sentence.</p>
+      </div>
+    </details>
+
+    <details class="card">
+      <summary><span class="mode self">Self-study</span>The vocabulary the five sessions leave behind<span class="mini">3 min</span><span class="caret">▶</span></summary>
+      <div class="body">
+        <ul>
+          <li><strong>Warrant.</strong> The reason a claim is believable. A score plus the assumptions that let it travel.</li>
+          <li><strong>Underspecification.</strong> A pipeline that can return many models with equally strong held-out performance which behave differently in deployment. Session 2.</li>
+          <li><strong>Optimism.</strong> The gap between a number reported after selecting on a set and the same model's score on data nobody selected on. Session 3.</li>
+          <li><strong>Construct validity.</strong> Whether an instrument reads the quantity you care about. Session 4.</li>
+          <li><strong>Leakage.</strong> Information about the outcome reaching the inputs. Session 5, at the scale of a literature.</li>
+          <li><strong>Falsifier.</strong> The observation that would end the claim, named in advance with a metric, a population, a threshold and a date.</li>
+        </ul>
+      </div>
+    </details>
+  </section>
+
+  <!-- ============ PART 1 ============ -->
+  <section class="section" id="part-1">
+    <div class="section-kicker">
+      <span class="klabel">Part 1 · covers the five questions</span>
+      <h2>Five sessions, five questions, five answers that would settle them</h2>
+      <span class="tag concept">13 min live</span>
+    </div>
+    <p class="lede">Each earlier session ends in a question an approver can ask out loud in under ten seconds. What makes the question useful is not the question, it is having decided in advance which answer would move you. Asking without that is a conversation; asking with it is a control.</p>
+
+    <figure class="zoomable">
+      <svg viewBox="0 0 880 444" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="A five row table. Session one, the resemblance: ask which arrangement in the world the score is leaning on and who watches it; the answer that would change a mind is an accuracy figure from patients collected after the wards were reorganised. Session two, the seed: ask how many models the pipeline could have returned and how far apart they are; the answer is three retrains on new seeds whose off-test spread stays under one accuracy point. Session three, the target: ask how many times the test set has been used to choose something; the answer is the chosen model scored once on two thousand fresh patients, within 0.005 of the report. Session four, the instrument: ask what task, whose population and which scoring rule produced the published rank; the answer is the same model scored on our own patients with our outcome definition and our threshold. Session five, borrowed evidence: ask what the split was and whether anything downstream of the outcome could be an input; the answer is one independent replication on data collected after the paper was published.">
+        <style>
+          .a6aH { font: 800 12px Inter, sans-serif; fill: #231A10; }
+          .a6aT { font: 800 11px Inter, sans-serif; fill: #fff; }
+          .a6aK { font: 800 11px Inter, sans-serif; fill: #231A10; }
+          .a6aB { font: 400 11px Inter, sans-serif; fill: #231A10; }
+          .a6aM { font: 400 11px Inter, sans-serif; fill: #6B5B47; }
+          .a6aR { font: 400 11px Inter, sans-serif; fill: #155E75; }
+          .a6aX { font: 800 11px Inter, sans-serif; fill: #155E75; }
+        </style>
+
+        <text class="a6aH" x="14" y="22">Five sessions, five questions, and the answer that would change the decision.</text>
+
+        <rect x="14" y="34" width="852" height="26" rx="6" fill="#713F12"></rect>
+        <text class="a6aT" x="28" y="52">The thread</text>
+        <text class="a6aT" x="186" y="52">The question to ask before approving</text>
+        <text class="a6aT" x="514" y="52">What would change my mind</text>
+
+        <rect x="14" y="66" width="852" height="56" rx="8" fill="#FBF6EF" stroke="#DCCDB8"></rect>
+        <line x1="168" y1="74" x2="168" y2="114" stroke="#DCCDB8" stroke-width="1"></line>
+        <line x1="496" y1="74" x2="496" y2="114" stroke="#DCCDB8" stroke-width="1"></line>
+        <text class="a6aK" x="28" y="90">Session 1</text>
+        <text class="a6aM" x="28" y="108">The resemblance</text>
+        <text class="a6aB" x="186" y="90">Which arrangement in the world is this</text>
+        <text class="a6aB" x="186" y="108">score leaning on, and who watches it?</text>
+        <text class="a6aR" x="514" y="90">An accuracy figure from patients collected</text>
+        <text class="a6aR" x="514" y="108">after the wards were reorganised.</text>
+
+        <rect x="14" y="128" width="852" height="56" rx="8" fill="#FBF6EF" stroke="#DCCDB8"></rect>
+        <line x1="168" y1="136" x2="168" y2="176" stroke="#DCCDB8" stroke-width="1"></line>
+        <line x1="496" y1="136" x2="496" y2="176" stroke="#DCCDB8" stroke-width="1"></line>
+        <text class="a6aK" x="28" y="152">Session 2</text>
+        <text class="a6aM" x="28" y="170">The seed</text>
+        <text class="a6aB" x="186" y="152">How many models could this pipeline</text>
+        <text class="a6aB" x="186" y="170">have returned, and how far apart are they?</text>
+        <text class="a6aR" x="514" y="152">Three retrains on new seeds whose off-test</text>
+        <text class="a6aR" x="514" y="170">spread stays under one accuracy point.</text>
+
+        <rect x="14" y="190" width="852" height="56" rx="8" fill="#FBF6EF" stroke="#DCCDB8"></rect>
+        <line x1="168" y1="198" x2="168" y2="238" stroke="#DCCDB8" stroke-width="1"></line>
+        <line x1="496" y1="198" x2="496" y2="238" stroke="#DCCDB8" stroke-width="1"></line>
+        <text class="a6aK" x="28" y="214">Session 3</text>
+        <text class="a6aM" x="28" y="232">The target</text>
+        <text class="a6aB" x="186" y="214">How many times has this test set been</text>
+        <text class="a6aB" x="186" y="232">used to choose something?</text>
+        <text class="a6aR" x="514" y="214">The chosen model scored once on 2,000</text>
+        <text class="a6aR" x="514" y="232">fresh patients, within 0.005 of the report.</text>
+
+        <rect x="14" y="252" width="852" height="56" rx="8" fill="#FBF6EF" stroke="#DCCDB8"></rect>
+        <line x1="168" y1="260" x2="168" y2="300" stroke="#DCCDB8" stroke-width="1"></line>
+        <line x1="496" y1="260" x2="496" y2="300" stroke="#DCCDB8" stroke-width="1"></line>
+        <text class="a6aK" x="28" y="276">Session 4</text>
+        <text class="a6aM" x="28" y="294">The instrument</text>
+        <text class="a6aB" x="186" y="276">What task, whose population and which</text>
+        <text class="a6aB" x="186" y="294">scoring rule produced that published rank?</text>
+        <text class="a6aR" x="514" y="276">The same model scored on our own patients,</text>
+        <text class="a6aR" x="514" y="294">our outcome definition, our threshold.</text>
+
+        <rect x="14" y="314" width="852" height="56" rx="8" fill="#FBF6EF" stroke="#DCCDB8"></rect>
+        <line x1="168" y1="322" x2="168" y2="362" stroke="#DCCDB8" stroke-width="1"></line>
+        <line x1="496" y1="322" x2="496" y2="362" stroke="#DCCDB8" stroke-width="1"></line>
+        <text class="a6aK" x="28" y="338">Session 5</text>
+        <text class="a6aM" x="28" y="356">Borrowed evidence</text>
+        <text class="a6aB" x="186" y="338">What was the split, and could anything</text>
+        <text class="a6aB" x="186" y="356">downstream of the outcome be an input?</text>
+        <text class="a6aR" x="514" y="338">One independent replication on data</text>
+        <text class="a6aR" x="514" y="356">collected after the paper was published.</text>
+
+        <rect x="14" y="380" width="852" height="52" rx="9" fill="#ECFEFF" stroke="#155E75"></rect>
+        <text class="a6aX" x="28" y="404">Every answer in the right column names a number and a source of data.</text>
+        <text class="a6aB" x="28" y="422">A question whose answer cannot be written that way produces reassurance, and reassurance cannot be checked in March.</text>
+      </svg>
+      <figcaption>🔍 Click to zoom - the question is the cheap half. Deciding the answer in advance is the control.</figcaption>
+    </figure>
+
+    <details class="card">
+      <summary><span class="mode live">Live</span>Two of the five answers are almost free<span class="mini">4 min</span><span class="caret">▶</span></summary>
+      <div class="body">
+        <p>The seed question costs three retrains. At Thornbury, twenty models that differed only in their random seed sat within a held-out spread of 0.003 to 0.019 depending on the data draw, and pulled apart by 0.034 to 0.051 once the wards moved: the shifted spread ran 2.7 to 11.3 times the held-out spread, in five draws out of five. Three retrains will not reproduce that whole picture, and they do not need to. They tell you whether the number in front of you identifies one model or a family.</p>
+        <p>The fresh-set question costs one scoring run. The measured optimism at Thornbury from selecting the best of a hundred candidates was 0.0072, and the same model's accuracy on data nobody selected on barely moved between one candidate and a hundred: 0.9500 down to 0.9497. That is small, and the point of asking is not to catch a scandal. It is that the answer takes an afternoon, so an unanswered version of it is a choice rather than a constraint.</p>
+      </div>
+    </details>
+
+    <details class="card">
+      <summary><span class="mode live">Live</span>The two questions where the honest answer is "we cannot"<span class="mini">4 min</span><span class="caret">▶</span></summary>
+      <div class="body">
+        <p>A published rank and a published paper both sit outside your control. You cannot rerun somebody else's benchmark on your population, and you cannot re-split their data. When the answer that would change your mind is unobtainable, the finding is not that the evidence is bad; the finding is how much weight it can carry, which is less than a number of its size suggests.</p>
+        <p>What you can do is bound the exposure. Kapoor and Narayanan found leakage in 17 fields, collectively affecting 294 papers, with a taxonomy of eight types. That base rate is an argument for asking how much of a decision rests on evidence nobody in the room produced, and for funding the one cheap replication that would move the answer, rather than for discounting the literature wholesale.</p>
+        <div class="callout example">
+          <span class="ex-pill">Real world</span>
+          <p>A vendor slide shows a first-place rank. The answer that would change your mind is the same model scored on 500 of your own patients, with your outcome definition and your threshold. If the vendor can run that, the rank stops mattering because you have the number you actually needed. If they cannot, you have learned the price of the rank.</p>
+        </div>
+      </div>
+    </details>
+  </section>
+
+  <!-- ============ PART 2 ============ -->
+  <section class="section" id="part-2">
+    <div class="section-kicker">
+      <span class="klabel">Part 2 · covers the anatomy</span>
+      <h2>A falsifier that can actually fire</h2>
+      <span class="tag concept">9 min live</span>
+    </div>
+    <p class="lede">Most written falsifiers are gestures. They name a direction instead of a number, a feeling instead of a population, and no date at all, so no observation ever contradicts them and nothing ever triggers. Four parts fix that, and all four are usually already known at approval.</p>
+
+    <figure class="zoomable">
+      <svg viewBox="0 0 880 356" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="A gesture at the top reads: if performance degrades significantly we will revisit the model. It has no metric, no population, no threshold and no date, so no observation contradicts it. Below, four boxes give the parts a falsifier needs. Metric: named and countable, accuracy on deterioration within 24 hours. Population: whose patients and when, deployment-year patients on the reorganised wards. Threshold: a number, not a direction, below 0.90, chosen between 0.949 and 0.765. Date: when somebody looks, the March review and any ward reorganisation. The assembled sentence reads: if accuracy on deployment-year patients is below 0.90 at the March review, or on the day any ward is reorganised, the model comes out of triage until it is rescored.">
+        <style>
+          .a6bH { font: 800 12px Inter, sans-serif; fill: #231A10; }
+          .a6bT { font: 800 11px Inter, sans-serif; fill: #fff; }
+          .a6bQ { font: 800 12px Inter, sans-serif; fill: #231A10; }
+          .a6bB { font: 400 11px Inter, sans-serif; fill: #231A10; }
+          .a6bM { font: 400 11px Inter, sans-serif; fill: #6B5B47; }
+          .a6bX { font: 800 11px Inter, sans-serif; fill: #155E75; }
+        </style>
+
+        <text class="a6bH" x="14" y="22">Four parts. Remove any one and the sentence can never fire.</text>
+
+        <rect x="14" y="34" width="852" height="80" rx="9" fill="#FBF6EF" stroke="#DCCDB8"></rect>
+        <text class="a6bM" x="28" y="56">What approval notes usually say</text>
+        <text class="a6bQ" x="28" y="78">"If performance degrades significantly, we will revisit the model."</text>
+        <text class="a6bM" x="28" y="100">No metric, no population, no threshold, no date. Nothing that could happen next year contradicts it.</text>
+
+        <text class="a6bH" x="14" y="138">The four parts, and the Thornbury version of each</text>
+
+        <rect x="14" y="150" width="210" height="88" rx="9" fill="#FDFBF7" stroke="#DCCDB8"></rect>
+        <rect x="14" y="150" width="210" height="24" rx="9" fill="#713F12"></rect>
+        <text class="a6bT" x="28" y="167">1 · Metric</text>
+        <text class="a6bM" x="28" y="192">Named and countable</text>
+        <text class="a6bB" x="28" y="210">Accuracy on deterioration</text>
+        <text class="a6bB" x="28" y="228">within 24 hours</text>
+
+        <rect x="228" y="150" width="210" height="88" rx="9" fill="#FDFBF7" stroke="#DCCDB8"></rect>
+        <rect x="228" y="150" width="210" height="24" rx="9" fill="#713F12"></rect>
+        <text class="a6bT" x="242" y="167">2 · Population</text>
+        <text class="a6bM" x="242" y="192">Whose patients, and when</text>
+        <text class="a6bB" x="242" y="210">Deployment-year patients</text>
+        <text class="a6bB" x="242" y="228">on the reorganised wards</text>
+
+        <rect x="442" y="150" width="210" height="88" rx="9" fill="#FDFBF7" stroke="#DCCDB8"></rect>
+        <rect x="442" y="150" width="210" height="24" rx="9" fill="#713F12"></rect>
+        <text class="a6bT" x="456" y="167">3 · Threshold</text>
+        <text class="a6bM" x="456" y="192">A number, not a direction</text>
+        <text class="a6bB" x="456" y="210">Below 0.90, chosen by us</text>
+        <text class="a6bB" x="456" y="228">between 0.949 and 0.765</text>
+
+        <rect x="656" y="150" width="210" height="88" rx="9" fill="#FDFBF7" stroke="#DCCDB8"></rect>
+        <rect x="656" y="150" width="210" height="24" rx="9" fill="#713F12"></rect>
+        <text class="a6bT" x="670" y="167">4 · Date</text>
+        <text class="a6bM" x="670" y="192">When somebody looks</text>
+        <text class="a6bB" x="670" y="210">The March review, and</text>
+        <text class="a6bB" x="670" y="228">any ward reorganisation</text>
+
+        <rect x="14" y="252" width="852" height="66" rx="9" fill="#ECFEFF" stroke="#155E75"></rect>
+        <text class="a6bX" x="28" y="274">Written at approval, in the note, before anybody has seen a second number:</text>
+        <text class="a6bB" x="28" y="294">"If accuracy on deployment-year patients is below 0.90 at the March review, or on the day any ward is</text>
+        <text class="a6bB" x="28" y="312">reorganised, the model comes out of triage until it has been rescored."</text>
+
+        <text class="a6bM" x="14" y="342">The fifth part is a person. A check with nobody's name on it is a sentence, and a sentence does not run in March.</text>
+      </svg>
+      <figcaption>🔍 Click to zoom - the threshold is a decision, not a measurement. Somebody has to choose it out loud.</figcaption>
+    </figure>
+
+    <details class="card">
+      <summary><span class="mode live">Live</span>Where the threshold comes from<span class="mini">4 min</span><span class="caret">▶</span></summary>
+      <div class="body">
+        <p>The most common objection to writing a number is that nobody knows the right one. That is true and it is not a reason to leave it out, because a threshold is a statement about what the organisation would do, not an estimate of anything. It sits between the score that justified approval and the score at which the model is doing harm, and both ends of that range are usually known or arguable in the room.</p>
+        <p>At Thornbury the approved figure was 0.949 and the post-reorganisation figure turned out to be 0.765. A threshold anywhere in between converts the fall into a scheduled decision rather than a discovery. Picking it badly is recoverable; the sentence can be rewritten at the next review with the reason for the change recorded. Picking nothing is what leaves the question open for eighteen months.</p>
+      </div>
+    </details>
+
+    <details class="card">
+      <summary><span class="mode self">Self-study</span>Two failure modes of a written falsifier<span class="mini">3 min</span><span class="caret">▶</span></summary>
+      <div class="body">
+        <p><strong>Set so low it never fires.</strong> A threshold chosen to be safe from embarrassment is a threshold chosen to be inert. The test is simple: ask what the metric would have to read for the sentence to trigger, then ask whether the model would still be usable at that level. If the honest answer is no, the sentence is protecting the approval rather than the patients.</p>
+        <p><strong>Attached to a metric nobody computes.</strong> A falsifier written against a quantity that requires a special study will not be evaluated, whatever the note says. Pick something already on a dashboard or already produced monthly, even if it is a rougher measure, because a rough check that happens beats a precise check that does not.</p>
+      </div>
+    </details>
+  </section>
+
+  <!-- ============ PART 3 ============ -->
+  <section class="section" id="part-3">
+    <div class="section-kicker">
+      <span class="klabel">Part 3 · build-along</span>
+      <h2>Write one, for a model you are about to approve</h2>
+      <span class="tag build">20 min build-along</span>
+    </div>
+    <p class="lede">No laptop. Pick a model your area is about to approve or renew, and produce one sentence with four parts and a name against it. The measure of success is that somebody who was not in the room could run the check without asking you what you meant.</p>
+
+    <figure class="zoomable">
+      <svg viewBox="0 0 880 336" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Two columns showing the same model over six months. Approved on the number alone: at approval, 0.949 and no condition written down; month three, the wards are reorganised and nobody links the two; month six, clinicians quietly stop acting on the flags; what happens next, an argument about whether the model ever worked. Approved with a falsifier: at approval, 0.949 plus the line that would end it; month three, the reorganisation triggers the named check; month six, rescored at 0.765 and pulled from triage; what happens next, a decision with a date and an owner on it.">
+        <style>
+          .a6cH { font: 800 12px Inter, sans-serif; fill: #231A10; }
+          .a6cT { font: 800 11px Inter, sans-serif; fill: #fff; }
+          .a6cK { font: 800 11px Inter, sans-serif; fill: #231A10; }
+          .a6cM { font: 400 11px Inter, sans-serif; fill: #6B5B47; }
+          .a6cB { font: 400 11px Inter, sans-serif; fill: #231A10; }
+        </style>
+
+        <text class="a6cH" x="14" y="22">Same model, same drop, two different month sixes.</text>
+
+        <rect x="14" y="36" width="416" height="240" rx="9" fill="#FBF6EF" stroke="#DCCDB8"></rect>
+        <rect x="14" y="36" width="416" height="28" rx="9" fill="#713F12"></rect>
+        <text class="a6cT" x="30" y="55">Approved on the number alone</text>
+        <text class="a6cK" x="30" y="88">Approval</text>
+        <text class="a6cM" x="30" y="106">0.949, and no condition written down</text>
+        <text class="a6cK" x="30" y="136">Month 3</text>
+        <text class="a6cM" x="30" y="154">The wards are reorganised. Nobody links the two.</text>
+        <text class="a6cK" x="30" y="184">Month 6</text>
+        <text class="a6cM" x="30" y="202">Clinicians quietly stop acting on the flags.</text>
+        <text class="a6cK" x="30" y="232">What happens next</text>
+        <text class="a6cM" x="30" y="250">An argument about whether it ever worked.</text>
+
+        <rect x="450" y="36" width="416" height="240" rx="9" fill="#FBF6EF" stroke="#DCCDB8"></rect>
+        <rect x="450" y="36" width="416" height="28" rx="9" fill="#155E75"></rect>
+        <text class="a6cT" x="466" y="55">Approved with the line that would end it</text>
+        <text class="a6cK" x="466" y="88">Approval</text>
+        <text class="a6cM" x="466" y="106">0.949, plus a metric, a population, a number, a date</text>
+        <text class="a6cK" x="466" y="136">Month 3</text>
+        <text class="a6cM" x="466" y="154">The reorganisation triggers the named check.</text>
+        <text class="a6cK" x="466" y="184">Month 6</text>
+        <text class="a6cM" x="466" y="202">Rescored at 0.765 and pulled from triage.</text>
+        <text class="a6cK" x="466" y="232">What happens next</text>
+        <text class="a6cM" x="466" y="250">A decision with a date and an owner on it.</text>
+
+        <rect x="14" y="288" width="852" height="38" rx="9" fill="#ECFEFF" stroke="#155E75"></rect>
+        <text class="a6cB" x="28" y="312">The model behaved identically in both columns. The difference is whether anybody agreed in advance what the drop would mean.</text>
+      </svg>
+      <figcaption>🔍 Click to zoom - nothing in the left column is anybody's mistake, which is what makes it so common.</figcaption>
+    </figure>
+
+    <div class="steps">
+      <div class="step"><div><p><strong>Name the model and the number on the slide.</strong> The figure, the data it was computed on, and when that data was collected. Everything that follows hangs off this sentence, so say it out loud before anybody improves it.</p></div></div>
+      <div class="step"><div><p><strong>Pick the metric that already exists.</strong> Not the best measure of value, the best measure somebody is already computing monthly. Write its name exactly as it appears wherever it is produced.</p></div></div>
+      <div class="step"><div><p><strong>Name the population, including its time window.</strong> "Patients on the reorganised wards, admitted in the quarter" is a population. "Our users" is not, because two people will compute it differently and both will be right.</p></div></div>
+      <div class="step"><div><p><strong>Choose the threshold out loud, and record the reasoning.</strong> Put it between the score that justified approval and the score at which you would not deploy at all. Somebody will disagree; that argument is the useful part and it is much cheaper now than in March.</p></div></div>
+      <div class="step"><div><p><strong>Set two dates, not one.</strong> A calendar date so the check happens on a quiet quarter, and an event trigger for the arrangement most likely to move: a reorganisation, a supplier change, a new intake form, a policy.</p></div></div>
+      <div class="step"><div><p><strong>Put a name against it and say the consequence.</strong> Who runs the check, and what happens if it trips: withdrawn, reduced to advisory, or rescored within a stated number of days. A trigger with no stated consequence becomes a discussion.</p></div></div>
+      <div class="step"><div><p><strong>Read it back to somebody who was not involved.</strong> If they can tell you what would make the claim false and when they would find out, the sentence is finished. If they ask what you meant, it is a draft.</p></div></div>
+    </div>
+
+    <div class="callout tip">
+      <p><strong>The one-sentence version to take into an approval.</strong> "If [metric] on [population] is below [number] at [date], or on the day [named change] happens, [person] pulls the model into review and it comes out of [use] until it is rescored." Everything in the five sessions is an argument for why that sentence is worth the minute it costs.</p>
+    </div>
+  </section>
+
+  <!-- ============ QUIZ ============ -->
+  <section class="section" id="quiz">
+    <div class="section-kicker">
+      <span class="klabel">Check yourself</span>
+      <h2>Three questions</h2>
+    </div>
+
+    <div class="quiz-q" data-answer="2">
+      <p class="qtext">An approval note says "we will monitor the model and revisit if performance degrades materially". What is wrong with it?</p>
+      <button class="qopt" type="button">A · Nothing, as long as the team genuinely monitors it and is competent</button>
+      <button class="qopt" type="button">B · It should specify the algorithm and the retraining cadence, which are the parts a reviewer can verify</button>
+      <button class="qopt" type="button">C · No observation contradicts it, so nothing can ever trigger; it names no metric, no population, no threshold and no date</button>
+      <p class="qwhy">The sentence is compatible with every future, including the one where accuracy falls by two tenths and everybody explains it. Monitoring is not the missing part; the missing part is the number that decides whether what is being monitored counts as degradation.</p>
+    </div>
+
+    <div class="quiz-q" data-answer="0">
+      <p class="qtext">A team objects that they cannot write a threshold because nobody knows what level would be unacceptable. What is the best response?</p>
+      <button class="qopt" type="button">A · Write one anyway between the score that justified approval and the score at which you would not deploy, record the reasoning, and revise it at the next review</button>
+      <button class="qopt" type="button">B · Leave it out until a study establishes the correct threshold, so the number is defensible</button>
+      <button class="qopt" type="button">C · Use the industry standard threshold for the metric, since a published convention avoids the argument</button>
+      <p class="qwhy">A threshold is a statement about what the organisation would do, not an estimate of a quantity, so there is no study that could produce it. Waiting for certainty leaves the decision to whoever is in the room after the number falls, which is the situation the sentence exists to prevent.</p>
+    </div>
+
+    <div class="quiz-q" data-answer="1">
+      <p class="qtext">A vendor rank is the main evidence for a purchase, and the vendor will not score their model on your data. What has the review learned?</p>
+      <button class="qopt" type="button">A · That the rank is probably inflated by test-set reuse, so leaderboard evidence should be discounted as a class</button>
+      <button class="qopt" type="button">B · That the answer which would settle it is unobtainable, so the rank can carry less weight than a number of its size suggests</button>
+      <button class="qopt" type="button">C · That the purchase should proceed, because a first-place rank on a recognised benchmark is strong external validation</button>
+      <p class="qwhy">A rank is a claim about a task, a distribution and a scoring rule that are not yours, and refusing the replication does not make it false. It makes it unfalsifiable from where you sit, which is a fact about how much of the decision it can support, not a verdict on the vendor.</p>
+    </div>
+    <p class="quiz-score"></p>
+  </section>
+
+  <!-- ============ HOMEWORK ============ -->
+  <section class="section" id="homework">
+    <div class="section-kicker">
+      <span class="klabel">Homework</span>
+      <h2>After the leader track</h2>
+      <span class="tag time">30 min</span>
+    </div>
+    <div class="callout">
+      <p>Take the sentence you wrote tonight to the team that owns the model and get two things added: a name and a date in whatever system already holds their recurring work. Then look back through the last four approvals your area signed and count how many carry a condition somebody could run. The count is usually zero, and it is the most useful number you will bring to your next governance meeting. Anyone continuing into the practitioner track can run both Thornbury benches themselves from session 1 onwards.</p>
+    </div>
+  </section>
+
+  <!-- ============ COVERAGE ============ -->
+  <section class="section" id="official">
+    <div class="section-kicker">
+      <span class="klabel">Sources covered</span>
+      <h2>What tonight maps to</h2>
+    </div>
+    <div class="covered">
+      <div class="covered-row">
+        <span class="status pill solid">✓</span>
+        <span class="name">The question that closes a review</span>
+        <span class="note">What would change your mind, asked before the approval rather than after the incident, and why an unfalsifiable claim carries no weight.</span>
+      </div>
+      <div class="covered-row">
+        <span class="status pill solid">✓</span>
+        <span class="name">Five questions from the five earlier sessions</span>
+        <span class="note">The resemblance, the seed, the target, the instrument and the borrowed evidence, each with the specific answer that would settle it.</span>
+      </div>
+      <div class="covered-row">
+        <span class="status pill solid">✓</span>
+        <span class="name">The four parts of a falsifier</span>
+        <span class="note">A named metric, a named population, a threshold and a date, with an owner and a stated consequence attached.</span>
+      </div>
+      <div class="covered-row">
+        <span class="status pill solid">✓</span>
+        <span class="name">Where the disagreement sits</span>
+        <span class="note">Falsifier as a logical test against falsifier as a commitment device, and the practice both positions produce.</span>
+      </div>
+      <div class="covered-row">
+        <span class="status pill light">◐</span>
+        <span class="name">Running the benches yourself</span>
+        <span class="note">The practitioner track builds the Thornbury world, the twenty-seed bench and the selection bench from p1 through p10.</span>
+      </div>
+      <div class="covered-row">
+        <span class="status pill inkpill">·</span>
+        <span class="name">Memorization, random labels and double descent</span>
+        <span class="note">Not covered by design. <strong>learn-deep-learning-with-phoebe</strong> session 05 owns how a network can fit noise and what the interpolation threshold means.</span>
+      </div>
+      <div class="covered-row">
+        <span class="status pill inkpill">·</span>
+        <span class="name">Metric definitions and drift detection</span>
+        <span class="note">Not covered by design. <strong>learn-model-evaluation-with-phoebe</strong> defines the metrics and owns monitoring for drift.</span>
+      </div>
+      <div class="covered-row">
+        <span class="status pill inkpill">·</span>
+        <span class="name">Fairness auditing</span>
+        <span class="note">Not covered by design. The stress tests here are about credibility; group harm and its measurement belong to the fairness literature.</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ CHEAT SHEET ============ -->
+  <section class="cheat" id="cheatsheet">
+    <h3>Session 6 cheat sheet</h3>
+    <div class="grid-2">
+      <div class="cheat-item"><b>No falsifier, no claim</b><span>A sentence compatible with every future rules nothing out and cannot be checked.</span></div>
+      <div class="cheat-item"><b>Four parts</b><span>A named metric, a named population, a threshold, a date. Missing one makes it inert.</span></div>
+      <div class="cheat-item"><b>The fifth part is a person</b><span>A check with nobody's name on it does not run.</span></div>
+      <div class="cheat-item"><b>Before, not after</b><span>Written after the number, a threshold is a negotiation. Written at approval, it is an agreement.</span></div>
+      <div class="cheat-item"><b>A threshold is a decision</b><span>Not an estimate. Put it between the score that justified approval and the score you would refuse.</span></div>
+      <div class="cheat-item"><b>Three retrains</b><span>Change only the seed. At Thornbury the shifted spread ran 2.7 to 11.3 times the held-out spread.</span></div>
+      <div class="cheat-item"><b>One fresh scoring run</b><span>Optimism from selecting the best of 100 was 0.0072, and the honest column went 0.9500 to 0.9497.</span></div>
+      <div class="cheat-item"><b>Unobtainable is information</b><span>When the answer that would settle it cannot be got, the evidence carries less weight than its size suggests.</span></div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="pagefoot">
+  <div class="wrap">
+    <p>Leader session 6 of 6 · learn-ml-epistemology-with-phoebe · by Phoebe Fu</p>
+    <nav class="pagenav">
+      <a href="a5-a-whole-literature-wrong.html">← Leader session 5 · A whole literature, wrong the same way</a>
+      <a href="p1-the-assumption-under-the-split.html">Practitioner session 1 · The assumption under the split →</a>
+    </nav>
+  </div>
+</footer>
+
+<script src="../assets/app.js?v=2"></script>
+</body>
+</html>

@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- social:start -->
+<meta name="description" content="Leader session 1 of 6. A held-out score is not a fact about the model, it is a claim about a future that resembles the past. Thornbury's triage model scores 0.949 where it was measured and 0.765 once the wards are reorganised.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Learn with Phoebe">
+<meta property="og:title" content="What a test score entitles you to - learn ML epistemology with phoebe">
+<meta property="og:description" content="Leader session 1 of 6. The three assumptions hiding inside every held-out number, and what happens when one of them expires.">
+<meta property="og:url" content="https://phoebefu6.github.io/learn-ml-epistemology-with-phoebe/courses/a1-what-a-test-score-entitles-you-to.html">
+<meta property="og:image" content="https://phoebefu6.github.io/learn-ml-epistemology-with-phoebe/assets/og-cover.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="What a test score entitles you to - learn ML epistemology with phoebe">
+<meta name="twitter:description" content="0.949 where it was measured, 0.765 where it was deployed. Nothing about the model changed.">
+<meta name="twitter:image" content="https://phoebefu6.github.io/learn-ml-epistemology-with-phoebe/assets/og-cover.png">
+<!-- social:end -->
+<title>Leader session 1 · What a test score entitles you to - learn ML epistemology with phoebe</title>
+<link rel="stylesheet" href="../assets/style.css?v=2">
+</head>
+<body>
+
+<div class="toolbar">
+  <div class="wrap">
+    <span class="crumb"><a href="../index.html">learn-ml-epistemology-with-phoebe</a> / Leader session 1 of 6</span>
+    <button class="btn" id="toggle-all" type="button">Expand all</button>
+    <button class="btn primary" id="zoom-toggle" type="button">Projector zoom: off</button>
+  </div>
+</div>
+
+<header class="masthead">
+  <div class="wrap">
+    <div class="eyebrow">Learn ML Epistemology with Phoebe · Leader session 1 of 6</div>
+    <h1>What a test score <span class="accent">entitles you to</span></h1>
+    <p class="sub">Thornbury's deterioration-risk model scores 0.949 on data it never trained on. That number is correct, it reproduces, and it was computed properly. A year later the hospital group reorganises its wards and the same model, unchanged, scores 0.765. Nothing was retrained and nobody made a mistake. The number was never a fact about the model; it was a claim about a future that would resemble the past, and one of the resemblances quietly expired. Tonight is about what that kind of number does and does not entitle you to say.</p>
+    <div class="chip-row">
+      <span class="chip level">🔴 Hardest</span>
+      <span class="chip audience">Whoever approves the deployment</span>
+      <span class="chip audience">Anyone who has been handed an accuracy figure</span>
+      <span class="chip time">45 min</span>
+    </div>
+    <div class="agenda">
+      <span class="a1" style="flex:1">0-3 · Welcome</span>
+      <span class="a2" style="flex:5">3-20 · What the number claims</span>
+      <span class="a3" style="flex:4">20-40 · Build-along: audit a warrant</span>
+      <span class="a4" style="flex:1">40-45 · Q&amp;A</span>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <!-- ============ INTRO ============ -->
+  <section class="section" id="intro">
+    <div class="section-kicker">
+      <span class="klabel">Part 0</span>
+      <h2>How the leader track works</h2>
+    </div>
+    <p class="lede">Six sessions, 45 minutes each, no code. Tonight: what a held-out score is evidence of, and the three assumptions it rests on. Session 2 is underspecification, which is what happens when many models are equally good on paper and different in the world. Session 3 is what goes wrong when a number becomes a target. Session 4 is what a benchmark licenses you to claim about your own problem. Session 5 is a whole literature that was wrong in the same way, and what to do about evidence you did not produce. Session 6 is the question to ask before you approve anything: what would change your mind. The example throughout is <strong>Thornbury</strong>, a hospital group predicting which patients deteriorate within 24 hours.</p>
+
+    <div class="legend">
+      <span class="pill">Live = presented in the 45 minutes</span>
+      <span class="pill">Self-study = the full depth, after class</span>
+      <span class="pill">🔍 Every diagram zooms</span>
+    </div>
+
+    <div class="callout win">
+      <p><strong>★ What you walk out with tonight.</strong> The three assumptions that turn a held-out number into a claim about tomorrow, so you can ask which one is load-bearing for the model in front of you. The measured cost of one of them expiring at Thornbury: 0.949 down to 0.765, with no retraining and no error. And a habit that costs one sentence in a review: name the resemblance the score depends on, before the score is quoted.</p>
+    </div>
+
+    <details class="card" open>
+      <summary><span class="mode live">Live</span>A score is a claim, not a property<span class="mini">4 min</span><span class="caret">▶</span></summary>
+      <div class="body">
+        <p>When a model reports 0.949 on held-out data, the thing being reported is not a property of the model in the way that its file size is. It is the outcome of a bet: that the data it will meet resembles the data it was scored on, in the ways that matter. Held-out accuracy is the best evidence we have for that bet, and it is still evidence about a resemblance rather than a measurement of the future.</p>
+        <p>This sounds like philosophy until the resemblance breaks, at which point it becomes an incident. The useful move is to make the bet explicit while everyone is calm: say out loud which resemblance the number depends on, and who would notice if it stopped holding. Most review meetings never do this, which is why the first sign of trouble is usually a dashboard rather than a question.</p>
+        <div class="callout example">
+          <span class="ex-pill">Real world</span>
+          <p>Thornbury's model was scored on patients from the collection year and approved on a held-out accuracy of 0.949. In that year the high-acuity ward received most of the patients who went on to deteriorate, so the ward a patient was on agreed with the outcome about 90 percent of the time without causing it. The model found that agreement and used it. When the group reorganised its wards, the agreement fell to about 50 percent and the same model scored 0.765.</p>
+        </div>
+      </div>
+    </details>
+
+    <details class="card">
+      <summary><span class="mode self">Self-study</span>The words that will keep coming back<span class="mini">4 min</span><span class="caret">▶</span></summary>
+      <div class="body">
+        <ul>
+          <li><strong>Held-out set.</strong> Data kept aside from training and used once to estimate how the model behaves on data it has not seen.</li>
+          <li><strong>Warrant.</strong> The reason a claim is believable. A score is not a warrant on its own; the warrant is the score plus the assumptions that let it travel.</li>
+          <li><strong>Shortcut.</strong> A feature that predicts the outcome without causing it, and whose usefulness depends on an arrangement that can change.</li>
+          <li><strong>Distribution shift.</strong> The world the model meets stops resembling the world it was scored on.</li>
+          <li><strong>Stress test.</strong> Scoring a model on data chosen to break a specific assumption, rather than on more of the same data.</li>
+          <li><strong>Underspecification.</strong> A pipeline that can return many models with equally strong held-out performance which behave differently in deployment. Session 2.</li>
+          <li><strong>Falsifier.</strong> The observation that would make you stop believing the claim. Written down in advance, it is the cheapest control there is. Session 6.</li>
+        </ul>
+      </div>
+    </details>
+  </section>
+
+  <!-- ============ PART 1 ============ -->
+  <section class="section" id="part-1">
+    <div class="section-kicker">
+      <span class="klabel">Part 1 · covers the three assumptions</span>
+      <h2>Three assumptions, and one of them is usually the problem</h2>
+      <span class="tag concept">10 min live</span>
+    </div>
+    <p class="lede">A held-out score travels from the test set to next Tuesday along three links. Each one is an assumption, each one can break independently, and they break for different reasons. Naming which link is load-bearing takes about a minute and changes what you monitor.</p>
+
+    <figure class="zoomable">
+      <svg viewBox="0 0 880 330" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="A chain of three links carrying a score from the test set to a future decision. Link one, the same-world assumption: the data the model will meet resembles the data it was scored on. Link two, the independent-draw assumption: the test rows were not used to choose the model. Link three, the right-target assumption: the thing measured is the thing the decision needs. Below each link sits how it breaks, and a red band notes that Thornbury broke the first one.">
+        <style>
+          .a1aH { font: 800 12px Inter, sans-serif; fill: #231A10; }
+          .a1aT { font: 800 11px Inter, sans-serif; fill: #fff; }
+          .a1aB { font: 400 11px Inter, sans-serif; fill: #231A10; }
+          .a1aM { font: 400 11px Inter, sans-serif; fill: #6B5B47; }
+          .a1aR { font: 800 11px Inter, sans-serif; fill: #155E75; }
+        </style>
+        <defs>
+          <marker id="a1aAr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#6B5B47"></path></marker>
+        </defs>
+
+        <text class="a1aH" x="14" y="22">The score is measured here and spent there. Three assumptions carry it.</text>
+
+        <rect x="14" y="40" width="150" height="52" rx="9" fill="#713F12"></rect>
+        <text class="a1aT" x="28" y="62">The test set</text>
+        <text class="a1aT" x="28" y="80" style="font-weight:400">0.949 at Thornbury</text>
+
+        <line x1="168" y1="66" x2="214" y2="66" stroke="#6B5B47" stroke-width="1.6" marker-end="url(#a1aAr)"></line>
+
+        <rect x="218" y="40" width="196" height="52" rx="9" fill="#EBD9C3" stroke="#DCCDB8"></rect>
+        <text class="a1aB" x="232" y="62">1 · The same world</text>
+        <text class="a1aM" x="232" y="80">Tomorrow resembles the test set</text>
+
+        <line x1="418" y1="66" x2="444" y2="66" stroke="#6B5B47" stroke-width="1.6" marker-end="url(#a1aAr)"></line>
+
+        <rect x="448" y="40" width="196" height="52" rx="9" fill="#EBD9C3" stroke="#DCCDB8"></rect>
+        <text class="a1aB" x="462" y="62">2 · An untouched draw</text>
+        <text class="a1aM" x="462" y="80">The set did not pick the model</text>
+
+        <line x1="648" y1="66" x2="674" y2="66" stroke="#6B5B47" stroke-width="1.6" marker-end="url(#a1aAr)"></line>
+
+        <rect x="678" y="40" width="188" height="52" rx="9" fill="#EBD9C3" stroke="#DCCDB8"></rect>
+        <text class="a1aB" x="692" y="62">3 · The right target</text>
+        <text class="a1aM" x="692" y="80">Measured what the decision needs</text>
+
+        <text class="a1aH" x="14" y="130">How each one actually breaks</text>
+
+        <rect x="218" y="144" width="196" height="96" rx="9" fill="#FBF6EF" stroke="#DCCDB8"></rect>
+        <text class="a1aM" x="232" y="166">A shortcut expires</text>
+        <text class="a1aM" x="232" y="186">The population moves</text>
+        <text class="a1aM" x="232" y="206">The process changes</text>
+        <text class="a1aM" x="232" y="226">Seasons, policy, a new form</text>
+
+        <rect x="448" y="144" width="196" height="96" rx="9" fill="#FBF6EF" stroke="#DCCDB8"></rect>
+        <text class="a1aM" x="462" y="166">The set was scored twice</text>
+        <text class="a1aM" x="462" y="186">A leaderboard was climbed</text>
+        <text class="a1aM" x="462" y="206">Thresholds tuned on it</text>
+        <text class="a1aM" x="462" y="226">Session 3 measures the cost</text>
+
+        <rect x="678" y="144" width="188" height="96" rx="9" fill="#FBF6EF" stroke="#DCCDB8"></rect>
+        <text class="a1aM" x="692" y="166">Accuracy, not harm</text>
+        <text class="a1aM" x="692" y="186">Average, not the ward</text>
+        <text class="a1aM" x="692" y="206">A proxy for the outcome</text>
+        <text class="a1aM" x="692" y="226">Session 4 is the benchmark case</text>
+
+        <rect x="14" y="258" width="852" height="54" rx="9" fill="#ECFEFF" stroke="#155E75"></rect>
+        <text class="a1aR" x="28" y="280">Thornbury broke the first one, and only the first one.</text>
+        <text class="a1aB" x="28" y="300">The score was computed correctly on an untouched set that measured the right thing. It still stopped being true.</text>
+      </svg>
+      <figcaption>🔍 Click to zoom - three links, three different failure modes. Only one of them is anybody's mistake.</figcaption>
+    </figure>
+
+    <details class="card">
+      <summary><span class="mode live">Live</span>Why the first link is the one that usually goes<span class="mini">4 min</span><span class="caret">▶</span></summary>
+      <div class="body">
+        <p>Links two and three are under somebody's control. A test set can be kept clean by discipline, and the target can be chosen carefully by argument. The first link is not under anybody's control, because it is a claim about a world that keeps moving for reasons that have nothing to do with the model: a reorganisation, a new intake process, a supplier change, a policy, a season.</p>
+        <p>That asymmetry is worth saying out loud in a review, because it changes what you ask for. For links two and three you ask about process. For link one you ask a different question: what in this score depends on an arrangement that could change, and who would tell us if it did. A model that leans on something stable can survive neglect. A model that leans on a current arrangement needs a watcher.</p>
+      </div>
+    </details>
+
+    <details class="card">
+      <summary><span class="mode self">Self-study</span>Why "more data" does not repair link one<span class="mini">3 min</span><span class="caret">▶</span></summary>
+      <div class="body">
+        <p>A bigger test set makes the estimate of today's accuracy more precise. It says nothing about whether today resembles tomorrow, because every extra row is drawn from the same today. Precision and validity are different properties, and the first is much easier to buy.</p>
+        <p>This is the reason a very large held-out set can be reassuring and useless at the same time. The honest reading of a tight estimate is "we know what this model does on data like this, to within a small margin", which leaves the entire question of what data will be like completely open.</p>
+      </div>
+    </details>
+  </section>
+
+  <!-- ============ PART 2 ============ -->
+  <section class="section" id="part-2">
+    <div class="section-kicker">
+      <span class="klabel">Part 2 · covers the Thornbury drop</span>
+      <h2>What one expired assumption cost</h2>
+      <span class="tag concept">8 min live</span>
+    </div>
+    <p class="lede">The Thornbury numbers are worth sitting with because nothing in the story is a mistake. The data were clean, the split was honest, the metric was reasonable, and the model was competently built. The drop happened anyway, and the size of it is the argument for everything in the remaining five sessions.</p>
+
+    <figure class="zoomable">
+      <svg viewBox="0 0 880 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Two bars. Held-out accuracy in the collection year reads 0.949. Shifted accuracy after the wards are reorganised reads 0.765, a fall of 0.184. A note records that the ward agreed with the outcome 90 percent of the time before the reorganisation and 50 percent after, and that the model was not retrained between the two bars.">
+        <style>
+          .a1bH { font: 800 12px Inter, sans-serif; fill: #231A10; }
+          .a1bT { font: 800 12px Inter, sans-serif; fill: #fff; }
+          .a1bB { font: 400 11px Inter, sans-serif; fill: #231A10; }
+          .a1bM { font: 400 11px Inter, sans-serif; fill: #6B5B47; }
+          .a1bR { font: 800 11px Inter, sans-serif; fill: #155E75; }
+        </style>
+        <text class="a1bH" x="14" y="22">The same model, scored twice. No retraining between them.</text>
+
+        <text class="a1bM" x="14" y="62">Collection year, held out</text>
+        <rect x="14" y="72" width="680" height="34" rx="6" fill="#713F12"></rect>
+        <text class="a1bT" x="28" y="94">0.949</text>
+        <text class="a1bM" x="706" y="94">ward agrees 90% of the time</text>
+
+        <text class="a1bM" x="14" y="142">Deployment year, wards reorganised</text>
+        <rect x="14" y="152" width="548" height="34" rx="6" fill="#155E75"></rect>
+        <text class="a1bT" x="28" y="174">0.765</text>
+        <text class="a1bM" x="574" y="174">ward agrees 50% of the time</text>
+
+        <line x1="562" y1="146" x2="562" y2="196" stroke="#155E75" stroke-width="1.5" stroke-dasharray="4 3"></line>
+        <line x1="694" y1="66" x2="694" y2="116" stroke="#713F12" stroke-width="1.5" stroke-dasharray="4 3"></line>
+
+        <rect x="14" y="214" width="852" height="70" rx="9" fill="#FBF6EF" stroke="#DCCDB8"></rect>
+        <text class="a1bR" x="28" y="238">A fall of 0.184, and not one line of the model changed.</text>
+        <text class="a1bB" x="28" y="258">The model learned an arrangement, not a mechanism. The arrangement was real, it was predictive, and it was</text>
+        <text class="a1bB" x="28" y="276">never promised to anybody. Nothing in the held-out score could have told you which kind it had learned.</text>
+      </svg>
+      <figcaption>🔍 Click to zoom - the drop is the price of one assumption, measured.</figcaption>
+    </figure>
+
+    <details class="card">
+      <summary><span class="mode live">Live</span>The shortcut was not a bug, and that is the uncomfortable part<span class="mini">4 min</span><span class="caret">▶</span></summary>
+      <div class="body">
+        <p>It is tempting to file this as a data quality problem and ask for the ward to be removed. That instinct is worth resisting for a moment, because the ward was genuinely informative in the collection year. A model that ignored it would have scored worse and been rejected in review for being worse. The pipeline did what it was asked to do.</p>
+        <p>The real lesson is narrower and harder: predictive and durable are different properties, and a held-out score measures only the first. Nothing in the review process at Thornbury asked which one the model had found, and no amount of additional held-out data would have answered it, because the shortcut worked on held-out data too.</p>
+        <div class="callout example">
+          <span class="ex-pill">Real world</span>
+          <p>Ask a modelling team what their model would do if one named feature were shuffled. At Thornbury, flipping the ward on every patient changes the prediction for between 70 and 100 percent of them, depending on which model you ask, and every one of those models scored about 0.949. That range is session 2's subject, and it is invisible from the score.</p>
+        </div>
+      </div>
+    </details>
+
+    <details class="card">
+      <summary><span class="mode self">Self-study</span>What the remaining five sessions add<span class="mini">3 min</span><span class="caret">▶</span></summary>
+      <div class="body">
+        <ul>
+          <li><strong>Session 2.</strong> Twenty models from the same pipeline, equally good on held-out data, measurably different once the ward moves. That is underspecification, and it means "we validated it" does not identify which model you deployed.</li>
+          <li><strong>Session 3.</strong> What happens to a number once people start selecting against it, measured rather than asserted, and why the folklore overstates it in one direction and understates it in another.</li>
+          <li><strong>Session 4.</strong> Benchmarks: what a published ranking licenses you to expect on your own problem, which is less than it appears.</li>
+          <li><strong>Session 5.</strong> A survey that found leakage in 294 papers across 17 fields, and what it means when the evidence you are relying on was produced by somebody else.</li>
+          <li><strong>Session 6.</strong> The falsifier: writing down what would change your mind, before the result arrives.</li>
+        </ul>
+      </div>
+    </details>
+  </section>
+
+  <!-- ============ PART 3 ============ -->
+  <section class="section" id="part-3">
+    <div class="section-kicker">
+      <span class="klabel">Part 3 · build-along</span>
+      <h2>Audit the warrant on a model you already trust</h2>
+      <span class="tag build">20 min build-along</span>
+    </div>
+    <p class="lede">No laptop. Pick a model your area already relies on, one whose number somebody quoted to you with confidence, and walk the three links out loud. The goal is not a verdict. It is to find which link nobody in the room can speak to, because that is the one that will surprise you.</p>
+
+    <div class="steps">
+      <div class="step"><div><p><strong>Say the number and where it came from.</strong> Not "it is accurate" but the figure, the data it was computed on, and when. If nobody in the room can say when, you have already found something.</p></div></div>
+      <div class="step"><div><p><strong>Name the resemblance.</strong> Finish this sentence: "this number holds as long as ___ keeps being true." Population, process, season, supplier, a policy, a form that people fill in the same way.</p></div></div>
+      <div class="step"><div><p><strong>Ask what the model would do if one feature were shuffled.</strong> Pick the feature somebody would call the most predictive. If nobody knows the answer, nobody knows what the model learned.</p></div></div>
+      <div class="step"><div><p><strong>Check link two honestly.</strong> How many times has that test set been looked at? Was a threshold tuned on it, a variant chosen with it, a decision made twice? Nobody is in trouble; the number is just softer than it looks.</p></div></div>
+      <div class="step"><div><p><strong>Check link three out loud.</strong> Does the metric measure the thing the decision needs, or the thing that was easy to compute? Say who is harmed when the model is wrong in each direction.</p></div></div>
+      <div class="step"><div><p><strong>Write the watcher.</strong> For the resemblance you named in step two, say who would notice if it stopped holding, and how long that would take. "Nobody" and "a quarter" are both common and both answers worth having in writing.</p></div></div>
+    </div>
+
+    <div class="callout tip">
+      <p><strong>The one-sentence version to take into a meeting.</strong> "This model scores X on data from [when], and that number holds as long as [resemblance] keeps being true; [person] would notice within [time] if it stopped." A team that can say that sentence has done the epistemology. A team that cannot has an accuracy figure and a hope.</p>
+    </div>
+  </section>
+
+  <!-- ============ QUIZ ============ -->
+  <section class="section" id="quiz">
+    <div class="section-kicker">
+      <span class="klabel">Check yourself</span>
+      <h2>Three questions</h2>
+    </div>
+
+    <div class="quiz-q" data-answer="1">
+      <p class="qtext">Thornbury's model fell from 0.949 to 0.765 after the wards were reorganised. What went wrong?</p>
+      <button class="qopt" type="button">A · The held-out score was computed incorrectly, so the original number was never real</button>
+      <button class="qopt" type="button">B · Nothing in the process went wrong; the score depended on an arrangement in the world, and the arrangement changed</button>
+      <button class="qopt" type="button">C · The model was overfitted to the training data and should have been regularised harder</button>
+      <p class="qwhy">The split was honest and the number reproduced. The model found a feature that was genuinely predictive in the collection year and was never promised to stay that way. This is not overfitting, which is a failure to generalise from training to held-out data; here the model generalised to held-out data perfectly well.</p>
+    </div>
+
+    <div class="quiz-q" data-answer="2">
+      <p class="qtext">A team offers to quadruple the size of the held-out set to increase confidence before deployment. What does that buy?</p>
+      <button class="qopt" type="button">A · A better estimate of how the model will perform after deployment, since more data is closer to the real world</button>
+      <button class="qopt" type="button">B · Protection against the test set having been reused, since a larger set is harder to overfit</button>
+      <button class="qopt" type="button">C · A more precise estimate of performance on data like today's, and nothing at all about whether tomorrow resembles today</button>
+      <p class="qwhy">Every additional row is drawn from the same world, so precision improves and validity does not. A tight estimate and a fragile assumption sit together comfortably, which is what makes a large held-out set quietly reassuring.</p>
+    </div>
+
+    <div class="quiz-q" data-answer="0">
+      <p class="qtext">Which question does the most work in a five-minute model review?</p>
+      <button class="qopt" type="button">A · What in this score depends on an arrangement that could change, and who would notice if it did</button>
+      <button class="qopt" type="button">B · What is the accuracy, and is it higher than the model it replaces</button>
+      <button class="qopt" type="button">C · Which algorithm was used, and was it the current state of the art</button>
+      <p class="qwhy">The accuracy is already in the deck and the algorithm rarely determines the failure. The first question is the only one of the three that surfaces the assumption carrying the number, and it produces a named owner and a detection time rather than a reassurance.</p>
+    </div>
+    <p class="quiz-score"></p>
+  </section>
+
+  <!-- ============ HOMEWORK ============ -->
+  <section class="section" id="homework">
+    <div class="section-kicker">
+      <span class="klabel">Homework</span>
+      <h2>Before session 2</h2>
+      <span class="tag time">30 min</span>
+    </div>
+    <div class="callout">
+      <p>Take the model you audited tonight and find out one thing: how many models were trained before that one was chosen, and what separated them. Ask the person who built it. The answer is often "a few dozen, and we kept the best on the validation set", which is the honest and normal answer, and it is exactly the situation session 2 is about. Bring the number.</p>
+    </div>
+  </section>
+
+  <!-- ============ COVERAGE ============ -->
+  <section class="section" id="official">
+    <div class="section-kicker">
+      <span class="klabel">Sources covered</span>
+      <h2>What tonight maps to</h2>
+    </div>
+    <div class="covered">
+      <div class="covered-row">
+        <span class="status pill solid">✓</span>
+        <span class="name">A held-out score as a claim rather than a property</span>
+        <span class="note">The three assumptions that carry it from the test set to a decision, and the different ways each one breaks.</span>
+      </div>
+      <div class="covered-row">
+        <span class="status pill solid">✓</span>
+        <span class="name">The Thornbury drop, measured</span>
+        <span class="note">0.949 held out against 0.765 once the ward agreement falls from 90 percent to 50 percent, with no retraining in between.</span>
+      </div>
+      <div class="covered-row">
+        <span class="status pill solid">✓</span>
+        <span class="name">Predictive against durable</span>
+        <span class="note">Why a shortcut is not a bug, why a held-out score cannot distinguish the two, and why more held-out data does not help.</span>
+      </div>
+      <div class="covered-row">
+        <span class="status pill light">◐</span>
+        <span class="name">Underspecification</span>
+        <span class="note">Session 2. Tonight names the 70 to 100 percent reliance range; the twenty models behind it come next.</span>
+      </div>
+      <div class="covered-row">
+        <span class="status pill light">◐</span>
+        <span class="name">What selecting on a test set costs</span>
+        <span class="note">Session 3 measures link two rather than asserting it.</span>
+      </div>
+      <div class="covered-row">
+        <span class="status pill inkpill">·</span>
+        <span class="name">Memorization, random labels and double descent</span>
+        <span class="note">Not covered by design. <strong>learn-deep-learning-with-phoebe</strong> session 05 owns how a network can fit noise and what the interpolation threshold means.</span>
+      </div>
+      <div class="covered-row">
+        <span class="status pill inkpill">·</span>
+        <span class="name">How to compute accuracy, and drift detection</span>
+        <span class="note">Not covered by design. <strong>learn-model-evaluation-with-phoebe</strong> defines the metrics and owns monitoring for drift.</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ CHEAT SHEET ============ -->
+  <section class="cheat" id="cheatsheet">
+    <h3>Session 1 cheat sheet</h3>
+    <div class="grid-2">
+      <div class="cheat-item"><b>A score is a bet</b><span>That the data ahead resembles the data it was scored on, in the ways that matter.</span></div>
+      <div class="cheat-item"><b>Three links</b><span>The same world, an untouched draw, the right target. They break for different reasons.</span></div>
+      <div class="cheat-item"><b>Link one is nobody's fault</b><span>The world moves for reasons unrelated to the model. That is why it needs a watcher, not a process.</span></div>
+      <div class="cheat-item"><b>0.949 to 0.765</b><span>One expired arrangement, no retraining, no error anywhere in the pipeline.</span></div>
+      <div class="cheat-item"><b>Predictive is not durable</b><span>A held-out score cannot tell the two apart, because a shortcut works on held-out data too.</span></div>
+      <div class="cheat-item"><b>More data buys precision</b><span>Not validity. A tight estimate of the wrong quantity is still the wrong quantity.</span></div>
+      <div class="cheat-item"><b>Ask the shuffle question</b><span>What would this model do if one named feature were scrambled. Silence is the finding.</span></div>
+      <div class="cheat-item"><b>The sentence</b><span>Scores X on data from when, holds while the resemblance holds, and this person notices in this long.</span></div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="pagefoot">
+  <div class="wrap">
+    <p>Leader session 1 of 6 · learn-ml-epistemology-with-phoebe · by Phoebe Fu</p>
+    <nav class="pagenav">
+      <a href="../index.html">← All sessions</a>
+      <a href="a2-equally-good-differently-wrong.html">Leader session 2 · Equally good, differently wrong →</a>
+    </nav>
+  </div>
+</footer>
+
+<script src="../assets/app.js?v=2"></script>
+</body>
+</html>

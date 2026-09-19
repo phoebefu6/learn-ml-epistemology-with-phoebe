@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- social:start -->
+<meta name="description" content="Practitioner session 4 of 10. Designing the shifted set. A stress test can establish that this model relies on the ward and that one does not. It cannot establish that the model will hold under a shift you did not think of. D'Amour et al. ran theirs across five application domains.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Learn with Phoebe">
+<meta property="og:title" content="Stress tests - learn ML epistemology with phoebe">
+<meta property="og:description" content="Practitioner session 4 of 10. Name the shift, apply it to the inputs, and claim only what you tested.">
+<meta property="og:url" content="https://phoebefu6.github.io/learn-ml-epistemology-with-phoebe/courses/p4-stress-tests.html">
+<meta property="og:image" content="https://phoebefu6.github.io/learn-ml-epistemology-with-phoebe/assets/og-cover.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Stress tests - learn ML epistemology with phoebe">
+<meta name="twitter:description" content="A passed stress test licenses a claim about one shift and nothing else.">
+<meta name="twitter:image" content="https://phoebefu6.github.io/learn-ml-epistemology-with-phoebe/assets/og-cover.png">
+<!-- social:end -->
+<title>Practitioner session 4 · Stress tests - learn ML epistemology with phoebe</title>
+<link rel="stylesheet" href="../assets/style.css?v=2">
+</head>
+<body>
+
+<div class="toolbar">
+  <div class="wrap">
+    <span class="crumb"><a href="../index.html">learn-ml-epistemology-with-phoebe</a> / Practitioner session 4 of 10</span>
+    <button class="btn" id="toggle-all" type="button">Expand all</button>
+    <button class="btn primary" id="zoom-toggle" type="button">Projector zoom: off</button>
+  </div>
+</div>
+
+<header class="masthead">
+  <div class="wrap">
+    <div class="eyebrow">Learn ML Epistemology with Phoebe · Practitioner session 4 of 10</div>
+    <h1>Stress tests, and <span class="accent">what they license</span></h1>
+    <p class="sub">Session 3 read a spread off a shifted column without ever asking where that column came from. Tonight builds it. The shifted set at Thornbury is one argument away from the held-out set, and the discipline in that one argument is the whole session: the shift has to be one you can name and justify from how the hospital group actually changes, it has to land on the inputs rather than the labels, and passing it buys you a claim about that shift and no others. D'Amour et al. ran stress tests across five application domains and found the same thing in all of them.</p>
+    <div class="chip-row">
+      <span class="chip level">🔴 Hardest</span>
+      <span class="chip audience">Anyone asked to prove a model is robust</span>
+      <span class="chip audience">Anyone who has been handed a robustness section to review</span>
+      <span class="chip time">45 min</span>
+    </div>
+    <div class="agenda">
+      <span class="a1" style="flex:1">0-3 · Welcome</span>
+      <span class="a2" style="flex:4">3-16 · What it licenses</span>
+      <span class="a3" style="flex:4">16-29 · Three design rules</span>
+      <span class="a4" style="flex:4">29-45 · Build-along and Q&amp;A</span>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <!-- ============ INTRO ============ -->
+  <section class="section" id="intro">
+    <div class="section-kicker">
+      <span class="klabel">Part 0</span>
+      <h2>Where tonight sits</h2>
+    </div>
+    <p class="lede">The two numbers quoted across the whole track, 0.949 held out and 0.765 shifted, are not symmetrical. The first comes from a split, which is a procedure. The second comes from a design decision somebody made about how the world changes, and a different decision would have produced a different number. Tonight is about making that decision defensible, because the shifted column is only as good as the argument behind it. Session 5 asks what happens once people start choosing models against it.</p>
+
+    <div class="legend">
+      <span class="pill">Live = written together in the 45 minutes</span>
+      <span class="pill">Self-study = the full depth, after class</span>
+      <span class="pill">🔍 Every diagram zooms</span>
+    </div>
+
+    <div class="callout win">
+      <p><strong>★ What you walk out with tonight.</strong> Three rules for designing a shift, each with the failure it prevents. The exact construction of the Thornbury shifted set, one argument different from the held-out set, so you can see where a stress test lives in code. The sentence a passed stress test licenses, and the three sentences it does not. And D'Amour et al.'s five application domains as the answer to anyone who says this is a hospital problem.</p>
+    </div>
+
+    <details class="card" open>
+      <summary><span class="mode live">Live</span>A stress test is a scored set, not a technique<span class="mini">4 min</span><span class="caret">▶</span></summary>
+      <div class="body">
+        <p>There is nothing clever in the machinery. A stress test is a second evaluation set, built so that one named thing about the world is different, and scored with the same metric on the same trained model. No retraining, no new features, no change to the model at all. At Thornbury the named thing is the ward arrangement, and the difference between the held-out set and the shifted set is a single argument in the generator moving from 0.90 to 0.50.</p>
+        <p>What makes it hard is not the code, it is the argument for why that shift and not another. Anyone can perturb a column and produce a drop. A drop only means something if the perturbation corresponds to a change the world can actually make, which is why the design rules in Part 2 are about justification rather than about method.</p>
+      </div>
+    </details>
+
+    <details class="card">
+      <summary><span class="mode self">Self-study</span>The words that will keep coming back<span class="mini">4 min</span><span class="caret">▶</span></summary>
+      <div class="body">
+        <ul>
+          <li><strong>Stress test.</strong> Scoring a trained model on data built so one named aspect of the world differs from the collection conditions.</li>
+          <li><strong>Named shift.</strong> A change you can describe in a sentence about the world, with a mechanism, before you write the code that produces it.</li>
+          <li><strong>Input shift.</strong> The relationship between the features and the outcome changes. The outcome itself is still generated the same way.</li>
+          <li><strong>Label shift.</strong> The outcome changes. A drop measured after moving labels is not a fact about the model.</li>
+          <li><strong>The licensed claim.</strong> The one sentence a passed stress test supports, which always names the shift it was run under.</li>
+          <li><strong>The unenumerable remainder.</strong> Every shift you did not think of. It does not shrink when you pass the ones you did.</li>
+        </ul>
+      </div>
+    </details>
+  </section>
+
+  <!-- ============ PART 1 ============ -->
+  <section class="section" id="part-1">
+    <div class="section-kicker">
+      <span class="klabel">Part 1 · covers what a stress test licenses</span>
+      <h2>A narrow claim, held firmly</h2>
+      <span class="tag concept">13 min live</span>
+    </div>
+    <p class="lede">The Thornbury shifted set answers one question well. Twenty models that were indistinguishable held out separate on it, and the separation is measurable: reliance on the ward from 0.70 to 1.00, shifted accuracy spread across 0.051 on draw 1. That is a strong result about one shift, and it is silent about everything else.</p>
+
+    <figure class="zoomable">
+      <svg viewBox="0 0 880 310" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Two panels. On the left, what a passed stress test establishes: that this model relies on the named feature and that one does not, that the pipeline returns predictors which differ under this shift, and the size of the drop under it. On the right, what it does not establish: that the model will hold under a shift nobody designed, that the drop measured is the worst case, or that a model which passed is durable in general. A band at the foot notes that the unenumerable remainder does not shrink when a test is passed.">
+        <style>
+          .p4aH { font: 800 12px Inter, sans-serif; fill: #231A10; }
+          .p4aT { font: 800 11px Inter, sans-serif; fill: #FFFFFF; }
+          .p4aB { font: 400 11px Inter, sans-serif; fill: #231A10; }
+          .p4aM { font: 400 11px Inter, sans-serif; fill: #6B5B47; }
+          .p4aR { font: 800 11px Inter, sans-serif; fill: #155E75; }
+          .p4aRs { font: 400 11px Inter, sans-serif; fill: #155E75; }
+        </style>
+
+        <text class="p4aH" x="14" y="22">One shift, tested. Two very different lists follow from it.</text>
+
+        <rect x="14" y="38" width="416" height="196" rx="9" fill="#FBF6EF" stroke="#DCCDB8"></rect>
+        <rect x="14" y="38" width="416" height="28" rx="9" fill="#713F12"></rect>
+        <text class="p4aT" x="30" y="57">Establishes</text>
+        <text class="p4aB" x="30" y="90">This model relies on the ward.</text>
+        <text class="p4aM" x="30" y="110">That one does not. Measured, not argued.</text>
+        <text class="p4aB" x="30" y="138">The pipeline returns predictors that</text>
+        <text class="p4aM" x="30" y="158">differ under this shift, by 0.051 on draw 1.</text>
+        <text class="p4aB" x="30" y="186">The size of the drop under this shift:</text>
+        <text class="p4aM" x="30" y="206">0.949 held out against 0.765 shifted.</text>
+        <text class="p4aM" x="30" y="226">The same model, scored twice.</text>
+
+        <rect x="450" y="38" width="416" height="196" rx="9" fill="#ECFEFF" stroke="#155E75"></rect>
+        <rect x="450" y="38" width="416" height="28" rx="9" fill="#155E75"></rect>
+        <text class="p4aT" x="466" y="57">Does not establish</text>
+        <text class="p4aR" x="466" y="90">That the model holds under a shift</text>
+        <text class="p4aRs" x="466" y="110">nobody thought of. Nothing tests that.</text>
+        <text class="p4aR" x="466" y="138">That 0.765 is the worst case.</text>
+        <text class="p4aRs" x="466" y="158">A ward that reversed would cost more.</text>
+        <text class="p4aR" x="466" y="186">That a model which passed is robust.</text>
+        <text class="p4aRs" x="466" y="206">It passed one test, under one shift,</text>
+        <text class="p4aRs" x="466" y="226">on one named feature.</text>
+
+        <rect x="14" y="250" width="852" height="46" rx="9" fill="#EBD9C3" stroke="#DCCDB8"></rect>
+        <text class="p4aB" x="28" y="276">Passing a stress test removes one way of being wrong from a list nobody can finish writing.</text>
+      </svg>
+      <figcaption>🔍 Click to zoom - the left column is evidence, the right column is the part that gets dropped in the summary.</figcaption>
+    </figure>
+
+    <details class="card">
+      <summary><span class="mode live">Live</span>The sentence you may write, and the one you may not<span class="mini">4 min</span><span class="caret">▶</span></summary>
+      <div class="body">
+        <p>Licensed: "scored on patients from a year in which the ward no longer agrees with the outcome, this model falls from 0.949 to 0.765, and its measured reliance on the ward is the figure printed beside it." Every clause names something that was done. A reader can disagree with the design of the shift, and that disagreement is productive because the design is on the page.</p>
+        <p>Not licensed: "the model is robust to distribution shift." That sentence is about a category, and the test was about one member of it. It is also the sentence that gets written, because it is shorter and because the robustness section of a document is usually read as a verdict rather than as a list of what was tried.</p>
+        <div class="callout example">
+          <span class="ex-pill">Real world</span>
+          <p>Ask for the list, not the verdict. "Which shifts did you score it on" produces a short honest answer, usually one or two, and everybody in the room can then see the remainder. "Is it robust" produces a yes.</p>
+        </div>
+      </div>
+    </details>
+
+    <details class="card">
+      <summary><span class="mode live">Live</span>Five domains, one result<span class="mini">4 min</span><span class="caret">▶</span></summary>
+      <div class="body">
+        <p>D'Amour et al. (2020) is a forty-author paper, and the author list is doing work. Their stress tests span computer vision, medical imaging, natural language processing, clinical risk prediction from electronic health records, and medical genomics. Different data types, different teams, different pipelines, and the same finding: many predictors with equally strong held-out performance, behaving differently once they were scored somewhere else.</p>
+        <p>That breadth is the answer to the most common deflection, which is that the effect is an artefact of one field's data or one team's habits. Thornbury is a small simulation built to make the mechanism visible and checkable. The evidence that the mechanism is general is theirs, not this bench's.</p>
+      </div>
+    </details>
+
+    <figure class="zoomable">
+      <svg viewBox="0 0 880 208" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Five boxes naming D'Amour and co-authors' application domains: computer vision, medical imaging, natural language processing, clinical risk prediction from electronic health records, and medical genomics. A band beneath records that the paper has forty authors and that the same result appeared in all five domains: many predictors with equally strong held-out performance behaving differently under stress.">
+        <style>
+          .p4bH { font: 800 12px Inter, sans-serif; fill: #231A10; }
+          .p4bT { font: 800 11px Inter, sans-serif; fill: #FFFFFF; }
+          .p4bR { font: 800 11px Inter, sans-serif; fill: #155E75; }
+          .p4bRs { font: 400 11px Inter, sans-serif; fill: #155E75; }
+        </style>
+
+        <text class="p4bH" x="14" y="22">Where D'Amour et al. ran their stress tests.</text>
+
+        <rect x="14" y="38" width="164" height="86" rx="9" fill="#713F12"></rect>
+        <text class="p4bT" x="28" y="62">Computer</text>
+        <text class="p4bT" x="28" y="80">vision</text>
+
+        <rect x="188" y="38" width="164" height="86" rx="9" fill="#713F12"></rect>
+        <text class="p4bT" x="202" y="62">Medical</text>
+        <text class="p4bT" x="202" y="80">imaging</text>
+
+        <rect x="362" y="38" width="164" height="86" rx="9" fill="#713F12"></rect>
+        <text class="p4bT" x="376" y="62">Natural language</text>
+        <text class="p4bT" x="376" y="80">processing</text>
+
+        <rect x="536" y="38" width="164" height="86" rx="9" fill="#713F12"></rect>
+        <text class="p4bT" x="550" y="62">Clinical risk</text>
+        <text class="p4bT" x="550" y="80">prediction from</text>
+        <text class="p4bT" x="550" y="98">health records</text>
+
+        <rect x="710" y="38" width="156" height="86" rx="9" fill="#713F12"></rect>
+        <text class="p4bT" x="724" y="62">Medical</text>
+        <text class="p4bT" x="724" y="80">genomics</text>
+
+        <rect x="14" y="140" width="852" height="56" rx="9" fill="#ECFEFF" stroke="#155E75"></rect>
+        <text class="p4bR" x="28" y="164">Forty authors, five domains, one result.</text>
+        <text class="p4bRs" x="28" y="186">Many predictors with equally strong held-out performance, behaving differently once they were scored elsewhere.</text>
+      </svg>
+      <figcaption>🔍 Click to zoom - the breadth is the argument that this is not one field's local difficulty.</figcaption>
+    </figure>
+  </section>
+
+  <!-- ============ PART 2 ============ -->
+  <section class="section" id="part-2">
+    <div class="section-kicker">
+      <span class="klabel">Part 2 · covers the design discipline</span>
+      <h2>Three rules for a shift worth scoring</h2>
+      <span class="tag concept">13 min live</span>
+    </div>
+    <p class="lede">Each rule exists because a specific bad stress test is easy to write and looks exactly like a good one in the write-up. The rules are about the design, not the code, and the third one is the one teams break after the run rather than during it.</p>
+
+    <figure class="zoomable">
+      <svg viewBox="0 0 880 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Three design rules. Rule one, name the shift and justify it from how the world changes: the ward reorganisation holds because hospital groups reorganise, while adding random noise to every column fails because nothing in the world does that. Rule two, apply the shift to the inputs and not the labels: changing which ward a patient is on holds, while flipping outcomes fails because the drop then measures the corrupted labels. Rule three, claim only the shift you ran: the ward sentence holds and the word robust fails.">
+        <style>
+          .p4cH { font: 800 12px Inter, sans-serif; fill: #231A10; }
+          .p4cN { font: 800 15px Inter, sans-serif; fill: #FFFFFF; }
+          .p4cK { font: 800 11px Inter, sans-serif; fill: #231A10; }
+          .p4cB { font: 400 11px Inter, sans-serif; fill: #231A10; }
+          .p4cG { font: 800 11px Inter, sans-serif; fill: #713F12; }
+          .p4cM { font: 400 11px Inter, sans-serif; fill: #6B5B47; }
+          .p4cR { font: 800 11px Inter, sans-serif; fill: #155E75; }
+          .p4cRs { font: 400 11px Inter, sans-serif; fill: #155E75; }
+        </style>
+
+        <text class="p4cH" x="14" y="22">Each rule is here because the test that breaks it reads like a good one.</text>
+
+        <rect x="14" y="38" width="272" height="246" rx="9" fill="#FBF6EF" stroke="#DCCDB8"></rect>
+        <circle cx="42" cy="66" r="14" fill="#713F12"></circle>
+        <text class="p4cN" x="37" y="71">1</text>
+        <text class="p4cK" x="66" y="70">Name it first</text>
+        <text class="p4cB" x="28" y="100">A shift you can describe as a</text>
+        <text class="p4cB" x="28" y="118">sentence about the world, with</text>
+        <text class="p4cB" x="28" y="136">a mechanism, before any code.</text>
+        <text class="p4cG" x="28" y="168">Holds</text>
+        <text class="p4cM" x="28" y="188">The group reorganises its wards.</text>
+        <text class="p4cM" x="28" y="206">Hospital groups do that.</text>
+        <text class="p4cR" x="28" y="238">Fails</text>
+        <text class="p4cRs" x="28" y="258">Gaussian noise on every column.</text>
+        <text class="p4cRs" x="28" y="276">Nothing in the world does that.</text>
+
+        <rect x="304" y="38" width="272" height="246" rx="9" fill="#FBF6EF" stroke="#DCCDB8"></rect>
+        <circle cx="332" cy="66" r="14" fill="#713F12"></circle>
+        <text class="p4cN" x="327" y="71">2</text>
+        <text class="p4cK" x="356" y="70">Move the inputs</text>
+        <text class="p4cB" x="318" y="100">The outcome is generated the</text>
+        <text class="p4cB" x="318" y="118">same way on both sides. Only</text>
+        <text class="p4cB" x="318" y="136">the inputs behave differently.</text>
+        <text class="p4cG" x="318" y="168">Holds</text>
+        <text class="p4cM" x="318" y="188">The ward stops agreeing with</text>
+        <text class="p4cM" x="318" y="206">who deteriorates.</text>
+        <text class="p4cR" x="318" y="238">Fails</text>
+        <text class="p4cRs" x="318" y="258">Flip one outcome in five. The</text>
+        <text class="p4cRs" x="318" y="276">drop measures the labels.</text>
+
+        <rect x="594" y="38" width="272" height="246" rx="9" fill="#FBF6EF" stroke="#DCCDB8"></rect>
+        <circle cx="622" cy="66" r="14" fill="#713F12"></circle>
+        <text class="p4cN" x="617" y="71">3</text>
+        <text class="p4cK" x="646" y="70">Claim only what you ran</text>
+        <text class="p4cB" x="608" y="100">The licensed sentence names</text>
+        <text class="p4cB" x="608" y="118">the shift. Every time, including</text>
+        <text class="p4cB" x="608" y="136">in the one-line summary.</text>
+        <text class="p4cG" x="608" y="168">Holds</text>
+        <text class="p4cM" x="608" y="188">Falls to 0.765 when the ward</text>
+        <text class="p4cM" x="608" y="206">stops agreeing with the outcome.</text>
+        <text class="p4cR" x="608" y="238">Fails</text>
+        <text class="p4cRs" x="608" y="258">Robust to distribution shift.</text>
+        <text class="p4cRs" x="608" y="276">One member, whole category.</text>
+      </svg>
+      <figcaption>🔍 Click to zoom - name it, move the inputs, claim only the shift you ran.</figcaption>
+    </figure>
+
+    <details class="card">
+      <summary><span class="mode live">Live</span>Why the labels must stay where they are<span class="mini">4 min</span><span class="caret">▶</span></summary>
+      <div class="body">
+        <p>Corrupting labels in the stress set produces a drop reliably, which is what makes it tempting. It measures nothing about the model. Flip one outcome in five and a perfect model is now scored wrong on one row in five, because the thing predictions are compared against has been made wrong. Every model in the pool loses ground together, and the number that comes out is a property of the corruption.</p>
+        <p>The Thornbury shift keeps the outcome mechanism untouched and moves an input's relationship to it. A patient with a given vitals drift and lab trend deteriorates with exactly the same probability in the deployment year as in the collection year. What changed is which ward that patient is in, which is a fact about hospital administration and not about physiology. A model that never used the ward scores the same in both worlds, and that is the property the test is built to expose.</p>
+      </div>
+    </details>
+
+    <details class="card">
+      <summary><span class="mode live">Live</span>An open disagreement: named shifts, or a broad battery<span class="mini">5 min</span><span class="caret">▶</span></summary>
+      <div class="body">
+        <p>The rules above take one side of a live argument, and the other side is not foolish. The named-shift position says a perturbation with no mechanism behind it produces a number nobody can act on: if you cannot say what in the world would do that to your data, a drop tells you nothing about deployment and an absence of a drop tells you less.</p>
+        <p>The battery position says that the shifts which break models are, almost by definition, the ones nobody anticipated, so restricting yourself to shifts you can justify guarantees you only ever test the failures you already feared. On this view a wide sweep of arbitrary perturbations is a detector for underspecification rather than a forecast of deployment, and a pipeline whose outputs scatter under nonsense perturbations is telling you something real even though the perturbations are not.</p>
+        <p>Both positions are held by people who have shipped models that failed. They disagree about what the number is for: evidence about a deployment, or evidence about a pipeline. The practical reconciliation, which neither camp fully accepts, is that they are different measurements and should be reported under different headings rather than averaged into a robustness score.</p>
+      </div>
+    </details>
+
+    <details class="card">
+      <summary><span class="mode self">Self-study</span>Where the shift comes from when you cannot simulate it<span class="mini">4 min</span><span class="caret">▶</span></summary>
+      <div class="body">
+        <p>Thornbury can regenerate its deployment year because the world is a function. Real projects usually cannot, and the substitutes are ordinary: hold out a later time period rather than a random slice, hold out one site or region entirely, score on the subgroup whose intake process changed last year, or use data collected before and after a known policy change as two worlds.</p>
+        <p>Each of those is a named shift with a mechanism, which is the only property that matters. A held-out year is a stress test if you say what you expect to have changed in it, and it is just another random split if you do not. Generalisation of an <em>experiment</em> to a new population is a different subject and belongs to <strong>learn-experimentation-with-phoebe</strong>; the question here is a fitted model scored somewhere else.</p>
+      </div>
+    </details>
+  </section>
+
+  <!-- ============ PART 3 ============ -->
+  <section class="section" id="part-3">
+    <div class="section-kicker">
+      <span class="klabel">Part 3 · build-along</span>
+      <h2>Build the Thornbury shifted set</h2>
+      <span class="tag build">16 min build-along</span>
+    </div>
+    <p class="lede">The whole stress test is one argument. Below is the generator that produces both worlds, the three lines that call it, and the mistake that looks identical in a diff.</p>
+
+    <figure class="zoomable">
+      <svg viewBox="0 0 880 330" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="How the two Thornbury worlds are built. A shared band at the top shows the outcome mechanism, identical on both sides: the outcome is drawn from a sigmoid of minus 0.35 plus 1.25 times the vitals drift plus 1.05 times the lab trend, with no ward term in it. Below, two panels: the collection year passes 0.90 as the shortcut strength so the ward agrees with the outcome 90 percent of the time, and the deployment year passes 0.50 so it agrees 50 percent of the time. A band at the foot notes that only an input moved, so the drop belongs to the model.">
+        <style>
+          .p4dH { font: 800 12px Inter, sans-serif; fill: #231A10; }
+          .p4dT { font: 800 11px Inter, sans-serif; fill: #FFFFFF; }
+          .p4dW { font: 400 11px Inter, sans-serif; fill: #FFFFFF; }
+          .p4dB { font: 400 11px Inter, sans-serif; fill: #231A10; }
+          .p4dK { font: 800 11px Inter, sans-serif; fill: #231A10; }
+          .p4dM { font: 400 11px Inter, sans-serif; fill: #6B5B47; }
+          .p4dR { font: 800 11px Inter, sans-serif; fill: #155E75; }
+          .p4dRs { font: 400 11px Inter, sans-serif; fill: #155E75; }
+        </style>
+        <defs>
+          <marker id="p4dAr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#6B5B47"></path></marker>
+        </defs>
+
+        <text class="p4dH" x="14" y="22">One generator, one argument, two worlds.</text>
+
+        <rect x="14" y="38" width="852" height="70" rx="9" fill="#713F12"></rect>
+        <text class="p4dT" x="28" y="62">The outcome mechanism, identical in both worlds</text>
+        <text class="p4dW" x="28" y="84">y drawn from sig(-0.35 + 1.25*vitals + 1.05*lab). Two honest signals, and no ward term anywhere in it.</text>
+        <text class="p4dW" x="28" y="102">A patient with the same vitals and labs deteriorates with the same probability on both sides.</text>
+
+        <rect x="14" y="126" width="386" height="120" rx="9" fill="#FBF6EF" stroke="#DCCDB8"></rect>
+        <text class="p4dK" x="28" y="150">Collection year</text>
+        <text class="p4dB" x="28" y="174">makeData(n, seed, 0.90)</text>
+        <text class="p4dM" x="28" y="198">The ward agrees with the outcome</text>
+        <text class="p4dM" x="28" y="216">90 percent of the time.</text>
+        <text class="p4dM" x="28" y="236">Training and held-out rows.</text>
+
+        <line x1="408" y1="186" x2="470" y2="186" stroke="#6B5B47" stroke-width="1.6" marker-end="url(#p4dAr)"></line>
+        <text class="p4dM" x="404" y="164">one argument</text>
+
+        <rect x="480" y="126" width="386" height="120" rx="9" fill="#ECFEFF" stroke="#155E75"></rect>
+        <text class="p4dR" x="494" y="150">Deployment year</text>
+        <text class="p4dRs" x="494" y="174">makeData(n, seed, 0.50)</text>
+        <text class="p4dRs" x="494" y="198">The ward agrees with the outcome</text>
+        <text class="p4dRs" x="494" y="216">50 percent of the time.</text>
+        <text class="p4dRs" x="494" y="236">The shifted rows. Nothing else moved.</text>
+
+        <rect x="14" y="262" width="852" height="56" rx="9" fill="#EBD9C3" stroke="#DCCDB8"></rect>
+        <text class="p4dK" x="28" y="286">An input's relationship to the outcome moved. The outcome did not.</text>
+        <text class="p4dB" x="28" y="308">So the fall from 0.949 to 0.765 belongs to the model, and a model that ignored the ward would not fall at all.</text>
+      </svg>
+      <figcaption>🔍 Click to zoom - the shift is a single argument, and its discipline is that the label line is untouched.</figcaption>
+    </figure>
+
+    <div class="steps">
+      <div class="step"><div><p><strong>Write the sentence before the code.</strong> "The group reorganises its wards, so the ward stops agreeing with who deteriorates." If the sentence needs the code to make sense, the shift has no mechanism behind it yet.</p></div></div>
+      <div class="step"><div><p><strong>Find the one parameter that carries it.</strong> At Thornbury it is the agreement rate between the ward and the outcome. One argument, one value in each world, and a diff a reviewer can read in a second.</p></div></div>
+      <div class="step"><div><p><strong>Check the label line is untouched.</strong> Read the generator and confirm the outcome is drawn the same way on both sides. This is the step that gets skipped, and skipping it is how a stress test comes to measure its own corruption.</p></div></div>
+      <div class="step"><div><p><strong>Score without retraining.</strong> The same trained model, the same metric, the new rows. Any retraining turns a stress test into a different experiment about whether the pipeline can learn the new world.</p></div></div>
+      <div class="step"><div><p><strong>Report both numbers and the shift.</strong> Held out, shifted, and the sentence from step one. Two numbers with no sentence between them is the shape most robustness sections already have.</p></div></div>
+      <div class="step"><div><p><strong>Write down what you did not test.</strong> A ward that reverses rather than decays, a new intake process, a different patient mix. The list is short to write and it is the part a reader cannot reconstruct.</p></div></div>
+    </div>
+
+    <div class="prompt-box good"><span class="label">★ Block 1 · the generator, from assets/ep-live.js</span>
+/* Both worlds come out of this one function. shortcutStrength is the shift. */
+function makeData(n, seed, shortcutStrength){
+  var r=rng(seed), rows=[];
+  for(var i=0;i&lt;n;i++){
+    var vit=normal(r), lab=normal(r);
+    var z=-0.35+1.25*vit+1.05*lab;          // the outcome mechanism: no ward in it
+    var y = r() &lt; sig(z) ? 1 : 0;           // this line is the same in both worlds
+    /* ward agrees with the outcome shortcutStrength of the time */
+    var ward = (r() &lt; shortcutStrength) ? y : (r()&lt;0.5?1:0);
+    rows.push({x:[vit,lab,ward], y:y});
+  }
+  return rows;
+}
+</div>
+
+    <div class="prompt-box good"><span class="label">★ Block 2 · three sets, one trained model, two scores</span>
+var T = window.THORNBURY;
+
+var trainRows = T.makeData(4000, 101, 0.90);   // collection year
+var heldRows  = T.makeData(2000, 102, 0.90);   // collection year, never trained on
+var shiftRows = T.makeData(2000, 103, 0.50);   // the stress test
+
+var m = T.train(trainRows, 1001);              // trained once, on the collection year only
+
+console.log("held out", T.acc(m, heldRows).toFixed(3));              // around 0.949
+console.log("shifted ", T.acc(m, shiftRows).toFixed(3));             // around 0.765
+console.log("reliance", T.relianceOnWard(m, heldRows).toFixed(2));   // 0.70 to 1.00 by seed
+
+// No retraining between the two scores. The model does not know the wards moved,
+// which is the entire point: deployment does not retrain you either.
+</div>
+
+    <div class="prompt-box bad"><span class="label">✗ The stress test that measures nothing</span>
+// WRONG: this moves the labels, not the inputs.
+shiftRows.forEach(function (row) {
+  if (Math.random() &lt; 0.2) row.y = 1 - row.y;
+});
+
+// Every model in the pool now loses ground together, including one that
+// never looked at the ward, and including a perfect one: one row in five
+// is scored against the wrong answer. Nothing about the model was measured.
+</div>
+
+    <div class="callout tip">
+      <p><strong>The habit to keep.</strong> Every robustness claim gets a shift named in the same sentence as the number. "0.765 once the ward stops agreeing with the outcome" survives a reader asking what was tested; "robust to shift" does not. And keep the list of untested shifts next to the tested one, because the person reading your summary in six months will otherwise assume the list is empty.</p>
+    </div>
+  </section>
+
+  <!-- ============ QUIZ ============ -->
+  <section class="section" id="quiz">
+    <div class="section-kicker">
+      <span class="klabel">Check yourself</span>
+      <h2>Three questions</h2>
+    </div>
+
+    <div class="quiz-q" data-answer="1">
+      <p class="qtext">A model passes the Thornbury stress test: it scores 0.949 held out and barely moves on the shifted set. What may go in the summary?</p>
+      <button class="qopt" type="button">A · That the model is robust to distribution shift, since it held up when the data changed</button>
+      <button class="qopt" type="button">B · That the model barely moves when the ward stops agreeing with the outcome, which says nothing about shifts that were not tested</button>
+      <button class="qopt" type="button">C · That the model does not rely on any shortcut, since a shortcut would have shown up as a drop</button>
+      <p class="qwhy">One shift was scored, so one claim is licensed and it names that shift. Other shortcuts may exist and would only appear under stresses nobody built, and the category word "robust" turns a result about one member into a claim about all of them.</p>
+    </div>
+
+    <div class="quiz-q" data-answer="2">
+      <p class="qtext">A colleague builds a stress set by flipping one outcome in five, and reports that accuracy fell sharply. What did they measure?</p>
+      <button class="qopt" type="button">A · The model's sensitivity to noise, which is a legitimate if crude robustness check</button>
+      <button class="qopt" type="button">B · Label drift, which is a real deployment risk and worth scoring separately</button>
+      <button class="qopt" type="button">C · The corruption they applied; every model in the pool falls together, including one that ignores every feature they were worried about</button>
+      <p class="qwhy">Moving the labels changes what the predictions are being compared against, so the drop is a property of the manipulation rather than of the model. A stress test has to leave the outcome mechanism alone and move an input's relationship to it, which is what the single argument in the Thornbury generator does.</p>
+    </div>
+
+    <div class="quiz-q" data-answer="0">
+      <p class="qtext">Why does the D'Amour et al. paper span computer vision, medical imaging, natural language processing, clinical risk prediction from electronic health records and medical genomics?</p>
+      <button class="qopt" type="button">A · Because the breadth is the evidence: the same pipeline behaviour appeared in five different fields, so it is not an artefact of one field's data or habits</button>
+      <button class="qopt" type="button">B · Because stress tests have to be validated separately in each domain before they can be trusted</button>
+      <button class="qopt" type="button">C · Because the effect is strongest in medical data and the other domains are included for contrast</button>
+      <p class="qwhy">Forty authors across five application areas found many predictors with equally strong held-out performance behaving differently under stress. A single-domain result invites the reply that the domain is unusual, which is exactly the reply the breadth removes.</p>
+    </div>
+    <p class="quiz-score"></p>
+  </section>
+
+  <!-- ============ HOMEWORK ============ -->
+  <section class="section" id="homework">
+    <div class="section-kicker">
+      <span class="klabel">Homework</span>
+      <h2>Before session 5</h2>
+      <span class="tag time">30 min</span>
+    </div>
+    <div class="callout">
+      <p>Take the shift sentence you wrote after session 3 and put it through the three rules. Does it name a mechanism the world actually has? Does it move an input rather than the outcome? Then write the claim that passing it would license, in one sentence that mentions the shift. Most first drafts fail rule two without noticing, usually by resampling the outcome to change the base rate. Bring the sentence and the claim. Session 5 asks what happens once a set like this starts being used to choose between models rather than to describe one.</p>
+    </div>
+  </section>
+
+  <!-- ============ COVERAGE ============ -->
+  <section class="section" id="official">
+    <div class="section-kicker">
+      <span class="klabel">Sources covered</span>
+      <h2>What tonight maps to</h2>
+    </div>
+    <div class="covered">
+      <div class="covered-row">
+        <span class="status pill solid">✓</span>
+        <span class="name">What a stress test can establish</span>
+        <span class="note">That this model relies on the ward and that one does not, that the pipeline returns predictors which differ under this shift, and the size of the drop: 0.949 against 0.765.</span>
+      </div>
+      <div class="covered-row">
+        <span class="status pill solid">✓</span>
+        <span class="name">What it cannot establish</span>
+        <span class="note">That the model holds under a shift nobody designed, that the measured drop is the worst case, or that a model which passed is robust in general.</span>
+      </div>
+      <div class="covered-row">
+        <span class="status pill solid">✓</span>
+        <span class="name">D'Amour et al.'s five application domains</span>
+        <span class="note">Computer vision, medical imaging, natural language processing, clinical risk prediction from electronic health records, and medical genomics. Forty authors, one result.</span>
+      </div>
+      <div class="covered-row">
+        <span class="status pill solid">✓</span>
+        <span class="name">The three design rules</span>
+        <span class="note">Name the shift and justify it from how the world changes, apply it to the inputs and not the labels, and claim only the shift you ran.</span>
+      </div>
+      <div class="covered-row">
+        <span class="status pill solid">✓</span>
+        <span class="name">How the Thornbury shifted set is built</span>
+        <span class="note">One generator, one argument. The outcome line is identical in both worlds and the ward agreement moves from 0.90 to 0.50.</span>
+      </div>
+      <div class="covered-row">
+        <span class="status pill light">◐</span>
+        <span class="name">What selecting on this set would cost</span>
+        <span class="note">Session 5 measures what happens once a set is used to choose a model rather than to describe one.</span>
+      </div>
+      <div class="covered-row">
+        <span class="status pill light">◐</span>
+        <span class="name">Both benches, run live</span>
+        <span class="note">Session 10. The shifted set built here is what pane A scores against.</span>
+      </div>
+      <div class="covered-row">
+        <span class="status pill inkpill">·</span>
+        <span class="name">External validity for experiments</span>
+        <span class="note">Not covered by design. <strong>learn-experimentation-with-phoebe</strong> owns generalising an experiment to a new population; the question here is a fitted model scored elsewhere.</span>
+      </div>
+      <div class="covered-row">
+        <span class="status pill inkpill">·</span>
+        <span class="name">Fairness auditing</span>
+        <span class="note">Not covered by design. The stress tests here are about credibility rather than group harm, and the fairness literature is a separate subject.</span>
+      </div>
+      <div class="covered-row">
+        <span class="status pill inkpill">·</span>
+        <span class="name">Drift detection and monitoring</span>
+        <span class="note">Not covered by design. <strong>learn-model-evaluation-with-phoebe</strong> owns detecting a shift after deployment; tonight is about scoring one before.</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ CHEAT SHEET ============ -->
+  <section class="cheat" id="cheatsheet">
+    <h3>Session 4 cheat sheet</h3>
+    <div class="grid-2">
+      <div class="cheat-item"><b>A stress test is a scored set</b><span>Same model, same metric, one named thing about the world different. No retraining.</span></div>
+      <div class="cheat-item"><b>Name it before you code it</b><span>If you cannot say what in the world would do that to your data, the drop is uninterpretable.</span></div>
+      <div class="cheat-item"><b>Move inputs, never labels</b><span>Flip one outcome in five and even a perfect model is scored wrong on one row in five.</span></div>
+      <div class="cheat-item"><b>One argument</b><span>Thornbury's two worlds differ by 0.90 against 0.50. The outcome line is identical on both sides.</span></div>
+      <div class="cheat-item"><b>Claim the shift, not the category</b><span>Falls to 0.765 when the ward stops agreeing, rather than robust to distribution shift.</span></div>
+      <div class="cheat-item"><b>Five domains</b><span>Vision, medical imaging, NLP, clinical risk from health records, genomics. Forty authors, same result.</span></div>
+      <div class="cheat-item"><b>The remainder does not shrink</b><span>Passing removes one way of being wrong from a list nobody can finish writing.</span></div>
+      <div class="cheat-item"><b>List what you did not test</b><span>A reversed ward, a new intake process, a different patient mix. Readers assume the list is empty.</span></div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="pagefoot">
+  <div class="wrap">
+    <p>Practitioner session 4 of 10 · learn-ml-epistemology-with-phoebe · by Phoebe Fu</p>
+    <nav class="pagenav">
+      <a href="p3-twenty-seeds-one-pipeline.html">← Practitioner session 3 · Twenty seeds, one pipeline</a>
+      <a href="p5-selecting-on-a-set.html">Practitioner session 5 · Selecting on a set →</a>
+    </nav>
+  </div>
+</footer>
+
+<script src="../assets/app.js?v=2"></script>
+</body>
+</html>
